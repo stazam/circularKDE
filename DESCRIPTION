@@ -1,11 +1,16 @@
 Package: circularKDE
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Methods for kernel density estimation for circular data
+Version: 0.1.1
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+      c(person(given = "Stanislav", family = "Zamecnik", email = c("zamecnik@math.muni.cz"), role = c("aut", "cre")),
+      person(given = "Ivanka", family = "Hórová", email = c("horova@math.muni.cz"), role = c("aut")),
+      person(given = "Kamila", family = "Hasilová", email = c("kamila.hasilova@unob.cz"), role = c("aut")),
+      person(given = "Stanislav", family = "Katina", email = c("katina@math.muni.cz"), role = c("aut")))
+Description: Package for kernel density estimation of circular data using recently developed methods. Methdos are based on the following research articles: 
+ - Zámečník, S., Horová, I., Katina, S. et al. An adaptive method for bandwidth selection in circular kernel density estimation. Comput Stat 39, 1709–1728 (2024). https://doi.org/10.1007/s00180-023-01401-0
+ - Hasilová K., Horová I., Vališ D., Zámecník S., 2024. A comprehensive exploration of complete cross-validation for circular data. Statistics in Transition new series, 25(3), pp. 1-12. https://doi.org/10.59170/stattrans-2024-024
+ - Zámečník, S., Hasilová K., Horová, I. Generalised least square cross-validation for circular data.
+License: GPL (>=2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
