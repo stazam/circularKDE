@@ -1,14 +1,17 @@
 test_that("bw.lscvg returns a numeric value for valid input", {
   set.seed(60)
-  x <- rvonmises(50, pi/2, 1)
+  x <- rvonmises(50, circular(pi/2), 1, control.circular = list(units = "radians"))
   result <- bw.lscvg(x)
   expect_equal(result, 6.6326176)
+  expect_type(result, "double")
+  expect_length(result, 1)
+})
 
+test_that("bw.lscvg returns a numeric value for valid input", {
   set.seed(123)
-  x <- rvonmises(50, pi/2, 1)
+  x <- rvonmises(50, circular(pi/2), 1)
   result <- bw.lscvg(x)
   expect_equal(result, 5.09811023)
-
   expect_type(result, "double")
   expect_length(result, 1)
 })
@@ -30,7 +33,7 @@ test_that("bw.lscvg removes NA values and returns result", {
   x <- c(0, pi / 2, NA, pi)
   result <- bw.lscvg(x)
   expect_type(result, "double")
-  expect_cli_warning(bw.lscvg(x),1,"! `x` contains missing values, which will be removed")
+  expect_cli_warning(bw.lscvg(x), 1, "! `x` contains missing values, which will be removed")
 })
 
 test_that("bw.lscvg handles non-numeric g", {

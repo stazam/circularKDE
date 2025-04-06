@@ -38,7 +38,8 @@ bw.lscvg <- function(x,
     units = "radians",
     zero = 0,
     rotation = "counter",
-    modulo = "2pi"
+    modulo = "2pi",
+    template = "none"
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
@@ -125,4 +126,5 @@ bw.lscvg <- function(x,
 }
 
 
-bw.lscvg(x, lower = -5)
+
+
