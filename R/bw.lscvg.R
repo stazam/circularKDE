@@ -1,15 +1,43 @@
-#' Title
+#' Compute the Optimal Bandwidth for Circular Data using Generalized Least Squares Cross-Validation
 #'
-#' @param x Data from which the smoothing parameter is to be computed. The object is coerced to class circular.
-#' @param g parameter for bigger variability
-#' @param lower Lower boundary of the interval to be used in the search for the value of the smoothing parameter. Default value lower=0.
-#' @param upper Upper boundary of the interval to be used in the search for the value of the smoothing parameter. Default value upper=60.
-#' @param tol Convergence tolerance for optimize.
+#' This function computes the optimal smoothing parameter (bandwidth) for circular data
+#' using a generalized least squares cross-validation method. It searches for the value of the
+#' smoothing parameter `nu` that minimizes the cross-validation criterion within the
+#' specified interval `[lower, upper]`.
 #'
-#' @return something
+#' @param x Data from which the smoothing parameter is to be computed. The object is
+#'   coerced to a numeric vector in radians using `circular::conversion.circular`.
+#'   Can be a numeric vector or an object of class `circular`.
+#' @param g A numeric scalar that controls the variability in the cross-validation
+#'   procedure. It influences the scaling in the internal calculations, affecting the
+#'   bandwidth estimation. Default is 4.
+#' @param lower Lower boundary of the interval to be used in the search for the
+#'   smoothing parameter `nu`. Must be a positive numeric value less than `upper`.
+#'   Default is 0.
+#' @param upper Upper boundary of the interval to be used in the search for the
+#'   smoothing parameter `nu`. Must be a positive numeric value greater than `lower`.
+#'   Default is 60.
+#' @param tol Convergence tolerance for the `optimize` function, determining the
+#'   precision of the optimization process. Default is 0.1.
+#'
+#' @return The computed optimal smoothing parameter `nu`, a numeric value that
+#'   minimizes the least squares cross-validation criterion within the interval
+#'   `[lower, upper]`.
+#'
 #' @export
 #'
-#' @examples something
+#' @examples
+#' # Example with numeric data in radians
+#' set.seed(123)
+#' x <- runif(100, 0, 2 * pi)
+#' bw <- bw.lscvg(x)
+#' print(bw)
+#'
+#' # Example with circular data
+#' library(circular)
+#' x_circ <- rvonmises(100, mu = circular(0), kappa = 1)
+#' bw <- bw.lscvg(x_circ)
+#' print(bw)
 #'
 #' @importFrom circular conversion.circular
 #' @importFrom stats optimize
@@ -38,7 +66,8 @@ bw.lscvg <- function(x,
     units = "radians",
     zero = 0,
     rotation = "counter",
-    modulo = "2pi"
+    modulo = "2pi",
+    template = "none"
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
@@ -125,4 +154,5 @@ bw.lscvg <- function(x,
 }
 
 
-bw.lscvg(x, lower = -5)
+
+
