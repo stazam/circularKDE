@@ -2,7 +2,7 @@
 % Please edit documentation in R/bw.scv.R
 \name{bw.scv}
 \alias{bw.scv}
-\title{Title}
+\title{Hahah}
 \usage{
 bw.scv(x, np = 75, lower = 0, upper = 60, tol = 0.1)
 }
@@ -21,7 +21,7 @@ bw.scv(x, np = 75, lower = 0, upper = 60, tol = 0.1)
 something
 }
 \description{
-Title
+Hahah
 }
 \examples{
 something
