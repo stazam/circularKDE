@@ -21,6 +21,14 @@ bw.scv <- function(x,
       c("{.var x} must be a non-empty object.", "x" = "You've supplied an object of length {n}.")
     )
   }
+  if (!is.numeric(x)) {
+    if (all(is.na(x))) {
+      cli::cli_abort("{.var x} contains all missing values.")
+    }
+    cli::cli_abort(
+      c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
+    )
+  }
   x <- conversion.circular(
     x,
     units = "radians",
@@ -29,18 +37,9 @@ bw.scv <- function(x,
     modulo = "2pi"
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
-  if (!is.numeric(x)) {
-    cli::cli_abort(
-      c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
-    )
-  }
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
     x <- x[!is.na(x)]
-  }
-  n <- length(x)
-  if (n == 0) {
-    cli_abort("{.var x} is after removal of length {.var n}.", )
   }
   if (!is.numeric(np)) {
     cli::cli_alert_warning(
