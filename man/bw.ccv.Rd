@@ -2,25 +2,48 @@
 % Please edit documentation in R/bw.ccv.R
 \name{bw.ccv}
 \alias{bw.ccv}
-\title{Title}
+\title{Compute the Optimal Bandwidth for Circular Data using Complete Cross-Validation}
 \usage{
 bw.ccv(x, lower = 0, upper = 60, tol = 0.1)
 }
 \arguments{
-\item{x}{Data from which the smoothing parameter is to be computed. The object is coerced to class circular.}
+\item{x}{Data from which the smoothing parameter is to be computed. The object is
+coerced to a numeric vector in radians using \code{circular::conversion.circular}.
+Can be a numeric vector or an object of class \code{circular}.}
 
-\item{lower}{Lower boundary of the interval to be used in the search for the value of the smoothing parameter. Default value lower=0.}
+\item{lower}{Lower boundary of the interval to be used in the search for the
+smoothing parameter \code{nu}. Must be a positive numeric value less than \code{upper}.
+Default is 0.}
 
-\item{upper}{Upper boundary of the interval to be used in the search for the value of the smoothing parameter. Default value upper=60.}
+\item{upper}{Upper boundary of the interval to be used in the search for the
+smoothing parameter \code{nu}. Must be a positive numeric value greater than \code{lower}.
+Default is 60.}
 
-\item{tol}{Convergence tolerance for optimize.}
+\item{tol}{Convergence tolerance for the \code{optimize} function, determining the
+precision of the optimization process. Default is 0.1.}
 }
 \value{
-something
+The computed optimal smoothing parameter \code{nu}, a numeric value that
+minimizes the complete cross-validation criterion within the interval
+\verb{[lower, upper]}.
 }
 \description{
-Title
+This function calculates the optimal smoothing parameter (bandwidth) for circular data
+using the complete cross-validation (CCV) method (see \url{doi:10.59170/stattrans-2024-024}). It searches for the value of the
+smoothing parameter \code{nu} that minimizes the CCV criterion within a specified interval
+\verb{[lower, upper]}.
 }
 \examples{
-something
+# Example with numeric data in radians
+set.seed(123)
+x <- runif(100, 0, 2 * pi)
+bw <- bw.ccv(x)
+print(bw)
+
+# Example with circular data
+library(circular)
+x_circ <- rvonmises(100, mu = circular(0), kappa = 1)
+bw <- bw.ccv(x_circ)
+print(bw)
+
 }

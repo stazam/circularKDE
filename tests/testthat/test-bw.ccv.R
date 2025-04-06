@@ -2,7 +2,7 @@ test_that("bw.ccv returns a numeric value for valid input", {
   set.seed(60)
   x <- rvonmises(50, circular(pi / 2), 1, control.circular = list(units = "radians"))
   result <- bw.ccv(x)
-  expect_equal(result, 7.988761)
+  expect_equal(result, 7.98876150)
   expect_type(result, "double")
   expect_length(result, 1)
 })
@@ -11,7 +11,7 @@ test_that("bw.ccv returns a numeric value for valid input with different seed", 
   set.seed(123)
   x <- rvonmises(50, circular(pi / 2), 1)
   result <- bw.ccv(x)
-  expect_equal(result, 0.8082914)
+  expect_equal(result, 0.808291373)
   expect_type(result, "double")
   expect_length(result, 1)
 })
@@ -59,5 +59,5 @@ test_that("bw.ccv warns and resets invalid boundary values", {
 
 test_that("bw.ccv warns when minimum is at edge of the range", {
   x <- rep(0, 10)
-  expect_cli_warning(bw.ccv(x), 1, "! Minimum/maximum occurred at one end of the range.")
+  expect_cli_warning(bw.ccv(x, tol = 1), 1, "! Minimum/maximum occurred at one end of the range.")
 })

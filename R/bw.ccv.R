@@ -72,7 +72,7 @@ bw.ccv <- function(x,
   if (!is.numeric(lower)) {
     cli::cli_alert_warning(
       c(
-        "Argument {.var lower} must be numeric.",
+        "Argument {.var lower} must be numeric. ",
         "Default value 0 for lower boundary was used."
       )
     )
@@ -81,7 +81,7 @@ bw.ccv <- function(x,
   if (!is.numeric(upper)) {
     cli::cli_alert_warning(
       c(
-        "Argument {.var upper} must be numeric.",
+        "Argument {.var upper} must be numeric. ",
         "Default value 60 for upper boundary was used."
       )
     )
@@ -90,8 +90,8 @@ bw.ccv <- function(x,
   if (lower < 0 | lower >= upper) {
     cli::cli_alert_warning(
       c(
-        "The boundaries must be positive numbers and 'lower' must be smaller that 'upper'",
-        "Default boundaries lower=0, upper=60 were used"
+        "The boundaries must be positive numbers and 'lower' must be smaller that 'upper'. ",
+        "Default boundaries lower=0, upper=60 were used."
       )
     )
     lower <- 0
@@ -151,7 +151,8 @@ bw.ccv <- function(x,
     x = x
   )$minimum
   if (bw < lower + tol | bw > upper - tol) {
-    cli::cli_alert_warning("Minimum/maximum occurred at one end of the range")
+    cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
   }
   return(bw)
 }
+
