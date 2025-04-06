@@ -10,6 +10,10 @@
 #' @export
 #'
 #' @examples something
+#'
+#' @importFrom circular conversion.circular
+#' @importFrom stats optimize
+#' @import cli
 bw.lscvg <- function(x,
                      g = 4,
                      lower = 0,
@@ -21,6 +25,14 @@ bw.lscvg <- function(x,
       c("{.var x} must be a non-empty object.", "x" = "You've supplied an object of length {n}.")
     )
   }
+  if (!is.numeric(x)) {
+    if (all(is.na(x))) {
+      cli::cli_abort("{.var x} contains all missing values.")
+    }
+    cli::cli_abort(
+      c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
+    )
+  }
   x <- conversion.circular(
     x,
     units = "radians",
@@ -29,22 +41,13 @@ bw.lscvg <- function(x,
     modulo = "2pi"
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
-  if (!is.numeric(x)) {
-    cli::cli_abort(
-      c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
-    )
-  }
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
     x <- x[!is.na(x)]
   }
-  n <- length(x)
-  if (n == 0) {
-    cli_abort("{.var x} is after removal of length {.var n}.", )
-  }
   if (!is.numeric(g)) {
     cli::cli_alert_warning(c(
-      "Argument {.var g} must be numeric.",
+      "Argument {.var g} must be numeric. ",
       "Default value 4 for coefficient was used."
     ))
     g <- 4
@@ -52,16 +55,16 @@ bw.lscvg <- function(x,
   if (!is.numeric(lower)) {
     cli::cli_alert_warning(
       c(
-        "Argument {.var lower} must be numeric.",
+        "Argument {.var lower} must be numeric. ",
         "Default value 0 for lower boundary was used."
       )
     )
-    upper <- 0
+    lower <- 0
   }
   if (!is.numeric(upper)) {
     cli::cli_alert_warning(
       c(
-        "Argument {.var upper} must be numeric.",
+        "Argument {.var upper} must be numeric. ",
         "Default value 60 for upper boundary was used."
       )
     )
@@ -70,8 +73,8 @@ bw.lscvg <- function(x,
   if (lower < 0 | lower >= upper) {
     cli::cli_alert_warning(
       c(
-        "The boundaries must be positive numbers and 'lower' must be smaller that 'upper'",
-        "Default boundaries lower=0, upper=60 were used"
+        "The boundaries must be positive numbers and 'lower' must be smaller that 'upper'. ",
+        "Default boundaries lower=0, upper=60 were used."
       )
     )
     lower <- 0
@@ -116,7 +119,10 @@ bw.lscvg <- function(x,
     g = g
   )$minimum
   if (bw < lower + tol | bw > upper - tol) {
-    cli::cli_alert_warning("Minimum/maximum occurred at one end of the range")
+    cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
   }
   return(bw)
 }
+
+
+bw.lscvg(x, lower = -5)

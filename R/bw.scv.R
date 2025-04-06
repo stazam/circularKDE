@@ -1,4 +1,4 @@
-#' Title
+#' Hahah
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is coerced to class circular.
 #' @param np Number of points where to evaluate the estimator for numerical integration. Default np=75.
@@ -10,7 +10,6 @@
 #' @export
 #'
 #' @examples something
-
 bw.scv <- function(x,
                    np = 75,
                    lower = 0,

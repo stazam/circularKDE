@@ -91,12 +91,14 @@ density.adaptive.circular <- function(x,
   return(y)
 }
 
+#' @export
 density.hat <- function(z, x, bw) {
   n <- length(x)
   y <- 1 / (2 * n * pi * besselI(bw, 0)) * sum(exp (bw * cos(z - x)))
   return(y)
 }
 
+#' @export
 local.factor <- function(x,
                          bw0,
                          alpha = 0.5,

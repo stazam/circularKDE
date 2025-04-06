@@ -25,4 +25,5 @@ Title
 }
 \examples{
 something
+
 }
