@@ -4,8 +4,8 @@ test_that("density.adaptive.circular returns a numeric vector for valid input",
             x <- rvonmises(50, circular(pi / 2), 1, control.circular = list(units = "radians"))
             result <- density.adaptive.circular(x, bw0 = 1)
             expect_type(result, "double")
-            expect_length(result, 500)  # Default n = 500
-            expect_true(all(is.finite(result)))  # Ensure all values are finite
+            expect_length(result, 500)
+            expect_true(all(is.finite(result)))
           })
 
 test_that(
@@ -15,8 +15,8 @@ test_that(
     x <- rvonmises(50, circular(pi / 2), 1)
     result <- density.adaptive.circular(x, bw0 = 1)
     expect_type(result, "double")
-    expect_length(result, 500)  # Default n = 500
-    expect_true(all(is.finite(result)))  # Ensure all values are finite
+    expect_length(result, 500)
+    expect_true(all(is.finite(result)))
   }
 )
 
