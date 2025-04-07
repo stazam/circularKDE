@@ -50,7 +50,7 @@ bw.scv <- function(x,
   n <- length(x)
   if (n == 0) {
     cli::cli_abort(
-      c("{.var x} must be a non-empty object.", "x" = "You've supplied an object of length {n}.")
+      c("{.var x} must be a non-empty object. ", "x" = "You've supplied an object of length {n}.")
     )
   }
   if (!is.numeric(x)) {
@@ -58,7 +58,7 @@ bw.scv <- function(x,
       cli::cli_abort("{.var x} contains all missing values.")
     }
     cli::cli_abort(
-      c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
+      c("{.var x} must be a numeric vector. ", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
   x <- conversion.circular(
@@ -70,13 +70,13 @@ bw.scv <- function(x,
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
-    cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
   if (!is.numeric(np)) {
     cli::cli_alert_warning(
       c(
-        "Argument {.var np} must be numeric.",
+        "Argument {.var np} must be numeric. ",
         "Default value 75 for number of points for evalutaion of numerical integration was used."
       )
     )
@@ -85,7 +85,7 @@ bw.scv <- function(x,
   if (!is.numeric(lower)) {
     cli::cli_alert_warning(
       c(
-        "Argument {.var lower} must be numeric.",
+        "Argument {.var lower} must be numeric. ",
         "Default value 0 for lower boundary was used."
       )
     )
@@ -94,7 +94,7 @@ bw.scv <- function(x,
   if (!is.numeric(upper)) {
     cli::cli_alert_warning(
       c(
-        "Argument {.var upper} must be numeric.",
+        "Argument {.var upper} must be numeric. ",
         "Default value 60 for upper boundary was used."
       )
     )
@@ -103,8 +103,8 @@ bw.scv <- function(x,
   if (lower < 0 | lower >= upper) {
     cli::cli_alert_warning(
       c(
-        "The boundaries must be positive numbers and 'lower' must be smaller that 'upper'",
-        "Default boundaries lower=0, upper=60 were used"
+        "The boundaries must be positive numbers and 'lower' must be smaller that 'upper'. ",
+        "Default boundaries lower=0, upper=60 were used."
       )
     )
     lower <- 0
@@ -118,7 +118,7 @@ bw.scv <- function(x,
     x = x
   )$minimum
   if (bw < lower + tol | bw > upper - tol) {
-    cli::cli_alert_warning("Minimum/maximum occurred at one end of the range")
+    cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
   }
   return(bw)
 }
