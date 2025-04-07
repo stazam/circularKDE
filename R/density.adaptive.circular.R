@@ -82,12 +82,14 @@ density.adaptive.circular <- function(x,
     main.part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)))
     return(factor * main.part)
   }
-  y <- sapply(z,
-              density.est,
-              x = x,
-              bw0 = bw0,
-              alpha = alpha,
-              type = type)
+  y <- sapply(
+    z,
+    density.est,
+    x = x,
+    bw0 = bw0,
+    alpha = alpha,
+    type = type
+  )
   return(y)
 }
 

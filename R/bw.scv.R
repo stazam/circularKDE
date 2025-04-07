@@ -41,7 +41,6 @@
 #' @importFrom circular conversion.circular
 #' @importFrom stats optimize
 #' @import cli
-
 bw.scv <- function(x,
                    np = 75,
                    lower = 0,
@@ -126,86 +125,90 @@ bw.scv <- function(x,
 
 
 #              FISRT PART
-trapezoidal.rule <- function(f,m,thetas,mu){
+trapezoidal.rule <- function(f, m, thetas, mu) {
+  h <- 2 * pi / m
+  knots <- seq(0, 2 * pi, length = m)
 
-  h <- 2*pi / m
-  knots <- seq(0,2 * pi, length = m)
-
-  val <- 2*f(mu,knots,thetas)
+  val <- 2 * f(mu, knots, thetas)
   val <- sum(val) - val[1] - val[m]
 
-  return ( 1/2 * h * val )
+  return (1 / 2 * h * val)
 }
 
 
-first <- function(mu,theta,thetas){
+first <- function(mu, theta, thetas) {
+  first <- besselI(mu * sqrt(2 * (1 + cos(theta - thetas[1]))), 0)
+  second <- besselI(mu * sqrt(2 * (1 + cos(theta - thetas[2]))), 0)
 
-  first <- besselI(mu*sqrt(2*(1+ cos(theta - thetas[1]))),0)
-  second <- besselI(mu*sqrt(2*(1+ cos(theta - thetas[2]))),0)
-
-  return ( first * second )
+  return (first * second)
 }
 
 
 
-first.part <- function(thetas, m, mu){
-
+first.part <- function(thetas, m, mu) {
   n <- length(thetas)
-  factor <- 1 /  (4 * pi^2 * n * (n - 1) * besselI(mu,0)^4)
-  mat <- expand.grid(thetas,thetas)
-  mat <-  apply(mat, 1,trapezoidal.rule, f = first, m = m, mu  = mu )
-  mat[seq(1,length(mat),by = n+1)] <- 0
+  factor <- 1 /  (4 * pi ^ 2 * n * (n - 1) * besselI(mu, 0) ^ 4)
+  mat <- expand.grid(thetas, thetas)
+  mat <-  apply(mat,
+                1,
+                trapezoidal.rule,
+                f = first,
+                m = m,
+                mu  = mu)
+  mat[seq(1, length(mat), by = n + 1)] <- 0
   return(factor * sum(mat))
 }
 
 
 #              SECOND PART
-second <- function(mu,theta,thetas){
+second <- function(mu, theta, thetas) {
+  first_part <- besselI(mu * sqrt(2 * (1 + cos(theta - thetas[1]))), 0)
+  second_part <- exp(mu * cos(theta - thetas[2]))
 
-
-  first_part <- besselI(mu*sqrt(2*(1+ cos(theta - thetas[1]))),0)
-  second_part <- exp(mu*cos(theta - thetas[2]))
-
-  return ( first_part * second_part )
+  return (first_part * second_part)
 
 }
 
 
 
-second.part <- function(thetas,m,mu){
-
+second.part <- function(thetas, m, mu) {
   n <- length(thetas)
 
-  factor <- 1/(2*n*(n-1)*pi^2 * besselI(mu,0)^3)
+  factor <- 1 / (2 * n * (n - 1) * pi ^ 2 * besselI(mu, 0) ^ 3)
 
-  mat <- expand.grid(thetas,thetas)
-  mat <-  apply(mat, 1,trapezoidal.rule, f = second, m = m, mu  = mu )
-  mat[seq(1,length(mat),by = n+1)] <- 0
-  return(  factor *  sum(mat)  )
+  mat <- expand.grid(thetas, thetas)
+  mat <-  apply(mat,
+                1,
+                trapezoidal.rule,
+                f = second,
+                m = m,
+                mu  = mu)
+  mat[seq(1, length(mat), by = n + 1)] <- 0
+  return(factor *  sum(mat))
 
 }
 
 
 #              THIRD PART
-third.part <- function(thetas,mu){
-
+third.part <- function(thetas, mu) {
   n <- length(thetas)
 
-  factor <- 1 / ( 2 * n * (n - 1) * pi * besselI(mu,0)^2)
-  part <- besselI(mu * sqrt(2 * (1 + cos(outer(thetas, thetas, '-')))),0)
+  factor <- 1 / (2 * n * (n - 1) * pi * besselI(mu, 0) ^ 2)
+  part <- besselI(mu * sqrt(2 * (1 + cos(
+    outer(thetas, thetas, '-')
+  ))), 0)
 
-  return(  factor *  sum(part- diag(diag(part)))  )
+  return(factor *  sum(part - diag(diag(part))))
 
 }
 
 
-scv <- function(mu,np,x){
-
+scv <- function(mu, np, x) {
   n <- length(x)
-  first.part <- x %>% first.part(np,mu)
-  second.part <- x %>% second.part(np,mu)
+  first.part <- x %>% first.part(np, mu)
+  second.part <- x %>% second.part(np, mu)
   third.part <- x %>% third.part(mu)
 
-  return((first.part - second.part + third.part) + besselI(2*mu,0)/(2*n*pi*besselI(mu,0)^2))
+  return((first.part - second.part + third.part) + besselI(2 * mu, 0) /
+           (2 * n * pi * besselI(mu, 0) ^ 2))
 }
-
