@@ -1,15 +1,47 @@
-#' Hahah
+#' Compute the Optimal Bandwidth for Circular Data using Smoothed Cross-Validation
 #'
-#' @param x Data from which the smoothing parameter is to be computed. The object is coerced to class circular.
-#' @param np Number of points where to evaluate the estimator for numerical integration. Default np=75.
-#' @param lower Lower boundary of the interval to be used in the search for the value of the smoothing parameter. Default value lower=0.
-#' @param upper Upper boundary of the interval to be used in the search for the value of the smoothing parameter. Default value upper=60.
-#' @param tol Convergence tolerance for optimize.
+#' This function computes the optimal smoothing parameter (bandwidth) for circular data
+#' using a smoothed cross-validation (SCV) method (see <doi:doi.org/10.1007/s00180-023-01401-0>).
+#' It searches for the value of the smoothing parameter `nu` that minimizes the SCV criterion within the
+#' specified interval `[lower, upper]`.
 #'
-#' @return something
+#' @param x Data from which the smoothing parameter is to be computed. The object is
+#'   coerced to a numeric vector in radians using `circular::conversion.circular`.
+#'   Can be a numeric vector or an object of class `circular`.
+#' @param np An integer specifying the number of points used in numerical integration
+#'   to evaluate the SCV criterion. A higher number increases precision but also
+#'   computational cost. Default is 75.
+#' @param lower Lower boundary of the interval for the optimization of the smoothing
+#'   parameter `mu`. Must be a positive numeric value smaller than `upper`.
+#'   Default is 0.
+#' @param upper Upper boundary of the interval for the optimization of the smoothing
+#'   parameter `mu`. Must be a positive numeric value greater than `lower`.
+#'   Default is 60.
+#' @param tol Convergence tolerance used in the `optimize` function. Determines how
+#'   precisely the optimal value is estimated. Default is 0.1.
+#'
+#' @return The computed optimal smoothing parameter `mu`, the numeric value
+#' that minimizes the smoothed cross-validation criterion.
+#'
 #' @export
 #'
-#' @examples something
+#' @examples
+#' # Example with numeric data in radians
+#' set.seed(123)
+#' x <- runif(100, 0, 2 * pi)
+#' bw <- bw.scv(x)
+#' print(bw)
+#'
+#' # Example with circular data
+#' library(circular)
+#' x_circ <- rvonmises(100, mu = circular(0), kappa = 2)
+#' bw <- bw.scv(x_circ)
+#' print(bw)
+#'
+#' @importFrom circular conversion.circular
+#' @importFrom stats optimize
+#' @import cli
+
 bw.scv <- function(x,
                    np = 75,
                    lower = 0,
