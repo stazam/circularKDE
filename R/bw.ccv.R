@@ -155,4 +155,3 @@ bw.ccv <- function(x,
   }
   return(bw)
 }
-

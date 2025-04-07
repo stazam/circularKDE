@@ -152,7 +152,3 @@ bw.lscvg <- function(x,
   }
   return(bw)
 }
-
-
-
-
