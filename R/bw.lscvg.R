@@ -1,8 +1,8 @@
 #' Compute the Optimal Bandwidth for Circular Data using Generalized Least Squares Cross-Validation
 #'
 #' This function computes the optimal smoothing parameter (bandwidth) for circular data
-#' using a generalized least squares cross-validation method. It searches for the value of the
-#' smoothing parameter `nu` that minimizes the cross-validation criterion within the
+#' using a generalized least squares cross-validation method (see <doi:10.1007/s00180-023-01401-0>).
+#' It searches for the value of the smoothing parameter `nu` that minimizes the cross-validation criterion within the
 #' specified interval `[lower, upper]`.
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
