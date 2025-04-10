@@ -76,33 +76,33 @@ density.adaptive.circular <- function(x,
   x <- conversion.circular(
     x,
     units = "radians",
-    zero = 0,
+    zero = circular(0),
     rotation = "counter",
     modulo = "2pi"
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
-    cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
   if (!is.numeric(from)) {
-    cli_abort("{.var from} must be a numeric argument")
+    cli_abort("{.var from} must be a numeric argument.")
   }
   if (!is.finite(from)) {
-    cli_abort("{.var from} must be a non-fininte argument")
+    cli_abort("{.var from} must be a non-fininte argument.")
   }
   if (!is.numeric(to)) {
-    cli_abort("{.var from} must be a numeric argument")
+    cli_abort("{.var from} must be a numeric argument.")
   }
   if (!is.finite(to)) {
-    cli_abort("{.var from} must be a non-fininte argument")
+    cli_abort("{.var from} must be a non-fininte argument.")
   }
   n <- round(n)
   if (!is.numeric(n)) {
-    cli_abort("{.var from} must be a numeric argument")
+    cli_abort("{.var from} must be a numeric argument.")
   }
   if (n <= 0) {
-    cli_abort("argument 'n' must be integer and positive")
+    cli_abort("argument 'n' must be integer and positive.")
   }
   if (is.null(z)) {
     z <- circular(seq(
