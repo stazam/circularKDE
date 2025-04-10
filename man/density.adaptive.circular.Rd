@@ -2,7 +2,7 @@
 % Please edit documentation in R/density.adaptive.circular.R
 \name{density.adaptive.circular}
 \alias{density.adaptive.circular}
-\title{Title}
+\title{Adaptive Circular Kernel Density Estimation}
 \usage{
 \method{density}{adaptive.circular}(
   x,
@@ -16,28 +16,60 @@
 )
 }
 \arguments{
-\item{x}{something}
+\item{x}{Data for which the density is to be estimated. The object is coerced to a
+numeric vector in radians using \code{circular::conversion.circular}. Can be a numeric
+vector or an object of class \code{circular}.}
 
-\item{bw0}{something}
+\item{bw0}{Global bandwidth parameter, a positive numeric value that sets the
+baseline smoothness of the density estimate. Controls the overall scale of the
+kernel.}
 
-\item{alpha}{something}
+\item{alpha}{Numeric scalar between 0 and 1 (default is 0.5) that determines the
+sensitivity of the local bandwidth adaptation. Higher values increase the
+influence of local data density on the bandwidth.}
 
-\item{type}{something}
+\item{type}{Character string specifying the method for calculating the local
+adaptation factor (default is "n"). Options depend on the implementation of the
+\code{local.factor} function (not shown here).}
 
-\item{z}{something}
+\item{z}{Optional numeric vector of points at which to evaluate the density. If
+\code{NULL} (default), a grid of \code{n} equally spaced points between \code{from} and \code{to} is
+generated automatically.}
 
-\item{from}{something}
+\item{from}{Starting point of the evaluation range, a numeric value in radians.
+Must be finite. Default is \code{circular(0)} (0 radians).}
 
-\item{to}{something}
+\item{to}{Ending point of the evaluation range, a numeric value in radians. Must
+be finite. Default is \code{circular(2 * pi)} (2π radians).}
 
-\item{n}{something}
+\item{n}{Positive integer specifying the number of evaluation points (default is
+500). Ignored if \code{z} is provided. Determines the resolution of the density
+estimate when \code{z} is \code{NULL}.}
 }
 \value{
-something
+A numeric vector of length equal to the length of \code{z} (or \code{n} if \code{z} is
+\code{NULL}), containing the estimated density values at each evaluation point.
 }
 \description{
-Title
+This function computes an adaptive kernel density estimate for circular data,
+adjusting the bandwidth locally based on a global bandwidth parameter and data
+density (see \url{doi:10.1007/s00180-023-01401-0}). The density is evaluated over
+a specified range of points between \code{from} and \code{to}, using a local adaptation
+factor to refine the estimate.
 }
 \examples{
-something
+# Example with numeric data in radians
+x_circ <- runif(100, 0, 2 * pi)
+bw0 <- bw.lscvg(x = x_circ)
+dens <- density.adaptive.circular(x, bw0 = bw0)
+plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
+     main = "Adaptive Circular Density")
+
+# Example with circular data and custom evaluation points
+x_circ <- rvonmises(100, mu = circular(0), kappa = 1)
+bw0 <- bw.lscvg(x = x_circ)
+z <- seq(0, 2 * pi, length.out = 200)
+dens <- density.adaptive.circular(x_circ, bw0 = 0.5, z = z)
+plot(z, dens, type = "l", main = "Density with Custom Points")
+
 }
