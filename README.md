@@ -1,6 +1,6 @@
 ---
 title: "README"
-author: "stanislav zamecnik"
+author: "Stanislav Zámečník"
 date: "15 04 2025"
 output:
   html_document: default
