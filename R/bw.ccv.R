@@ -100,49 +100,40 @@ bw.ccv <- function(x,
 
   ccv <- function(x, nu) {
     n <- length(x)
-    grid <- outer(x, x, '-')
+    grid <- outer(x, x, "-")
 
-    factor2.1 <- 1  / (2 * pi * n ^ 2 * besselI(nu, 0) ^ 2)
-    part2 <- factor2.1 * sum(besselI(nu * sqrt(2 * (1 + cos(
-      grid
-    ))), 0))
+    bI0 <- besselI(nu, 0)
+    bI1 <- besselI(nu, 1)
+    bI2 <- besselI(nu, 2)
 
+    cos_grid <- cos(grid)
+    sin_grid <- sin(grid)
+    exp_nu_cos <- exp(nu * cos_grid)
 
-    factor3.1 <-  1 / (n * (n - 1))
-    factor3.2 <- 1 / (2 * pi * besselI(nu, 0))
-    part3 <- factor3.1 * factor3.2 *  (sum(exp(nu * cos(grid))) - sum(exp(nu * cos(rep(
-      0, n
-    )))))
+    cos0 <- 1
+    sin0 <- 0
+    exp0 <- exp(nu * cos0)
 
+    factor2 <- 1 / (2 * pi * n^2 * bI0^2)
+    part2 <- factor2 * sum(besselI(nu * sqrt(2 * (1 + cos_grid)), 0))
 
-    factor4.1 <- 1 / (2 * nu)
-    factor4.2 <- besselI(nu, 1) / besselI(nu, 0)
-    factor4.3 <- 1 / (2 * pi * besselI(nu, 0) * n * (n - 1))
-    argument4.1 <- exp(nu * cos(grid)) * (nu ^ 2 * sin(grid) ^ 2 - nu * cos(grid))
-    argument4.2 <- exp(nu * cos(rep(0, n))) * (nu ^ 2 * sin(rep(0, n)) ^
-                                                 2 - nu * cos(rep(0, n)))
-    part4 <- -factor4.1 * factor4.2 * factor4.3 * (sum(argument4.1) - sum(argument4.2))
+    factor3 <- 1 / (n * (n - 1) * 2 * pi * bI0)
+    part3 <- factor3 * (sum(exp_nu_cos) - n * exp0)
 
+    factor4 <- (1 / (2 * nu)) * (bI1 / bI0) * (1 / (2 * pi * bI0 * n * (n - 1)))
+    arg4 <- exp_nu_cos * (nu^2 * sin_grid^2 - nu * cos_grid)
+    arg4_0 <- exp0 * (-nu)
+    part4 <- -factor4 * (sum(arg4) - n * arg4_0)
 
-    factor5.1 <- 1 / (8 * nu ^ 2)
-    factor5.2 <- (2 * (besselI(nu, 1) / besselI(nu, 0)) ^ 2 - besselI(nu, 2) / besselI(nu, 0))
-    factor5.3 <- 1 / (2 * pi * besselI(nu, 0) * n * (n - 1))
+    factor5 <- (1 / (8 * nu^2)) * (2 * (bI1 / bI0)^2 - bI2 / bI0) * (1 / (2 * pi * bI0 * n * (n - 1)))
+    arg5 <- exp_nu_cos * (nu^4 * sin_grid^4 - 6 * nu^3 * sin_grid^2 * cos_grid +
+                            3 * nu^2 * (cos_grid^2 - sin_grid^2) - nu^2 * sin_grid^2 + nu * cos_grid)
 
-    argument5.1 <- exp(nu * cos(grid)) * (
-      nu ^ 4 * sin(grid) ^ 4 - 6 * nu ^ 3 * sin(grid) ^ 2 * cos(grid) +
-        3 * nu ^ 2 * (cos(grid) ^ 2 - sin(grid) ^
-                        2) - nu ^ 2 * sin(grid) ^ 2  + nu * cos(grid)
-    )
-    argument5.2 <- exp(nu * cos(rep(0, n))) * (
-      nu ^ 4 * sin(rep(0, n)) ^ 4 - 6 * nu ^ 3 * sin(rep(0, n)) ^ 2 * cos(rep(0, n)) +
-        3 * nu ^ 2 * (cos(rep(0, n)) ^
-                        2 - sin(rep(0, n)) ^ 2) - nu ^ 2 * sin(rep(0, n)) ^ 2  + nu * cos(rep(0, n))
-    )
+    arg5_0 <- exp0 * (3 * nu^2 + nu)
+    part5 <- factor5 * (sum(arg5) - n * arg5_0)
 
-    part5 <- factor5.1 * factor5.2 * factor5.3 * (sum(argument5.1) - sum(argument5.2))
-
-    output <- part2 - part3 + part4 + part5
-    return(output)
+    result <- part2 - part3 + part4 + part5
+    return(result)
   }
   bw <- optimize(
     ccv,
