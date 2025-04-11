@@ -120,16 +120,16 @@ bw.lscvg <- function(x,
     b0_nu_g    <- besselI(nu / g, 0)
     b0_nu_half <- besselI(nu / 2, 0)
 
-    part1 <- b0_2nu / (2 * pi * n * (b0_nu^2))
+    part1 <- b0_2nu / (2 * pi * n * (b0_nu ^ 2))
 
-    s1 <- sum(exp((nu/g) * cos_grid)) - n * exp(nu / g)
+    s1 <- sum(exp((nu / g) * cos_grid)) - n * exp(nu / g)
     part2 <- (2 / (g * (g - 2))) * (1 / (2 * pi * b0_nu_g)) * s1
 
     sqrt_term <- nu * sqrt(2 * (1 + cos_grid))
     s2 <- sum(besselI(sqrt_term, 0)) - n * b0_2nu
-    part3 <- ((n - 1) / n) * (1 / (2 * pi * (b0_nu^2))) * s2
+    part3 <- ((n - 1) / n) * (1 / (2 * pi * (b0_nu ^ 2))) * s2
 
-    s3 <- sum(exp((nu/2) * cos_grid)) - n * exp(nu / 2)
+    s3 <- sum(exp((nu / 2) * cos_grid)) - n * exp(nu / 2)
     part4 <- ((g - 1) / (g - 2)) * (1 / (2 * pi * b0_nu_half)) * s3
 
     output <- part1 + (part2 + part3 - part4) / (n * (n - 1))
