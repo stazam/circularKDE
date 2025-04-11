@@ -114,22 +114,25 @@ bw.ccv <- function(x,
     sin0 <- 0
     exp0 <- exp(nu * cos0)
 
-    factor2 <- 1 / (2 * pi * n^2 * bI0^2)
+    factor2 <- 1 / (2 * pi * n ^ 2 * bI0 ^ 2)
     part2 <- factor2 * sum(besselI(nu * sqrt(2 * (1 + cos_grid)), 0))
 
     factor3 <- 1 / (n * (n - 1) * 2 * pi * bI0)
     part3 <- factor3 * (sum(exp_nu_cos) - n * exp0)
 
     factor4 <- (1 / (2 * nu)) * (bI1 / bI0) * (1 / (2 * pi * bI0 * n * (n - 1)))
-    arg4 <- exp_nu_cos * (nu^2 * sin_grid^2 - nu * cos_grid)
+    arg4 <- exp_nu_cos * (nu ^ 2 * sin_grid ^ 2 - nu * cos_grid)
     arg4_0 <- exp0 * (-nu)
     part4 <- -factor4 * (sum(arg4) - n * arg4_0)
 
-    factor5 <- (1 / (8 * nu^2)) * (2 * (bI1 / bI0)^2 - bI2 / bI0) * (1 / (2 * pi * bI0 * n * (n - 1)))
-    arg5 <- exp_nu_cos * (nu^4 * sin_grid^4 - 6 * nu^3 * sin_grid^2 * cos_grid +
-                            3 * nu^2 * (cos_grid^2 - sin_grid^2) - nu^2 * sin_grid^2 + nu * cos_grid)
+    factor5 <- (1 / (8 * nu ^ 2)) * (2 * (bI1 / bI0) ^ 2 - bI2 / bI0) * (1 / (2 * pi * bI0 * n * (n - 1)))
+    arg5 <- exp_nu_cos * (
+      nu ^ 4 * sin_grid ^ 4 - 6 * nu ^ 3 * sin_grid ^ 2 * cos_grid +
+        3 * nu ^ 2 * (cos_grid ^ 2 - sin_grid ^ 2) - nu ^
+        2 * sin_grid ^ 2 + nu * cos_grid
+    )
 
-    arg5_0 <- exp0 * (3 * nu^2 + nu)
+    arg5_0 <- exp0 * (3 * nu ^ 2 + nu)
     part5 <- factor5 * (sum(arg5) - n * arg5_0)
 
     result <- part2 - part3 + part4 + part5
