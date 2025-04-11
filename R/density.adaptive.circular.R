@@ -73,17 +73,18 @@ density.adaptive.circular <- function(x,
       c("{.var x} must be a numeric vector.", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
-  x <- conversion.circular(
+  x.circular <- conversion.circular(
     x,
+    type = "angles",
     units = "radians",
     zero = circular(0),
     rotation = "counter",
-    modulo = "2pi"
+    modulo = "2pi",
   )
-  attr(x, "class") <- attr(x, "circularp") <- NULL
-  if (any(is.na(x))) {
-    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
-    x <- x[!is.na(x)]
+  attr(x.circular, "class") <- attr(x.circular, "circularp") <- NULL
+  if (any(is.na(x.circular))) {
+    cli::cli_alert_warning("{.var x.circular} contains missing values, which will be removed.")
+    x.circular <- x.circular[!is.na(x.circular)]
   }
   if (!is.numeric(from) | !is.finite(from)) {
     cli_abort("Argument {.var from} must be finite numeric value.")
@@ -115,10 +116,12 @@ density.adaptive.circular <- function(x,
   y <- sapply(
     z,
     density.est,
-    x = x,
+    x = x.circular,
     bw0 = bw0,
     alpha = alpha,
     type = type
   )
   return(y)
 }
+
+
