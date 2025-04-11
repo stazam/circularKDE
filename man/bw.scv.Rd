@@ -2,27 +2,51 @@
 % Please edit documentation in R/bw.scv.R
 \name{bw.scv}
 \alias{bw.scv}
-\title{Hahah}
+\title{Compute the Optimal Bandwidth for Circular Data using Smoothed Cross-Validation}
 \usage{
 bw.scv(x, np = 75, lower = 0, upper = 60, tol = 0.1)
 }
 \arguments{
-\item{x}{Data from which the smoothing parameter is to be computed. The object is coerced to class circular.}
+\item{x}{Data from which the smoothing parameter is to be computed. The object is
+coerced to a numeric vector in radians using \code{circular::conversion.circular}.
+Can be a numeric vector or an object of class \code{circular}.}
 
-\item{np}{Number of points where to evaluate the estimator for numerical integration. Default np=75.}
+\item{np}{An integer specifying the number of points used in numerical integration
+to evaluate the SCV criterion. A higher number increases precision but also
+computational cost. Default is 75.}
 
-\item{lower}{Lower boundary of the interval to be used in the search for the value of the smoothing parameter. Default value lower=0.}
+\item{lower}{Lower boundary of the interval for the optimization of the smoothing
+parameter \code{mu}. Must be a positive numeric value smaller than \code{upper}.
+Default is 0.}
 
-\item{upper}{Upper boundary of the interval to be used in the search for the value of the smoothing parameter. Default value upper=60.}
+\item{upper}{Upper boundary of the interval for the optimization of the smoothing
+parameter \code{mu}. Must be a positive numeric value greater than \code{lower}.
+Default is 60.}
 
-\item{tol}{Convergence tolerance for optimize.}
+\item{tol}{Convergence tolerance used in the \code{optimize} function. Determines how
+precisely the optimal value is estimated. Default is 0.1.}
 }
 \value{
-something
+The computed optimal smoothing parameter \code{mu}, the numeric value
+that minimizes the smoothed cross-validation criterion.
 }
 \description{
-Hahah
+This function computes the optimal smoothing parameter (bandwidth) for circular data
+using a smoothed cross-validation (SCV) method (see \url{doi:doi.org/10.1007/s00180-023-01401-0}).
+It searches for the value of the smoothing parameter \code{nu} that minimizes the SCV criterion within the
+specified interval \verb{[lower, upper]}.
 }
 \examples{
-something
+# Example with numeric data in radians
+set.seed(123)
+x <- runif(100, 0, 2 * pi)
+bw <- bw.scv(x)
+print(bw)
+
+# Example with circular data
+library(circular)
+x_circ <- rvonmises(100, mu = circular(0), kappa = 2)
+bw <- bw.scv(x_circ)
+print(bw)
+
 }
