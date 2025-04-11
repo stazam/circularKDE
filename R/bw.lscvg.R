@@ -113,31 +113,26 @@ bw.lscvg <- function(x,
   lscvg <- function(x, nu, g) {
     n <- length(x)
     grid <- outer(x, x, '-')
+    cos_grid <- cos(grid)
 
-    part1 <- 1 / n * besselI(2 * nu, 0) / (2 * pi * besselI(nu, 0) ^ 2)
+    b0_nu      <- besselI(nu, 0)
+    b0_2nu     <- besselI(2 * nu, 0)
+    b0_nu_g    <- besselI(nu / g, 0)
+    b0_nu_half <- besselI(nu / 2, 0)
 
-    factor2.1 <- 2 / (g * (g - 2))
-    factor2.2 <-  1 / (2 * pi * besselI(nu / g, 0))
-    part2 <- factor2.1 * factor2.2 * (sum(exp(nu / g * cos(grid))) - sum(exp(nu / g * cos(rep(
-      0, n
-    )))))
+    part1 <- b0_2nu / (2 * pi * n * (b0_nu^2))
 
-    factor3.1 <- (n - 1) / n
-    factor3.2 <-  1 / (2 * pi * besselI(nu, 0) ^ 2)
-    part3 <- factor3.1 * factor3.2 * (sum(besselI(nu * sqrt(2 * (
-      1 + cos(grid)
-    )), 0)) - sum(besselI(nu * sqrt(2 * (
-      1 + cos(rep(0, n))
-    )), 0)))
+    s1 <- sum(exp((nu/g) * cos_grid)) - n * exp(nu / g)
+    part2 <- (2 / (g * (g - 2))) * (1 / (2 * pi * b0_nu_g)) * s1
 
+    sqrt_term <- nu * sqrt(2 * (1 + cos_grid))
+    s2 <- sum(besselI(sqrt_term, 0)) - n * b0_2nu
+    part3 <- ((n - 1) / n) * (1 / (2 * pi * (b0_nu^2))) * s2
 
-    factor4.1 <- (g - 1) / (g - 2)
-    factor4.2 <-  1 / (2 * pi * besselI(nu / 2, 0))
-    part4 <- factor4.1 * factor4.2 * (sum(exp(nu / 2 * cos(grid))) - sum(exp(nu / 2 * cos(rep(
-      0, n
-    )))))
+    s3 <- sum(exp((nu/2) * cos_grid)) - n * exp(nu / 2)
+    part4 <- ((g - 1) / (g - 2)) * (1 / (2 * pi * b0_nu_half)) * s3
 
-    output <- part1 +  1 / (n * (n - 1)) * (part2 + part3 - part4)
+    output <- part1 + (part2 + part3 - part4) / (n * (n - 1))
     return(output)
   }
   bw <- optimize(
