@@ -59,10 +59,10 @@ density.adaptive.circular <- function(x,
                                       from = circular(0),
                                       to = circular(2 * pi),
                                       n = 500) {
-  n <- length(x)
-  if (n == 0) {
+  n_x <- length(x)
+  if (n_x == 0) {
     cli::cli_abort(
-      c("{.var x} must be a non-empty object.", "x" = "You've supplied an object of length {n}.")
+      c("{.var x} must be a non-empty object.", "x" = "You've supplied an object of length {n_x}.")
     )
   }
   if (!is.numeric(x)) {
@@ -70,7 +70,7 @@ density.adaptive.circular <- function(x,
       cli::cli_abort("{.var x} contains all missing values.")
     }
     cli::cli_abort(
-      c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
+      c("{.var x} must be a numeric vector.", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
   x <- conversion.circular(
@@ -85,24 +85,17 @@ density.adaptive.circular <- function(x,
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
-  if (!is.numeric(from)) {
-    cli_abort("{.var from} must be a numeric argument.")
+  if (!is.numeric(from) | !is.finite(from)) {
+    cli_abort("Argument {.var from} must be finite numeric value.")
   }
-  if (!is.finite(from)) {
-    cli_abort("{.var from} must be a non-fininte argument.")
+  if (!is.numeric(to) | !is.finite(to)) {
+    cli_abort("Argument {.var to} must be finite numeric value.")
   }
-  if (!is.numeric(to)) {
-    cli_abort("{.var from} must be a numeric argument.")
+  if (!is.numeric(n) | !is.finite(n)) {
+    cli_abort("Argument {.var n} must be finite numeric value.")
   }
-  if (!is.finite(to)) {
-    cli_abort("{.var from} must be a non-fininte argument.")
-  }
-  n <- round(n)
-  if (!is.numeric(n)) {
-    cli_abort("{.var from} must be a numeric argument.")
-  }
-  if (n <= 0) {
-    cli_abort("argument 'n' must be integer and positive.")
+  if (round(n) != n | n <= 0){
+    cli_abort("Argument {.var n} must be positive integer.")
   }
   if (is.null(z)) {
     z <- circular(seq(
