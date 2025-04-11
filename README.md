@@ -46,7 +46,7 @@ To use estimation by adaptive density function simply run
 library(circularKDE)
 
 bw <- bw.lscvg(x_circ)
-dens <- density.adaptive.circular(x, bw0 = bw0)
+dens <- density.adaptive.circular(x_circ, bw0 = bw)
 plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
       main = "Adaptive Circular Density")
 ```
