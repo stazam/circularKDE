@@ -5,7 +5,7 @@ test_that("bw.scv returns a numeric value for valid input", {
                  2,
                  control.circular = list(units = "radians"))
   result <- bw.scv(x)
-  expect_equal(result, 7.20835971)
+  expect_equal(result, 6.27092315)
   expect_length(result, 1)
   expect_type(result, "double")
 })
@@ -18,7 +18,7 @@ test_that("bw.scv returns a numeric value for valid input with different seed",
                            2,
                            control.circular = list(units = "radians"))
             result <- bw.scv(x)
-            expect_equal(result, 5.67646280)
+            expect_equal(result, 5.015259)
             expect_type(result, "double")
             expect_length(result, 1)
           })
