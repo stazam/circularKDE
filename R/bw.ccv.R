@@ -35,8 +35,8 @@
 #' bw <- bw.ccv(x)
 #' print(bw)
 #'
-#' @importFrom circular conversion.circular
 #' @importFrom stats optimize
+#' @import circular
 #' @import cli
 bw.ccv <- function(x,
                    lower = 0,

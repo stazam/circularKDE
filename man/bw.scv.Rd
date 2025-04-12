@@ -37,12 +37,10 @@ It searches for the value of the smoothing parameter \code{nu} that minimizes th
 specified interval \verb{[lower, upper]}.
 }
 \examples{
-# Example with numeric data in radians
+# Example with circular data
 library(circular)
 bw <- bw.scv(x)
 print(bw)
-# Example with circular data
-library(circular)
 x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 bw <- bw.scv(x)
 print(bw)

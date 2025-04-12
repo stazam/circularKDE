@@ -50,7 +50,7 @@
 #' dens <- density.adaptive.circular(x, bw0 = 0.5, z = z)
 #' plot(z, dens, type = "l", main = "Density with Custom Points")
 #'
-#' @importFrom circular conversion.circular
+#' @import circular
 #' @import cli
 density.adaptive.circular <- function(x,
                                       bw0,

@@ -34,14 +34,13 @@ smoothing parameter \code{nu} that minimizes the CCV criterion within a specifie
 \verb{[lower, upper]}.
 }
 \examples{
-# Example with numeric data in radians
+# Example with circular data
 library(circular)
 set.seed(123)
 x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 bw <- bw.ccv(x)
 print(bw)
 
-# Example with circular data
 x <- rvonmises(100, mu = circular(0), kappa = 1)
 bw <- bw.ccv(x)
 print(bw)

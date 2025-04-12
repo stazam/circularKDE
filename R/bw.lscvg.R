@@ -38,8 +38,8 @@
 #' bw <- bw.lscvg(x)
 #' print(bw)
 #'
-#' @importFrom circular conversion.circular
 #' @importFrom stats optimize
+#' @import circular
 #' @import cli
 bw.lscvg <- function(x,
                      g = 4,

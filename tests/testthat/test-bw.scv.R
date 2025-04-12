@@ -49,7 +49,7 @@ test_that("bw.scv handles non-numeric np", {
   expect_cli_warning(
     result <- bw.scv(x, np = "seventy-five"),
     1,
-    "! Argument `np` must be numeric. Default value 75 for number of points for evalutaion of numerical integration was used."
+    "! Argument `np` must be numeric. Default value 500 for number of points for evalutaion of numerical integration was used."
   )
   expect_type(result, "double")
 })

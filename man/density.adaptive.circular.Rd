@@ -10,8 +10,8 @@
   alpha = 0.5,
   type = "n",
   z = NULL,
-  from = circular(0),
-  to = circular(2 * pi),
+  from = 0,
+  to = 2 * pi,
   n = 500
 )
 }
@@ -59,17 +59,18 @@ factor to refine the estimate.
 }
 \examples{
 # Example with numeric data in radians
-x_circ <- runif(100, 0, 2 * pi)
-bw0 <- bw.lscvg(x = x_circ)
+library(circular)
+x <- rvonmises(100, mu = circular(0), kappa = 1)
+bw0 <- bw.lscvg(x = x)
 dens <- density.adaptive.circular(x, bw0 = bw0)
 plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
      main = "Adaptive Circular Density")
 
 # Example with circular data and custom evaluation points
-x_circ <- rvonmises(100, mu = circular(0), kappa = 1)
-bw0 <- bw.lscvg(x = x_circ)
+x <- rvonmises(100, mu = circular(0), kappa = 1)
+bw0 <- bw.lscvg(x = x)
 z <- seq(0, 2 * pi, length.out = 200)
-dens <- density.adaptive.circular(x_circ, bw0 = 0.5, z = z)
+dens <- density.adaptive.circular(x, bw0 = 0.5, z = z)
 plot(z, dens, type = "l", main = "Density with Custom Points")
 
 }

@@ -36,8 +36,8 @@
 #' bw <- bw.scv(x)
 #' print(bw)
 #'
-#' @importFrom circular conversion.circular
 #' @importFrom stats optimize
+#' @import circular
 #' @import cli
 bw.scv <- function(x,
                    np = 500,

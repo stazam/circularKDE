@@ -38,16 +38,15 @@ It searches for the value of the smoothing parameter \code{nu} that minimizes th
 specified interval \verb{[lower, upper]}.
 }
 \examples{
-# Example with numeric data in radians
+# Example with circular data
+library(circular)
 set.seed(123)
-x <- runif(100, 0, 2 * pi)
+x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 bw <- bw.lscvg(x)
 print(bw)
 
-# Example with circular data
-library(circular)
-x_circ <- rvonmises(100, mu = circular(0), kappa = 1)
-bw <- bw.lscvg(x_circ)
+x <- rvonmises(100, mu = circular(0), kappa = 1)
+bw <- bw.lscvg(x)
 print(bw)
 
 }
