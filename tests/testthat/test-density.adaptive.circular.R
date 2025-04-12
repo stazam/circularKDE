@@ -1,16 +1,18 @@
+#this one
 test_that("density.adaptive.circular returns a numeric vector for valid input",
           {
             density_vector <- c(
               0.212165846, 0.211115874, 0.140838460, 0.072948386, 0.212165846
             )
             set.seed(60)
-            x <- rvonmises(50, circular(pi / 2), 1, control.circular = list(units = "radians"))
+            x <- rvonmises(50, circular(pi / 2), 1)
             result <- density.adaptive.circular(x, bw0 = 1, n = 5)
             expect_type(result, "double")
             expect_equal(density_vector, result)
             expect_length(result, 5)
           })
 
+#this one
 test_that(
   "density.adaptive.circular returns a numeric vector for valid input with different seed",
   {
@@ -79,8 +81,6 @@ test_that("density.adaptive.circular throws error on non-numeric to", {
   }
 )
 
-
-# This one
 test_that("density.adaptive.circular throws error on invalid n", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_error(
@@ -104,7 +104,7 @@ test_that("density.adaptive.circular throws error on invalid n", {
 test_that("density.adaptive.circular uses custom z correctly", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
   z <- circular(seq(0, pi, length.out = 10))
-  result <- density.adaptive.circular(x, bw0 = 1, z = z)
+  result <- density.adaptive.circular(x, bw0 = 1, z=z)
   expect_type(result, "double")
   expect_length(result, 10)
   expect_true(all(is.finite(result)))
