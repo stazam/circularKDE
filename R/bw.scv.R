@@ -28,7 +28,7 @@
 #' @examples
 #' # Example with circular data
 #' library(circular)
-#  x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
+#' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 #' bw <- bw.scv(x)
 #' print(bw)
 #
