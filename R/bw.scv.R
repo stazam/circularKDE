@@ -26,14 +26,12 @@
 #' @export
 #'
 #' @examples
-#' # Example with numeric data in radians
+#' # Example with circular data
 #' library(circular)
 #  x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 #' bw <- bw.scv(x)
 #' print(bw)
 #
-#' # Example with circular data
-#' library(circular)
 #' x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 #' bw <- bw.scv(x)
 #' print(bw)
