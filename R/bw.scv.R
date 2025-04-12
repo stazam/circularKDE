@@ -156,5 +156,3 @@ bw.scv <- function(x,
   }
   return(bw)
 }
-
-

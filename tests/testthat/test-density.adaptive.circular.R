@@ -1,9 +1,10 @@
-#this one
 test_that("density.adaptive.circular returns a numeric vector for valid input",
           {
-            density_vector <- c(
-              0.212165846, 0.211115874, 0.140838460, 0.072948386, 0.212165846
-            )
+            density_vector <- c(0.212165846,
+                                0.211115874,
+                                0.140838460,
+                                0.072948386,
+                                0.212165846)
             set.seed(60)
             x <- rvonmises(50, circular(pi / 2), 1)
             result <- density.adaptive.circular(x, bw0 = 1, n = 5)
@@ -12,13 +13,10 @@ test_that("density.adaptive.circular returns a numeric vector for valid input",
             expect_length(result, 5)
           })
 
-#this one
 test_that(
   "density.adaptive.circular returns a numeric vector for valid input with different seed",
   {
-    density_vector <- c(
-      0.17507659, 0.26227211, 0.12427576, 0.07484904, 0.17507659
-    )
+    density_vector <- c(0.17507659, 0.26227211, 0.12427576, 0.07484904, 0.17507659)
     set.seed(123)
     x <- rvonmises(50, circular(pi / 2), 1)
     result <- density.adaptive.circular(x, bw0 = 1, n = 5)
@@ -45,7 +43,6 @@ test_that("density.adaptive.circular throws error if x contains only NAs", {
                "`x` contains all missing values.")
 })
 
-#this one
 test_that("density.adaptive.circular removes NA values and returns result",
           {
             x <- circular(c(0, pi / 2, NA, pi))
@@ -59,27 +56,31 @@ test_that("density.adaptive.circular removes NA values and returns result",
             )
           })
 
-test_that("density.adaptive.circular throws error on non-numeric non-finite from", {
-  x <- circular(seq(0, 2 * pi, length.out = 5))
-  expect_error(
-    density.adaptive.circular(x, bw0 = 1, from = "zero"),
-    "Argument `from` must be finite numeric value."
-  )
-  expect_error(
-    density.adaptive.circular(x, bw0 = 1, from = Inf),
-    "Argument `from` must be finite numeric value."
-  )
-})
+test_that("density.adaptive.circular throws error on non-numeric non-finite from",
+          {
+            x <- circular(seq(0, 2 * pi, length.out = 5))
+            expect_error(
+              density.adaptive.circular(x, bw0 = 1, from = "zero"),
+              "Argument `from` must be finite numeric value."
+            )
+            expect_error(
+              density.adaptive.circular(x, bw0 = 1, from = Inf),
+              "Argument `from` must be finite numeric value."
+            )
+          })
 
 test_that("density.adaptive.circular throws error on non-numeric to", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
-  expect_error(density.adaptive.circular(x, bw0 = 1, to = "two_pi"),
-               "Argument `to` must be finite numeric value.")
+  expect_error(
+    density.adaptive.circular(x, bw0 = 1, to = "two_pi"),
+    "Argument `to` must be finite numeric value."
+  )
 
-  expect_error(density.adaptive.circular(x, bw0 = 1, to = NA),
-               "Argument `to` must be finite numeric value.")
-  }
-)
+  expect_error(
+    density.adaptive.circular(x, bw0 = 1, to = NA),
+    "Argument `to` must be finite numeric value."
+  )
+})
 
 test_that("density.adaptive.circular throws error on invalid n", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
@@ -91,10 +92,8 @@ test_that("density.adaptive.circular throws error on invalid n", {
     density.adaptive.circular(x, bw0 = 1, n = Inf),
     "Argument `n` must be finite numeric value."
   )
-  expect_error(
-    density.adaptive.circular(x, bw0 = 1, n = -1),
-    "Argument `n` must be positive integer."
-  )
+  expect_error(density.adaptive.circular(x, bw0 = 1, n = -1),
+               "Argument `n` must be positive integer.")
   expect_error(
     density.adaptive.circular(x, bw0 = 1, n = 3.12),
     "Argument `n` must be positive integer."
@@ -104,7 +103,7 @@ test_that("density.adaptive.circular throws error on invalid n", {
 test_that("density.adaptive.circular uses custom z correctly", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
   z <- circular(seq(0, pi, length.out = 10))
-  result <- density.adaptive.circular(x, bw0 = 1, z=z)
+  result <- density.adaptive.circular(x, bw0 = 1, z = z)
   expect_type(result, "double")
   expect_length(result, 10)
   expect_true(all(is.finite(result)))

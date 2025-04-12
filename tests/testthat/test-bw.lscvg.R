@@ -91,4 +91,3 @@ test_that("bw.lscvg warns when minimum is at edge of the range", {
                      1,
                      "! Minimum/maximum occurred at one end of the range.")
 })
-

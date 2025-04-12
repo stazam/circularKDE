@@ -1,26 +1,27 @@
 test_that("bw.scv returns a numeric value for valid input", {
- set.seed(60)
- x <- rvonmises(100,
-                circular(3 * pi / 2),
-                2,control.circular = list(units = "radians"))
- result <- bw.scv(x)
- expect_equal(result, 7.20835971)
- expect_length(result, 1)
- expect_type(result, "double")
+  set.seed(60)
+  x <- rvonmises(100,
+                 circular(3 * pi / 2),
+                 2,
+                 control.circular = list(units = "radians"))
+  result <- bw.scv(x)
+  expect_equal(result, 7.20835971)
+  expect_length(result, 1)
+  expect_type(result, "double")
 })
 
 test_that("bw.scv returns a numeric value for valid input with different seed",
-         {
-           set.seed(123)
-           x <- rvonmises(100,
-                          circular(3 * pi / 2),
-                          2,
-                          control.circular = list(units = "radians"))
-           result <- bw.scv(x)
-           expect_equal(result, 5.67646280)
-           expect_type(result, "double")
-           expect_length(result, 1)
-         })
+          {
+            set.seed(123)
+            x <- rvonmises(100,
+                           circular(3 * pi / 2),
+                           2,
+                           control.circular = list(units = "radians"))
+            result <- bw.scv(x)
+            expect_equal(result, 5.67646280)
+            expect_type(result, "double")
+            expect_length(result, 1)
+          })
 
 test_that("bw.scv throws error on empty input", {
   expect_error(bw.scv(numeric(0)), "`x` must be a non-empty object.")
@@ -97,5 +98,3 @@ test_that("bw.scv warns when minimum is at edge of the range", {
                      1,
                      "! Minimum/maximum occurred at one end of the range.")
 })
-
-

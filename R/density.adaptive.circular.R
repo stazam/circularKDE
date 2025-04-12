@@ -100,15 +100,18 @@ density.adaptive.circular <- function(x,
     cli_abort("Argument {.var n} must be positive integer.")
   }
   if (is.null(z)) {
-    z <- circular(seq(
-      from = from,
-      to = to,
-      length.out = n
-    ),units = "radians",
-    zero = 0,
-    rotation = "counter",
-    modulo = "2pi",
-    template = "none")
+    z <- circular(
+      seq(
+        from = from,
+        to = to,
+        length.out = n
+      ),
+      units = "radians",
+      zero = 0,
+      rotation = "counter",
+      modulo = "2pi",
+      template = "none"
+    )
   }
   density.est <- function(z, x, bw0, alpha, type) {
     n <- length(x)
@@ -128,5 +131,3 @@ density.adaptive.circular <- function(x,
   )
   return(y)
 }
-
-
