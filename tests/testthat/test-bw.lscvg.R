@@ -30,7 +30,7 @@ test_that("bw.lscvg throws error if x contains only NAs", {
 })
 
 test_that("bw.lscvg removes NA values and returns result", {
-  x <- c(0, pi / 2, NA, pi)
+  x <- circular(c(0, pi / 2, NA, pi))
   result <- bw.lscvg(x)
   expect_type(result, "double")
   expect_cli_warning(bw.lscvg(x),
@@ -39,7 +39,7 @@ test_that("bw.lscvg removes NA values and returns result", {
 })
 
 test_that("bw.lscvg handles non-numeric g", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.lscvg(x, g = "wrong"),
     1,
@@ -49,7 +49,7 @@ test_that("bw.lscvg handles non-numeric g", {
 })
 
 test_that("bw.lscvg handles non-numeric lower", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.lscvg(x, lower = "zero"),
     1,
@@ -59,7 +59,7 @@ test_that("bw.lscvg handles non-numeric lower", {
 })
 
 test_that("bw.lscvg handles non-numeric upper", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.lscvg(x, upper = "sixty"),
     1,
@@ -69,7 +69,7 @@ test_that("bw.lscvg handles non-numeric upper", {
 })
 
 test_that("bw.lscvg warns and resets invalid boundary values", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.lscvg(x, lower = -5, upper = 5),
     1,
@@ -86,7 +86,7 @@ test_that("bw.lscvg warns and resets invalid boundary values", {
 })
 
 test_that("bw.lscvg warns when minimum is at edge of the range", {
-  x <- rep(0, 10)
+  x <- circular(rep(0, 10))
   expect_cli_warning(bw.lscvg(x),
                      1,
                      "! Minimum/maximum occurred at one end of the range.")

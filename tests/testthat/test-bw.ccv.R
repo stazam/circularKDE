@@ -31,7 +31,7 @@ test_that("bw.ccv throws error if x contains only NAs", {
 })
 
 test_that("bw.ccv removes NA values and returns result", {
-  x <- c(0, pi / 2, NA, pi)
+  x <- circular(c(0, pi / 2, NA, pi))
   result <- bw.ccv(x)
   expect_type(result, "double")
   expect_cli_warning(bw.ccv(x),
@@ -40,7 +40,7 @@ test_that("bw.ccv removes NA values and returns result", {
 })
 
 test_that("bw.ccv handles non-numeric lower", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.ccv(x, lower = "zero"),
     1,
@@ -50,7 +50,7 @@ test_that("bw.ccv handles non-numeric lower", {
 })
 
 test_that("bw.ccv handles non-numeric upper", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.ccv(x, upper = "sixty"),
     1,
@@ -60,7 +60,7 @@ test_that("bw.ccv handles non-numeric upper", {
 })
 
 test_that("bw.ccv warns and resets invalid boundary values", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.ccv(x, lower = -5, upper = 5),
     1,
@@ -77,7 +77,7 @@ test_that("bw.ccv warns and resets invalid boundary values", {
 })
 
 test_that("bw.ccv warns when minimum is at edge of the range", {
-  x <- rep(0, 10)
+  x <- circular(rep(0, 10))
   expect_cli_warning(bw.ccv(x, tol = 1),
                      1,
                      "! Minimum/maximum occurred at one end of the range.")
