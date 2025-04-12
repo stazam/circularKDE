@@ -42,7 +42,7 @@
 #' @importFrom stats optimize
 #' @import cli
 bw.scv <- function(x,
-                   np = 75,
+                   np = 500,
                    lower = 0,
                    upper = 60,
                    tol = 0.1) {
@@ -109,12 +109,49 @@ bw.scv <- function(x,
     lower <- 0
     upper <- 60
   }
+  scv <- function(x, mu, np) {
+    # trapezoidal rule for numerical integration in used
+    n <- length(x)
+    h <- 2 * pi / np
+    knots <- seq(0, 2 * pi * (m-1) / m, length = np) # correction for periodic functions
+
+    C <- cos(outer(knots, x, "-"))
+    D <- cos(outer(x, x, "-"))
+    B <- besselI(mu * sqrt(2 * (1 + C)), 0)
+    E <- exp(mu * C)
+    bessel_mu <- besselI(mu, 0)
+
+    # first part of ISB integral
+    BTB <- t(B) %*% B
+    sum_BTB <- sum(BTB) - sum(diag(BTB))
+    factor1 <- 1 / (4 * pi ^ 2 * n * (n - 1) * bessel_mu ^ 4)
+    first.part <- factor1 * h * sum_BTB
+
+    # second part of ISB integral
+    BTE <- t(B) %*% E
+    sum_BTE <- sum(BTE) - sum(diag(BTE))
+    factor2 <- 1 / (2 * n * (n - 1) * pi ^ 2 * bessel_mu ^ 3)
+    second.part <- factor2 * h * sum_BTE
+
+    # third part of ISB integral
+    part <- besselI(mu * sqrt(2 * (1 + D)), 0)
+    sum_part <- sum(part) - sum(diag(part))
+    factor3 <- 1 / (2 * n * (n - 1) * pi * bessel_mu ^ 2)
+    third.part <- factor3 * sum_part
+
+    # IV
+    last_term <- besselI(2 * mu, 0) / (2 * n * pi * bessel_mu ^ 2)
+
+    # ISB + IV
+    scv_value <- first.part - second.part + third.part + last_term
+    return(scv_value)
+  }
   bw <- optimize(
     scv,
     interval = c(lower, upper),
     maximum = FALSE,
-    np = np,
-    x = x
+    x = x,
+    np = np
   )$minimum
   if (bw < lower + tol | bw > upper - tol) {
     cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
@@ -123,92 +160,3 @@ bw.scv <- function(x,
 }
 
 
-
-#              FISRT PART
-trapezoidal.rule <- function(f, m, thetas, mu) {
-  h <- 2 * pi / m
-  knots <- seq(0, 2 * pi, length = m)
-
-  val <- 2 * f(mu, knots, thetas)
-  val <- sum(val) - val[1] - val[m]
-
-  return (1 / 2 * h * val)
-}
-
-
-first <- function(mu, theta, thetas) {
-  first <- besselI(mu * sqrt(2 * (1 + cos(theta - thetas[1]))), 0)
-  second <- besselI(mu * sqrt(2 * (1 + cos(theta - thetas[2]))), 0)
-
-  return (first * second)
-}
-
-
-
-first.part <- function(thetas, m, mu) {
-  n <- length(thetas)
-  factor <- 1 /  (4 * pi ^ 2 * n * (n - 1) * besselI(mu, 0) ^ 4)
-  mat <- expand.grid(thetas, thetas)
-  mat <-  apply(mat,
-                1,
-                trapezoidal.rule,
-                f = first,
-                m = m,
-                mu  = mu)
-  mat[seq(1, length(mat), by = n + 1)] <- 0
-  return(factor * sum(mat))
-}
-
-
-#              SECOND PART
-second <- function(mu, theta, thetas) {
-  first_part <- besselI(mu * sqrt(2 * (1 + cos(theta - thetas[1]))), 0)
-  second_part <- exp(mu * cos(theta - thetas[2]))
-
-  return (first_part * second_part)
-
-}
-
-
-
-second.part <- function(thetas, m, mu) {
-  n <- length(thetas)
-
-  factor <- 1 / (2 * n * (n - 1) * pi ^ 2 * besselI(mu, 0) ^ 3)
-
-  mat <- expand.grid(thetas, thetas)
-  mat <-  apply(mat,
-                1,
-                trapezoidal.rule,
-                f = second,
-                m = m,
-                mu  = mu)
-  mat[seq(1, length(mat), by = n + 1)] <- 0
-  return(factor *  sum(mat))
-
-}
-
-
-#              THIRD PART
-third.part <- function(thetas, mu) {
-  n <- length(thetas)
-
-  factor <- 1 / (2 * n * (n - 1) * pi * besselI(mu, 0) ^ 2)
-  part <- besselI(mu * sqrt(2 * (1 + cos(
-    outer(thetas, thetas, '-')
-  ))), 0)
-
-  return(factor *  sum(part - diag(diag(part))))
-
-}
-
-
-scv <- function(mu, np, x) {
-  n <- length(x)
-  first.part <- x %>% first.part(np, mu)
-  second.part <- x %>% second.part(np, mu)
-  third.part <- x %>% third.part(mu)
-
-  return((first.part - second.part + third.part) + besselI(2 * mu, 0) /
-           (2 * n * pi * besselI(mu, 0) ^ 2))
-}

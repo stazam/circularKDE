@@ -1,27 +1,26 @@
-#test_that("bw.scv returns a numeric value for valid input", {
-#  set.seed(60)
-#  x <- rvonmises(100,
-#                 circular(3 * pi / 2),
-#                 2,
-#  result <- bw.scv(x)
-#                 control.circular = list(units = "radians"))
-#  expect_equal(result, 6.05465743)
-#  expect_length(result, 1)
-#  expect_type(result, "double")
-#})
+test_that("bw.scv returns a numeric value for valid input", {
+ set.seed(60)
+ x <- rvonmises(100,
+                circular(3 * pi / 2),
+                2,control.circular = list(units = "radians"))
+ result <- bw.scv(x)
+ expect_equal(result, 7.20835971)
+ expect_length(result, 1)
+ expect_type(result, "double")
+})
 
-#test_that("bw.scv returns a numeric value for valid input with different seed",
-#          {
-#            x <- rvonmises(100,
-#            set.seed(123)
-#                           2,
-#                           circular(3 * pi / 2),
-#                           control.circular = list(units = "radians"))
-#            result <- bw.scv(x)
-#            expect_equal(result, 4.84740614)
-#            expect_type(result, "double")
-#            expect_length(result, 1)
-#          })
+test_that("bw.scv returns a numeric value for valid input with different seed",
+         {
+           set.seed(123)
+           x <- rvonmises(100,
+                          circular(3 * pi / 2),
+                          2,
+                          control.circular = list(units = "radians"))
+           result <- bw.scv(x)
+           expect_equal(result, 5.67646280)
+           expect_type(result, "double")
+           expect_length(result, 1)
+         })
 
 test_that("bw.scv throws error on empty input", {
   expect_error(bw.scv(numeric(0)), "`x` must be a non-empty object.")
@@ -37,7 +36,7 @@ test_that("bw.scv throws error if x contains only NAs", {
 })
 
 test_that("bw.scv removes NA values and returns result", {
-  x <- c(0, pi / 2, NA, pi)
+  x <- circular(c(0, pi / 2, NA, pi))
   result <- bw.scv(x)
   expect_type(result, "double")
   expect_cli_warning(bw.scv(x),
@@ -46,7 +45,7 @@ test_that("bw.scv removes NA values and returns result", {
 })
 
 test_that("bw.scv handles non-numeric np", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.scv(x, np = "seventy-five"),
     1,
@@ -56,7 +55,7 @@ test_that("bw.scv handles non-numeric np", {
 })
 
 test_that("bw.scv handles non-numeric lower", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.scv(x, lower = "zero"),
     1,
@@ -66,7 +65,7 @@ test_that("bw.scv handles non-numeric lower", {
 })
 
 test_that("bw.scv handles non-numeric upper", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.scv(x, upper = "sixty"),
     1,
@@ -76,7 +75,7 @@ test_that("bw.scv handles non-numeric upper", {
 })
 
 test_that("bw.scv warns and resets invalid boundary values", {
-  x <- seq(0, 2 * pi, length.out = 5)
+  x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
     result <- bw.scv(x, lower = -5, upper = 5),
     1,
@@ -93,8 +92,10 @@ test_that("bw.scv warns and resets invalid boundary values", {
 })
 
 test_that("bw.scv warns when minimum is at edge of the range", {
-  x <- rep(0, 10)
+  x <- circular(rep(0, 10))
   expect_cli_warning(bw.scv(x),
                      1,
                      "! Minimum/maximum occurred at one end of the range.")
 })
+
+
