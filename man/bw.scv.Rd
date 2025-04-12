@@ -4,7 +4,7 @@
 \alias{bw.scv}
 \title{Compute the Optimal Bandwidth for Circular Data using Smoothed Cross-Validation}
 \usage{
-bw.scv(x, np = 75, lower = 0, upper = 60, tol = 0.1)
+bw.scv(x, np = 500, lower = 0, upper = 60, tol = 0.1)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
@@ -13,7 +13,7 @@ Can be a numeric vector or an object of class \code{circular}.}
 
 \item{np}{An integer specifying the number of points used in numerical integration
 to evaluate the SCV criterion. A higher number increases precision but also
-computational cost. Default is 75.}
+computational cost. Default is 500.}
 
 \item{lower}{Lower boundary of the interval for the optimization of the smoothing
 parameter \code{mu}. Must be a positive numeric value smaller than \code{upper}.
@@ -37,16 +37,12 @@ It searches for the value of the smoothing parameter \code{nu} that minimizes th
 specified interval \verb{[lower, upper]}.
 }
 \examples{
-# Example with numeric data in radians
-set.seed(123)
-x <- runif(100, 0, 2 * pi)
-bw <- bw.scv(x)
-print(bw)
-
 # Example with circular data
 library(circular)
-x_circ <- rvonmises(100, mu = circular(0), kappa = 2)
-bw <- bw.scv(x_circ)
+bw <- bw.scv(x)
+print(bw)
+x <- rvonmises(100, mu = circular(0.5), kappa = 2)
+bw <- bw.scv(x)
 print(bw)
 
 }

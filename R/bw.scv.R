@@ -10,7 +10,7 @@
 #'   Can be a numeric vector or an object of class `circular`.
 #' @param np An integer specifying the number of points used in numerical integration
 #'   to evaluate the SCV criterion. A higher number increases precision but also
-#'   computational cost. Default is 75.
+#'   computational cost. Default is 500.
 #' @param lower Lower boundary of the interval for the optimization of the smoothing
 #'   parameter `mu`. Must be a positive numeric value smaller than `upper`.
 #'   Default is 0.
@@ -26,20 +26,18 @@
 #' @export
 #'
 #' @examples
-#' # Example with numeric data in radians
-#' set.seed(123)
-#' x <- runif(100, 0, 2 * pi)
+#' # Example with circular data
+#' library(circular)
+#  x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
+#' bw <- bw.scv(x)
+#' print(bw)
+#
+#' x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 #' bw <- bw.scv(x)
 #' print(bw)
 #'
-#' # Example with circular data
-#' library(circular)
-#' x_circ <- rvonmises(100, mu = circular(0), kappa = 2)
-#' bw <- bw.scv(x_circ)
-#' print(bw)
-#'
-#' @importFrom circular conversion.circular
 #' @importFrom stats optimize
+#' @import circular
 #' @import cli
 bw.scv <- function(x,
                    np = 500,
@@ -60,7 +58,7 @@ bw.scv <- function(x,
       c("{.var x} must be a numeric vector. ", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
-  x <- conversion.circular(
+  x <- circular(
     x,
     units = "radians",
     zero = 0,
@@ -76,10 +74,10 @@ bw.scv <- function(x,
     cli::cli_alert_warning(
       c(
         "Argument {.var np} must be numeric. ",
-        "Default value 75 for number of points for evalutaion of numerical integration was used."
+        "Default value 500 for number of points for evalutaion of numerical integration was used."
       )
     )
-    np <- 75
+    np <- 500
   }
   if (!is.numeric(lower)) {
     cli::cli_alert_warning(
@@ -113,7 +111,7 @@ bw.scv <- function(x,
     # trapezoidal rule for numerical integration in used
     n <- length(x)
     h <- 2 * pi / np
-    knots <- seq(0, 2 * pi * (m-1) / m, length = np) # correction for periodic functions
+    knots <- seq(0, 2 * pi * (m - 1) / m, length = np) # correction for periodic functions
 
     C <- cos(outer(knots, x, "-"))
     D <- cos(outer(x, x, "-"))
@@ -158,5 +156,3 @@ bw.scv <- function(x,
   }
   return(bw)
 }
-
-
