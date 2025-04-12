@@ -56,7 +56,7 @@ bw.ccv <- function(x,
       c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
-  x <- conversion.circular(
+  x <- circular(
     x,
     units = "radians",
     zero = 0,

@@ -34,8 +34,8 @@
 #' bw <- bw.lscvg(x)
 #' print(bw)
 #'
-#' x_circ <- rvonmises(100, mu = circular(0), kappa = 1)
-#' bw <- bw.lscvg(x_circ)
+#' x <- rvonmises(100, mu = circular(0), kappa = 1)
+#' bw <- bw.lscvg(x)
 #' print(bw)
 #'
 #' @importFrom circular conversion.circular
@@ -60,7 +60,7 @@ bw.lscvg <- function(x,
       c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
-  x <- conversion.circular(
+  x <- circular(
     x,
     units = "radians",
     zero = 0,

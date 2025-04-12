@@ -36,17 +36,18 @@
 #'
 #' @examples
 #' # Example with numeric data in radians
-#' x_circ <- runif(100, 0, 2 * pi)
-#' bw0 <- bw.lscvg(x = x_circ)
+#' library(circular)
+#' x <- rvonmises(100, mu = circular(0), kappa = 1)
+#' bw0 <- bw.lscvg(x = x)
 #' dens <- density.adaptive.circular(x, bw0 = bw0)
 #' plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
 #'      main = "Adaptive Circular Density")
 #'
 #' # Example with circular data and custom evaluation points
-#' x_circ <- rvonmises(100, mu = circular(0), kappa = 1)
-#' bw0 <- bw.lscvg(x = x_circ)
+#' x <- rvonmises(100, mu = circular(0), kappa = 1)
+#' bw0 <- bw.lscvg(x = x)
 #' z <- seq(0, 2 * pi, length.out = 200)
-#' dens <- density.adaptive.circular(x_circ, bw0 = 0.5, z = z)
+#' dens <- density.adaptive.circular(x, bw0 = 0.5, z = z)
 #' plot(z, dens, type = "l", main = "Density with Custom Points")
 #'
 #' @importFrom circular conversion.circular
@@ -56,8 +57,8 @@ density.adaptive.circular <- function(x,
                                       alpha = 0.5,
                                       type = "n",
                                       z = NULL,
-                                      from = circular(0),
-                                      to = circular(2 * pi),
+                                      from = 0,
+                                      to = 2 * pi,
                                       n = 500) {
   n_x <- length(x)
   if (n_x == 0) {
@@ -73,18 +74,18 @@ density.adaptive.circular <- function(x,
       c("{.var x} must be a numeric vector.", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
-  x.circular <- conversion.circular(
+  x <- circular(
     x,
-    type = "angles",
     units = "radians",
-    zero = circular(0),
+    zero = 0,
     rotation = "counter",
     modulo = "2pi",
+    template = "none"
   )
-  attr(x.circular, "class") <- attr(x.circular, "circularp") <- NULL
-  if (any(is.na(x.circular))) {
-    cli::cli_alert_warning("{.var x.circular} contains missing values, which will be removed.")
-    x.circular <- x.circular[!is.na(x.circular)]
+  attr(x, "class") <- attr(x, "circularp") <- NULL
+  if (any(is.na(x))) {
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
+    x <- x[!is.na(x)]
   }
   if (!is.numeric(from) | !is.finite(from)) {
     cli_abort("Argument {.var from} must be finite numeric value.")
@@ -95,15 +96,19 @@ density.adaptive.circular <- function(x,
   if (!is.numeric(n) | !is.finite(n)) {
     cli_abort("Argument {.var n} must be finite numeric value.")
   }
-  if (round(n) != n | n <= 0){
+  if (round(n) != n | n <= 0) {
     cli_abort("Argument {.var n} must be positive integer.")
   }
   if (is.null(z)) {
     z <- circular(seq(
       from = from,
       to = to,
-      length = n
-    ))
+      length.out = n
+    ),units = "radians",
+    zero = 0,
+    rotation = "counter",
+    modulo = "2pi",
+    template = "none")
   }
   density.est <- function(z, x, bw0, alpha, type) {
     n <- length(x)
@@ -116,7 +121,7 @@ density.adaptive.circular <- function(x,
   y <- sapply(
     z,
     density.est,
-    x = x.circular,
+    x = x,
     bw0 = bw0,
     alpha = alpha,
     type = type
