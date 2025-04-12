@@ -34,8 +34,8 @@
 #
 #' # Example with circular data
 #' library(circular)
-#' x_circ <- rvonmises(100, mu = circular(0.5), kappa = 2)
-#' bw <- bw.scv(x_circ)
+#' x <- rvonmises(100, mu = circular(0.5), kappa = 2)
+#' bw <- bw.scv(x)
 #' print(bw)
 #'
 #' @importFrom circular conversion.circular
