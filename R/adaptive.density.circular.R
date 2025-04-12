@@ -39,7 +39,7 @@
 #' library(circular)
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
 #' bw0 <- bw.lscvg(x = x)
-#' dens <- density.adaptive.circular(x, bw0 = bw0)
+#' dens <- adaptive.density.circular(x, bw0 = bw0)
 #' plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
 #'      main = "Adaptive Circular Density")
 #'
@@ -47,12 +47,12 @@
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
 #' bw0 <- bw.lscvg(x = x)
 #' z <- seq(0, 2 * pi, length.out = 200)
-#' dens <- density.adaptive.circular(x, bw0 = 0.5, z = z)
+#' dens <- adaptive.density.circular(x, bw0 = 0.5, z = z)
 #' plot(z, dens, type = "l", main = "Density with Custom Points")
 #'
 #' @import circular
 #' @import cli
-density.adaptive.circular <- function(x,
+adaptive.density.circular <- function(x,
                                       bw0,
                                       alpha = 0.5,
                                       type = "n",

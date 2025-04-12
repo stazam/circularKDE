@@ -1,10 +1,9 @@
-#' @export
 local.factor <- function(x,
                          bw0,
                          alpha = 0.5,
                          type = c("am", "gm", "rv", "n")) {
   type <- match.arg(type)
-  lambdas <- density.hat(z = x, x = x, bw = bw0)
+  lambdas <- kernel.density.estimate(z = x, x = x, bw = bw0)
   g <- switch(
     type,
     "am" = mean(lambdas),
@@ -19,9 +18,13 @@ local.factor <- function(x,
   return((lambdas / g) ^ (-alpha))
 }
 
-#' @export
-density.hat <- function(z, x, bw) {
+kernel.density.estimate <- function(z, x, bw) {
   n <- length(x)
   y <- 1 / (2 * n * pi * besselI(bw, 0)) * sum(exp (bw * cos(z - x)))
   return(y)
 }
+
+
+
+
+

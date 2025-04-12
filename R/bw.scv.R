@@ -28,7 +28,7 @@
 #' @examples
 #' # Example with circular data
 #' library(circular)
-#  x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
+#' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 #' bw <- bw.scv(x)
 #' print(bw)
 #
@@ -111,7 +111,7 @@ bw.scv <- function(x,
     # trapezoidal rule for numerical integration in used
     n <- length(x)
     h <- 2 * pi / np
-    knots <- seq(0, 2 * pi * (m - 1) / m, length = np) # correction for periodic functions
+    knots <- seq(0, 2 * pi * (np - 1) / np, length = np) # correction for periodic functions
 
     C <- cos(outer(knots, x, "-"))
     D <- cos(outer(x, x, "-"))
