@@ -16,18 +16,18 @@ to evaluate the SCV criterion. A higher number increases precision but also
 computational cost. Default is 500.}
 
 \item{lower}{Lower boundary of the interval for the optimization of the smoothing
-parameter \code{mu}. Must be a positive numeric value smaller than \code{upper}.
+parameter \code{nu}. Must be a positive numeric value smaller than \code{upper}.
 Default is 0.}
 
 \item{upper}{Upper boundary of the interval for the optimization of the smoothing
-parameter \code{mu}. Must be a positive numeric value greater than \code{lower}.
+parameter \code{nu}. Must be a positive numeric value greater than \code{lower}.
 Default is 60.}
 
 \item{tol}{Convergence tolerance used in the \code{optimize} function. Determines how
 precisely the optimal value is estimated. Default is 0.1.}
 }
 \value{
-The computed optimal smoothing parameter \code{mu}, the numeric value
+The computed optimal smoothing parameter \code{nu}, the numeric value
 that minimizes the smoothed cross-validation criterion.
 }
 \description{
