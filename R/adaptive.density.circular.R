@@ -113,7 +113,7 @@ adaptive.density.circular <- function(x,
       template = "none"
     )
   }
-  density.adaptive.est <- function(z, x, bw0, alpha, type) {
+  kernel.density.adaptive.est <- function(z, x, bw0, alpha, type) {
     n <- length(x)
     factor <- 1 / (2 * n * pi)
 

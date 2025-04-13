@@ -19,7 +19,7 @@ local.factor <- function(x,
   return(result)
 }
 
-kernel.density.estimate <- function(z, x, bw) {
+kernel.density.est <- function(z, x, bw) {
   n <- length(x)
   factor <- 1 / (2 * n * pi * besselI(bw, 0))
   result <- factor * sum(exp (bw * cos(z - x)))
