@@ -113,17 +113,18 @@ adaptive.density.circular <- function(x,
       template = "none"
     )
   }
-  density.est <- function(z, x, bw0, alpha, type) {
+  density.adaptive.est <- function(z, x, bw0, alpha, type) {
     n <- length(x)
     factor <- 1 / (2 * n * pi)
 
     lambda <- local.factor(x, bw0, alpha, type)
     main.part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)))
-    return(factor * main.part)
+    response <- factor * main.part
+    return(response)
   }
   y <- sapply(
     z,
-    density.est,
+    density.adaptive.est,
     x = x,
     bw0 = bw0,
     alpha = alpha,

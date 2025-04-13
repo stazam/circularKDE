@@ -15,16 +15,15 @@ local.factor <- function(x,
     "rv" = max(lambdas) - min(lambdas),
     "n" = 1
   )
-  return((lambdas / g) ^ (-alpha))
+  result <- (lambdas / g) ^ (-alpha)
+  return(result)
 }
 
 kernel.density.estimate <- function(z, x, bw) {
   n <- length(x)
-  y <- 1 / (2 * n * pi * besselI(bw, 0)) * sum(exp (bw * cos(z - x)))
-  return(y)
+  factor <- 1 / (2 * n * pi * besselI(bw, 0))
+  result <- factor * sum(exp (bw * cos(z - x)))
+  return(result)
 }
-
-
-
 
 
