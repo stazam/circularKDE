@@ -124,7 +124,7 @@ adaptive.density.circular <- function(x,
   }
   y <- sapply(
     z,
-    density.adaptive.est,
+    kernel.density.adaptive.est,
     x = x,
     bw0 = bw0,
     alpha = alpha,
