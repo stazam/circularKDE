@@ -101,40 +101,39 @@ bw.ccv <- function(x,
     n <- length(x)
     grid <- outer(x, x, "-")
 
-    bI0 <- besselI(nu, 0)
-    bI1 <- besselI(nu, 1)
-    bI2 <- besselI(nu, 2)
+    b0.nu <- besselI(nu, 0)
+    b1.nu <- besselI(nu, 1)
+    b2.nu <- besselI(nu, 2)
 
-    cos_grid <- cos(grid)
-    sin_grid <- sin(grid)
-    exp_nu_cos <- exp(nu * cos_grid)
+    cos.grid <- cos(grid)
+    sin.grid <- sin(grid)
+    exp.nu.cos <- exp(nu * cos.grid)
 
-    cos0 <- 1
-    sin0 <- 0
-    exp0 <- exp(nu * cos0)
+    cos.0 <- 1
+    sin.0 <- 0
+    exp.0 <- exp(nu * cos.0)
 
-    factor2 <- 1 / (2 * pi * n ^ 2 * bI0 ^ 2)
-    part2 <- factor2 * sum(besselI(nu * sqrt(2 * (1 + cos_grid)), 0))
+    factor.1 <- 1 / (2 * pi * n ^ 2 * b0.nu ^ 2)
+    part.1 <- factor.1 * sum(besselI(nu * sqrt(2 * (1 + cos.grid)), 0))
 
-    factor3 <- 1 / (n * (n - 1) * 2 * pi * bI0)
-    part3 <- factor3 * (sum(exp_nu_cos) - n * exp0)
+    factor.2 <- 1 / (n * (n - 1) * 2 * pi * b0.nu)
+    part.2 <- factor.2 * (sum(exp.nu.cos) - n * exp.0)
 
-    factor4 <- (1 / (2 * nu)) * (bI1 / bI0) * (1 / (2 * pi * bI0 * n * (n - 1)))
-    arg4 <- exp_nu_cos * (nu ^ 2 * sin_grid ^ 2 - nu * cos_grid)
-    arg4_0 <- exp0 * (-nu)
-    part4 <- -factor4 * (sum(arg4) - n * arg4_0)
+    factor.3 <- (1 / (2 * nu)) * (b1.nu / b0.nu) * (1 / (2 * pi * b0.nu * n * (n - 1)))
+    arg.3 <- exp.nu.cos * (nu ^ 2 * sin.grid ^ 2 - nu * cos.grid)
+    arg.3.1 <- exp.0 * (-nu)
+    part.3 <- -factor.3 * (sum(arg.3) - n * arg.3.1)
 
-    factor5 <- (1 / (8 * nu ^ 2)) * (2 * (bI1 / bI0) ^ 2 - bI2 / bI0) * (1 / (2 * pi * bI0 * n * (n - 1)))
-    arg5 <- exp_nu_cos * (
-      nu ^ 4 * sin_grid ^ 4 - 6 * nu ^ 3 * sin_grid ^ 2 * cos_grid +
-        3 * nu ^ 2 * (cos_grid ^ 2 - sin_grid ^ 2) - nu ^
-        2 * sin_grid ^ 2 + nu * cos_grid
+    factor.4 <- (1 / (8 * nu ^ 2)) * (2 * (b1.nu / b0.nu) ^ 2 - b2.nu / b0.nu) * (1 / (2 * pi * b0.nu * n * (n - 1)))
+    arg.4 <- exp.nu.cos * (
+      nu ^ 4 * sin.grid ^ 4 - 6 * nu ^ 3 * sin.grid ^ 2 * cos.grid +
+        3 * nu ^ 2 * (cos.grid ^ 2 - sin.grid ^ 2) - nu ^
+        2 * sin.grid ^ 2 + nu * cos.grid
     )
+    arg.4.1 <- exp.0 * (3 * nu ^ 2 + nu)
+    part.4 <- factor.4 * (sum(arg.4) - n * arg.4.1)
 
-    arg5_0 <- exp0 * (3 * nu ^ 2 + nu)
-    part5 <- factor5 * (sum(arg5) - n * arg5_0)
-
-    result <- part2 - part3 + part4 + part5
+    result <- part.1 - part.2 + part.3 + part.4
     return(result)
   }
   bw <- optimize(
