@@ -119,8 +119,8 @@ adaptive.density.circular <- function(x,
 
     lambda <- local.factor(x, bw0, alpha, type)
     main.part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)))
-    response <- factor * main.part
-    return(response)
+    result <- factor * main.part
+    return(result)
   }
   y <- sapply(
     z,
