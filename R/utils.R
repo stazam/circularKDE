@@ -3,7 +3,7 @@ local.factor <- function(x,
                          alpha = 0.5,
                          type = c("am", "gm", "rv", "n")) {
   type <- match.arg(type)
-  lambdas <- kernel.density.est(z = x, x = x, bw = bw0)
+  lambdas <- sapply(x,kernel.density.est, x = x, bw = bw0)
   g <- switch(
     type,
     "am" = mean(lambdas),
@@ -25,5 +25,6 @@ kernel.density.est <- function(z, x, bw) {
   result <- factor * sum(exp (bw * cos(z - x)))
   return(result)
 }
+
 
 
