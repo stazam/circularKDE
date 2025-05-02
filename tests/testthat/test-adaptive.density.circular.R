@@ -1,6 +1,10 @@
 test_that("adaptive.density.circular returns a numeric vector for valid input",
           {
-            density_vector <- c(0.225589943, 0.209118581, 0.145161036, 0.059112002, 0.225589943)
+            density_vector <- c(0.225589943,
+                                0.209118581,
+                                0.145161036,
+                                0.059112002,
+                                0.225589943)
             set.seed(60)
             x <- rvonmises(50, circular(pi / 2), 1)
             result <- adaptive.density.circular(x, bw0 = 1, n = 5)
