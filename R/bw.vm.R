@@ -1,44 +1,41 @@
-#' Compute Bandwidth Selector for the von Mises Kernel (VM)
+#' Compute the Optimal Bandwidth for Circular Data using von Mises Method
 #'
-#' This function computes the optimal smoothing parameter (bandwidth) for
-#' circular data using the von Mises kernel density estimator.
-#' The method follows the framework described in
-#' García-Portugués et al. (2019) <doi:10.1016/j.stamet.2017.12.005>.
+#' This function computes the optimal smoothing parameter (bandwidth) for circular data
+#' using the von Mises method. The optimal bandwidth is derived based on the maximum 
+#' likelihood estimate of the concentration parameter kappa from a von Mises distribution
+#' fitted to the data.
 #'
-#' @param x Data from which the smoothing parameter is to be computed.
-#'   The object is coerced to a numeric vector in radians using
-#'   `circular::conversion.circular`. Can be a numeric vector or
-#'   an object of class `circular`.
-#' @param lower Lower boundary of the interval for the optimization of
-#'   the smoothing parameter. Must be a positive numeric value smaller
-#'   than `upper`. Default is 0.
-#' @param upper Upper boundary of the interval for the optimization of
-#'   the smoothing parameter. Must be a positive numeric value greater
-#'   than `lower`. Default is 60.
-#' @param tol Convergence tolerance used in the `optimize` function.
-#'   Determines how precisely the optimal value is estimated. Default is 0.1.
+#' @param x Data from which the smoothing parameter is to be computed. The object is
+#'   coerced to a numeric vector in radians using `circular::conversion.circular`.
+#'   Can be a numeric vector or an object of class `circular`.
 #'
-#' @return The computed optimal smoothing parameter (bandwidth).
-#'
-#' @references
-#' García-Portugués, E., Navarro-Esteban, P., & Cuesta-Albertos, J. A. (2019).
-#' A goodness-of-fit test for the von Mises–Fisher distribution.
-#' *Statistics & Probability Letters, 146*, 178–184.
-#' <https://doi.org/10.1016/j.spl.2018.10.018>
+#' @return The computed optimal smoothing parameter, a numeric value derived from 
+#'   the von Mises distribution fit to the data.
 #'
 #' @export
 #'
 #' @examples
+#' # Example with circular data
 #' library(circular)
-#' set.seed(42)
+#' set.seed(123)
 #' x <- rvonmises(100, mu = circular(0), kappa = 2)
 #' bw <- bw.vm(x)
 #' print(bw)
 #'
-bw.vm <- function(x,
-                  lower = 0,
-                  upper = 60,
-                  tol = 0.1) {
+#' x <- rwrappednormal(100, mu = circular(1), rho = 0.7)
+#' bw <- bw.vm(x)
+#' print(bw)
+#'
+#' @references
+#' García-Portugués, E. (2013). Exact risk improvement of bandwidth selectors
+#' for kernel density estimation with directional data. \emph{Electronic
+#' Journal of Statistics}, 7:1655--1685.
+#' \doi{10.1214/13-ejs821}
+#'
+#' @importFrom stats optimize
+#' @import circular
+#' @import cli
+bw.vm <- function(x) {
   n <- length(x)
   if (n == 0) {
     cli::cli_abort("{.var x} must be a non-empty object.")
@@ -52,21 +49,16 @@ bw.vm <- function(x,
     cli::cli_alert_warning("{.var x} contains missing values, removing them.")
     x <- x[!is.na(x)]
   }
-
-  crit_vm <- function(x, h) {
-    # Placeholder criterion (to be replaced with VM-specific one)
-    sum(cos(outer(x, x, "-")) * exp(-h))
-  }
-
-  bw <- optimize(
-    crit_vm,
-    interval = c(lower, upper),
-    maximum = FALSE,
-    x = x
-  )$minimum
-
-  if (bw < lower + tol || bw > upper - tol) {
-    cli::cli_alert_warning("Optimum occurred at the boundary.")
-  }
-  return(bw)
+  n <- length(x)
+  kappa_hat <- circular::mle.vonmises(x)$kappa
+  
+  I0 <- besselI(kappa_hat, 0)
+  I1 <- besselI(kappa_hat, 1)
+  I2 <- besselI(2 * kappa_hat, 2)
+  
+  # R_hat(f_VM^(2))
+  R_fVM2 <- (3 * kappa_hat^2 * I2 + 2 * kappa_hat * I1) / (8 * pi * I0^2)
+  
+  kappa_VM <- (2 * sqrt(pi) * R_fVM2 * n)^(2/5)
+  return(kappa_VM)
 }

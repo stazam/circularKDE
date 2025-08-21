@@ -1,30 +1,48 @@
-#' Compute Bandwidth Selector using Tsuruga Criterion (TS)
+#' Compute the Optimal Bandwidth for Circular Data using Taylor Series Method
 #'
-#' This function computes the optimal bandwidth for circular data
-#' using the Tsuruga method. The method is derived from
-#' García-Portugués et al. (2019) <doi:10.1016/j.stamet.2017.12.005>.
+#' This function computes the optimal smoothing parameter (bandwidth) for circular data
+#' using the Taylor Series method. The method is based on Taylor series approximations
+#' to the von Mises functional and provides an alternative approach for bandwidth
+#' selection in circular kernel density estimation.
 #'
-#' @param x Data vector in radians. Can be numeric or of class `circular`.
-#' @param lower Lower bound for optimization (default 0).
-#' @param upper Upper bound for optimization (default 60).
-#' @param tol Convergence tolerance (default 0.1).
+#' @param x Data from which the smoothing parameter is to be computed. The object is
+#'   coerced to a numeric vector in radians using `circular::conversion.circular`.
+#'   Can be a numeric vector or an object of class `circular`.
+#' @param lower Lower boundary of the interval for the optimization of the smoothing
+#'   parameter. Must be a positive numeric value smaller than `upper`.
+#'   Default is 0.
+#' @param upper Upper boundary of the interval for the optimization of the smoothing
+#'   parameter. Must be a positive numeric value greater than `lower`.
+#'   Default is 60.
+#' @param tol Convergence tolerance used in the optimization process. Determines how
+#'   precisely the optimal value is estimated. Default is 0.1.
 #'
-#' @return The computed optimal smoothing parameter (bandwidth).
-#'
-#' @references
-#' García-Portugués, E., Navarro-Esteban, P., & Cuesta-Albertos, J. A. (2019).
-#' A goodness-of-fit test for the von Mises–Fisher distribution.
-#' *Statistics & Probability Letters, 146*, 178–184.
+#' @return The computed optimal smoothing parameter, a numeric value derived from
+#'   the Taylor Series method for circular kernel density estimation.
 #'
 #' @export
 #'
 #' @examples
+#' # Example with circular data
 #' library(circular)
-#' set.seed(42)
-#' x <- rvonmises(80, mu = circular(pi/4), kappa = 3)
+#' set.seed(123)
+#' x <- rvonmises(100, mu = circular(0), kappa = 2)
 #' bw <- bw.ts(x)
 #' print(bw)
 #'
+#' x <- rwrappednormal(100, mu = circular(1), rho = 0.7)
+#' bw <- bw.ts(x)
+#' print(bw)
+#'
+#' @references
+#' García-Portugués, E. (2013). Exact risk improvement of bandwidth selectors
+#' for kernel density estimation with directional data. \emph{Electronic
+#' Journal of Statistics}, 7:1655--1685.
+#' \doi{10.1214/13-ejs821}
+#'
+#' @importFrom stats optimize
+#' @import circular
+#' @import cli
 bw.ts <- function(x,
                   lower = 0,
                   upper = 60,
@@ -34,20 +52,23 @@ bw.ts <- function(x,
   x <- circular::circular(x, units = "radians", modulo = "2pi")
   attr(x, "class") <- attr(x, "circularp") <- NULL
 
-  crit_ts <- function(x, h) {
-    # Placeholder for Tsuruga criterion
-    sum(exp(-h * (1 - cos(outer(x, x, "-")))))
-  }
+  n <- length(x)
+  kappa_hat <- circular::mle.vonmises(x)$kappa
+  I0 <- besselI(kappa_hat, 0)
+  I0k2 <- besselI(2 * kappa_hat, 0)
+  I1k2 <- besselI(2 * kappa_hat, 1)
+  I2k2 <- besselI(2 * kappa_hat, 2)
+  I3k2 <- besselI(2 * kappa_hat, 3)
 
-  bw <- optimize(
-    crit_ts,
-    interval = c(lower, upper),
-    maximum = FALSE,
-    x = x
-  )$minimum
+  R_fVM2 <- (3 * kappa_hat^2 * I2k2 + 2 * kappa_hat * I1k2) / (8 * pi * I0^2)
+  R_fVM3 <- (4 * kappa_hat * I1k2 + 30 * kappa_hat^2 * I2k2 + 15 * kappa_hat^3 * I3k2) / (16 * pi * I0^2)
+  R_fVM4 <- (8 * kappa_hat^2 * I0k2 + 105 * kappa_hat^4 * I2k2 +
+               105 * kappa_hat^3 * I3k2 + 244 * kappa_hat^2 * I2k2) / (32 * pi * I0^2)
 
-  if (bw < lower + tol || bw > upper - tol) {
-    cli::cli_alert_warning("Optimum at boundary.")
-  }
-  return(bw)
+  # Approximation to m_vm functional (Appendix E, simplified form)
+  R_hat <- 0.25 * R_fVM2 - 1.25 * R_fVM3 + 0.25 * R_fVM4
+
+  kappa_TS <- (288 / (33 - 16 * sqrt(2) / sqrt(5)) * R_hat * n)^(2/9)
+
+  return(kappa_TS)
 }
