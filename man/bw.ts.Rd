@@ -2,7 +2,7 @@
 % Please edit documentation in R/bw.ts.R
 \name{bw.ts}
 \alias{bw.ts}
-\title{Compute the Optimal Bandwidth for Circular Data using circular vesion of multiplicative method from Terrell and Scott.}
+\title{Compute the Optimal Bandwidth for Circular Data using circular version of multiplicative method from Terrell and Scott.}
 \usage{
 bw.ts(x)
 }
