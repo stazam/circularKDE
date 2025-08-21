@@ -35,6 +35,11 @@
 #' bw <- bw.ccv(x)
 #' print(bw)
 #'
+#' @references
+#' A comprehensive exploration of complete cross-validation for circular data 
+#' (2024). \emph{Statistics in Transition New Series}, 25(3):1--12.
+#' \doi{10.59170/stattrans-2024-024}
+#'
 #' @importFrom stats optimize
 #' @import circular
 #' @import cli

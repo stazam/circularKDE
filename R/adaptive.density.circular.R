@@ -50,6 +50,12 @@
 #' dens <- adaptive.density.circular(x, bw0 = 0.5, z = z)
 #' plot(z, dens, type = "l", main = "Density with Custom Points")
 #'
+#' @references
+#' Zámeček, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive 
+#' method for bandwidth selection in circular kernel density estimation. 
+#' \emph{Computational Statistics}.
+#' \doi{10.1007/s00180-023-01401-0}
+#'
 #' @import circular
 #' @import cli
 adaptive.density.circular <- function(x,

@@ -36,6 +36,12 @@
 #' bw <- bw.scv(x)
 #' print(bw)
 #'
+#' @references
+#' Zámeček, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive 
+#' method for bandwidth selection in circular kernel density estimation. 
+#' \emph{Computational Statistics}.
+#' \doi{10.1007/s00180-023-01401-0}
+#'
 #' @importFrom stats optimize
 #' @import circular
 #' @import cli

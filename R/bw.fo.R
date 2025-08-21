@@ -27,10 +27,10 @@
 #' print(bw)
 #'
 #' @references
-#' García-Portugués, E. (2013). Exact risk improvement of bandwidth selectors
-#' for kernel density estimation with directional data. \emph{Electronic
-#' Journal of Statistics}, 7:1655--1685.
-#' \doi{10.1214/13-ejs821}
+#' Tenreiro, C. (2022). Kernel density estimation for circular data: a Fourier 
+#' series-based plug-in approach for bandwidth selection. \emph{Journal of 
+#' Nonparametric Statistics}, 34(2):377--406.
+#' \doi{10.1080/10485252.2022.2057974}
 #'
 #' @importFrom stats optimize
 #' @import circular
