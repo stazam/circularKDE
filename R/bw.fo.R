@@ -58,7 +58,7 @@ bw.fo <- function(x) {
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
-    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
     x <- x[!is.na(x)]
   }
   
