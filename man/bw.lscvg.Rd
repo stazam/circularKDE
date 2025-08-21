@@ -16,25 +16,25 @@ procedure. It influences the scaling in the internal calculations, affecting the
 bandwidth estimation. Default is 4.}
 
 \item{lower}{Lower boundary of the interval to be used in the search for the
-smoothing parameter \code{nu}. Must be a positive numeric value less than \code{upper}.
+smoothing parameter \code{kappa}. Must be a positive numeric value less than \code{upper}.
 Default is 0.}
 
 \item{upper}{Upper boundary of the interval to be used in the search for the
-smoothing parameter \code{nu}. Must be a positive numeric value greater than \code{lower}.
+smoothing parameter \code{kappa}. Must be a positive numeric value greater than \code{lower}.
 Default is 60.}
 
 \item{tol}{Convergence tolerance for the \code{optimize} function, determining the
 precision of the optimization process. Default is 0.1.}
 }
 \value{
-The computed optimal smoothing parameter \code{nu}, a numeric value that
+The computed optimal smoothing parameter \code{kappa}, a numeric value that
 minimizes the least squares cross-validation criterion within the interval
 \verb{[lower, upper]}.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
 using a generalized least squares cross-validation method (see \url{doi:10.1007/s00180-023-01401-0}).
-It searches for the value of the smoothing parameter \code{nu} that minimizes the cross-validation criterion within the
+It searches for the value of the smoothing parameter \code{kappa} that minimizes the cross-validation criterion within the
 specified interval \verb{[lower, upper]}.
 }
 \examples{

@@ -2,8 +2,12 @@
 
 export(adaptive.density.circular)
 export(bw.ccv)
+export(bw.fo)
+export(bw.jf)
 export(bw.lscvg)
 export(bw.scv)
+export(bw.ts)
+export(bw.vm)
 import(circular)
 import(cli)
 importFrom(stats,optimize)

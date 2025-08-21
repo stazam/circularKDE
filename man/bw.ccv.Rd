@@ -12,25 +12,25 @@ coerced to a numeric vector in radians using \code{circular::conversion.circular
 Can be a numeric vector or an object of class \code{circular}.}
 
 \item{lower}{Lower boundary of the interval to be used in the search for the
-smoothing parameter \code{nu}. Must be a positive numeric value less than \code{upper}.
+smoothing parameter \code{kappa}. Must be a positive numeric value less than \code{upper}.
 Default is 0.}
 
 \item{upper}{Upper boundary of the interval to be used in the search for the
-smoothing parameter \code{nu}. Must be a positive numeric value greater than \code{lower}.
+smoothing parameter \code{kappa}. Must be a positive numeric value greater than \code{lower}.
 Default is 60.}
 
 \item{tol}{Convergence tolerance for the \code{optimize} function, determining the
 precision of the optimization process. Default is 0.1.}
 }
 \value{
-The computed optimal smoothing parameter \code{nu}, a numeric value that
+The computed optimal smoothing parameter \code{kappa}, a numeric value that
 minimizes the complete cross-validation criterion within the interval
 \verb{[lower, upper]}.
 }
 \description{
 This function calculates the optimal smoothing parameter (bandwidth) for circular data
 using the complete cross-validation (CCV) method (see \url{doi:10.59170/stattrans-2024-024}). It searches for the value of the
-smoothing parameter \code{nu} that minimizes the CCV criterion within a specified interval
+smoothing parameter \code{kappa} that minimizes the CCV criterion within a specified interval
 \verb{[lower, upper]}.
 }
 \examples{
@@ -45,4 +45,9 @@ x <- rvonmises(100, mu = circular(0), kappa = 1)
 bw <- bw.ccv(x)
 print(bw)
 
+}
+\references{
+A comprehensive exploration of complete cross-validation for circular data
+(2024). \emph{Statistics in Transition New Series}, 25(3):1--12.
+\doi{10.59170/stattrans-2024-024}
 }
