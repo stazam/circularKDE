@@ -57,22 +57,26 @@ bw.jf <- function(x) {
     modulo = "2pi"
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
+  if (any(is.na(x))) {
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
+    x <- x[!is.na(x)]
+  }
 
   n <- length(x)
-  nu.hat <- circular::mle.vonmises(x)$kappa
-  b0.nu <- besselI(nu.hat, 0)
-  b0.2nu <- besselI(2 * nu.hat, 0)
-  b1.2nu <- besselI(2 * nu.hat, 1)
-  b2.2nu <- besselI(2 * nu.hat, 2)
-  b3.2nu <- besselI(2 * nu.hat, 3)
+  kappa.hat <- circular::mle.vonmises(x)$kappa
+  b0.kappa <- besselI(kappa.hat, 0)
+  b0.2kappa <- besselI(2 * kappa.hat, 0)
+  b1.2kappa <- besselI(2 * kappa.hat, 1)
+  b2.2kappa <- besselI(2 * kappa.hat, 2)
+  b3.2kappa <- besselI(2 * kappa.hat, 3)
 
-  r.fVM2 <- (3 * nu.hat^2 * b2.2nu + 2 * nu.hat * b1.2nu) / (8 * pi * b0.nu^2)
-  r.fVM3 <- (4 * nu.hat * b1.2nu + 30 * nu.hat^2 * b2.2nu + 15 * nu.hat^3 * b3.2nu) / (16 * pi * b0.nu^2)
-  r.fVM4 <- (8 * nu.hat^2 * b0.2nu + 105 * nu.hat^4 * b2.2nu +
-               105 * nu.hat^3 * b3.2nu + 244 * nu.hat^2 * b2.2nu) / (32 * pi * b0.nu^2)
+  R.fVM2 <- (3 * kappa.hat^2 * b2.2kappa + 2 * kappa.hat * b1.2kappa) / (8 * pi * b0.kappa^2)
+  R.fVM3 <- (4 * kappa.hat * b1.2kappa + 30 * kappa.hat^2 * b2.2kappa + 15 * kappa.hat^3 * b3.2kappa) / (16 * pi * b0.kappa^2)
+  R.fVM4 <- (8 * kappa.hat^2 * b0.2kappa + 105 * kappa.hat^4 * b2.2kappa +
+               105 * kappa.hat^3 * b3.2kappa + 244 * kappa.hat^2 * b2.2kappa) / (32 * pi * b0.kappa^2)
 
-  R.hat <- 25 * r.fVM2 / 144 - 5 * r.fVM3 / 36 + r.fVM4 / 36
-  bw <- (16 * sqrt(pi) / 3 * R.hat * n)^(2/9)
+  R.hat <- 25 * R.fVM2 / 144 - 5 * R.fVM3 / 36 + R.fVM4 / 36
+  bw <- (16 * sqrt(pi) / (3 * R.hat * n))^(2/9)
 
   return(bw)
 }

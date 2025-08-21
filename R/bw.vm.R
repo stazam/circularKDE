@@ -63,15 +63,15 @@ bw.vm <- function(x) {
     x <- x[!is.na(x)]
   }
   n <- length(x)
-  nu.hat <- circular::mle.vonmises(x)$kappa
+  kappa.hat <- circular::mle.vonmises(x)$kappa
   
-  b0.nu <- besselI(nu.hat, 0)
-  b1.nu <- besselI(nu.hat, 1)
-  b2.2nu <- besselI(2 * nu.hat, 2)
+  b0.kappa <- besselI(kappa.hat, 0)
+  b1.kappa <- besselI(kappa.hat, 1)
+  b2.2kappa <- besselI(2 * kappa.hat, 2)
   
   # R_hat(f_VM^(2))
-  r.fVM2 <- (3 * nu.hat^2 * b2.2nu + 2 * nu.hat * b1.nu) / (8 * pi * b0.nu^2)
+  r.fVM2 <- (3 * kappa.hat^2 * b2.2kappa + 2 * kappa.hat * b1.kappa) / (8 * pi * b0.kappa^2)
 
-  bw <- (2 * sqrt(pi) * r.fVM2 * n)^(2/5)
-  return(bw)
+  kappa <- (2 * sqrt(pi) * r.fVM2 * n)^(2/5)
+  return(kappa)
 }
