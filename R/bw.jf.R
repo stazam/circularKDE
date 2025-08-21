@@ -34,10 +34,7 @@
 #' @importFrom stats optimize
 #' @import circular
 #' @import cli
-bw.jf <- function(x,
-                  lower = 0,
-                  upper = 60,
-                  tol = 0.1) {
+bw.jf <- function(x) {
   n <- length(x)
   if (n == 0) {
     cli::cli_abort(
