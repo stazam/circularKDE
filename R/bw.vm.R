@@ -38,27 +38,40 @@
 bw.vm <- function(x) {
   n <- length(x)
   if (n == 0) {
-    cli::cli_abort("{.var x} must be a non-empty object.")
+    cli::cli_abort(
+      c("{.var x} must be a non-empty object.", "x" = "You've supplied an object of length {n}.")
+    )
   }
   if (!is.numeric(x)) {
-    cli::cli_abort("{.var x} must be numeric or coercible to numeric.")
+    if (all(is.na(x))) {
+      cli::cli_abort("{.var x} contains all missing values.")
+    }
+    cli::cli_abort(
+      c("{.var x} must be a numeric vector.", "x" = "You've supplied a {.cls {class(x)}} vector.")
+    )
   }
-  x <- circular::circular(x, units = "radians", modulo = "2pi")
+  x <- circular(
+    x,
+    units = "radians",
+    zero = 0,
+    rotation = "counter",
+    modulo = "2pi"
+  )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
-    cli::cli_alert_warning("{.var x} contains missing values, removing them.")
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
   n <- length(x)
-  kappa_hat <- circular::mle.vonmises(x)$kappa
+  kappa.hat <- circular::mle.vonmises(x)$kappa
   
-  I0 <- besselI(kappa_hat, 0)
-  I1 <- besselI(kappa_hat, 1)
-  I2 <- besselI(2 * kappa_hat, 2)
+  I0 <- besselI(kappa.hat, 0)
+  I1 <- besselI(kappa.hat, 1)
+  I2 <- besselI(2 * kappa.hat, 2)
   
   # R_hat(f_VM^(2))
-  R_fVM2 <- (3 * kappa_hat^2 * I2 + 2 * kappa_hat * I1) / (8 * pi * I0^2)
+  R.fVM2 <- (3 * kappa.hat^2 * I2 + 2 * kappa.hat * I1) / (8 * pi * I0^2)
   
-  kappa_VM <- (2 * sqrt(pi) * R_fVM2 * n)^(2/5)
-  return(kappa_VM)
+  bw <- (2 * sqrt(pi) * R.fVM2 * n)^(2/5)
+  return(bw)
 }

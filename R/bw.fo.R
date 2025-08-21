@@ -36,6 +36,32 @@
 #' @import circular
 #' @import cli
 bw.fo <- function(x) {
+  n <- length(x)
+  if (n == 0) {
+    cli::cli_abort(
+      c("{.var x} must be a non-empty object.", "x" = "You've supplied an object of length {n}.")
+    )
+  }
+  if (!is.numeric(x)) {
+    if (all(is.na(x))) {
+      cli::cli_abort("{.var x} contains all missing values.")
+    }
+    cli::cli_abort(
+      c("{.var x} must be a numeric vector.", "x" = "You've supplied a {.cls {class(x)}} vector.")
+    )
+  }
+  x <- circular(
+    x,
+    units = "radians",
+    zero = 0,
+    rotation = "counter",
+    modulo = "2pi"
+  )
+  attr(x, "class") <- attr(x, "circularp") <- NULL
+  if (any(is.na(x))) {
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
+    x <- x[!is.na(x)]
+  }
   
   n <- length(x)
   C1 <- 0.25
@@ -51,16 +77,16 @@ bw.fo <- function(x) {
   c1 <- (mean(cos(x)))^2 + (mean(sin(x)))^2
   theta2[1] <- c1 / pi 
   
-  c_bar <- (n / (n - 1)) * (c1 - 1/n)
-  H[1] <- 1/n - gamma * (1 + 1/n) * c_bar
+  c.bar <- (n / (n - 1)) * (c1 - 1/n)
+  H[1] <- 1/n - gamma * (1 + 1/n) * c.bar
   
   for (k in 2:Un) {
-    c_k <- (mean(cos(k * x)))^2 + (mean(sin(k * x)))^2
-    theta2[k] <- theta2[k - 1] + (k^4 * c_k) / pi
-    c_bar <- c_bar + (n / (n - 1)) * (c_k - 1/n)
-    H[k] <- k / n - gamma * (1 + 1/n) * c_bar
+    c.k <- (mean(cos(k * x)))^2 + (mean(sin(k * x)))^2
+    theta2[k] <- theta2[k - 1] + (k^4 * c.k) / pi
+    c.bar <- c.bar + (n / (n - 1)) * (c.k - 1/n)
+    H[k] <- k / n - gamma * (1 + 1/n) * c.bar
   }
   m <- (Ln - 1) + which.min(H[Ln:Un])
-  bandwidth <- (4 * pi)^(-1/10) * (theta2[m] * n)^(-1/5)
-  return(bandwidth)
+  bw <- (4 * pi)^(-1/10) * (theta2[m] * n)^(-1/5)
+  return(bw)
 }
