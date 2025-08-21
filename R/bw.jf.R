@@ -69,13 +69,13 @@ bw.jf <- function(x) {
   b2.2kappa <- besselI(2 * kappa.hat, 2)
   b3.2kappa <- besselI(2 * kappa.hat, 3)
 
-  R.fVM2 <- (3 * kappa.hat^2 * b2.2kappa + 2 * kappa.hat * b1.2kappa) / (8 * pi * b0.kappa^2)
-  R.fVM3 <- (4 * kappa.hat * b1.2kappa + 30 * kappa.hat^2 * b2.2kappa + 15 * kappa.hat^3 * b3.2kappa) / (16 * pi * b0.kappa^2)
-  R.fVM4 <- (8 * kappa.hat^2 * b0.2kappa + 105 * kappa.hat^4 * b2.2kappa +
+  r.fVM2 <- (3 * kappa.hat^2 * b2.2kappa + 2 * kappa.hat * b1.2kappa) / (8 * pi * b0.kappa^2)
+  r.fVM3 <- (4 * kappa.hat * b1.2kappa + 30 * kappa.hat^2 * b2.2kappa + 15 * kappa.hat^3 * b3.2kappa) / (16 * pi * b0.kappa^2)
+  r.fVM4 <- (8 * kappa.hat^2 * b0.2kappa + 105 * kappa.hat^4 * b2.2kappa +
                105 * kappa.hat^3 * b3.2kappa + 244 * kappa.hat^2 * b2.2kappa) / (32 * pi * b0.kappa^2)
 
-  R.hat <- 25 * R.fVM2 / 144 - 5 * R.fVM3 / 36 + R.fVM4 / 36
-  bw <- (16 * sqrt(pi) / (3 * R.hat * n))^(2/9)
+  r.hat <- 25 * r.fVM2 / 144 - 5 * r.fVM3 / 36 + r.fVM4 / 36
+  bw <- (16 * sqrt(pi) / (3 * r.hat * n))^(2/9)
 
   return(bw)
 }
