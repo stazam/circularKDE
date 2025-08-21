@@ -1,4 +1,4 @@
-#' Compute the Optimal Bandwidth for Circular Data using circular vesion of multiplicative method from Terrell and Scott. 
+#' Compute the Optimal Bandwidth for Circular Data using circular version of multiplicative method from Terrell and Scott. 
 #'
 #' This function computes the optimal smoothing parameter (bandwidth) for circular data
 #' using the circular version of the multiplicative method from Terrell and Scott (1980). The method
