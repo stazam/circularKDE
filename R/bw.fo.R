@@ -1,9 +1,8 @@
-#' Compute the Optimal Bandwidth for Circular Data using Fourier Method
+#' Compute the Optimal Bandwidth for Circular Data using Fourier series-based direct plug-in approach
 #'
+#' 
 #' This function computes the optimal smoothing parameter (bandwidth) for circular data
-#' using the Fourier method. The method estimates the bandwidth based on Fourier
-#' coefficients and utilizes a data-driven approach to select the optimal truncation
-#' point for the Fourier series expansion.
+#' using the Fourier series-based direct plug-in approach based on delta sequence estimators (see <doi:doi.org/10.1080/10485252.2022.2057974>).
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using `circular::conversion.circular`.

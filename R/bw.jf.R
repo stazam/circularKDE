@@ -1,15 +1,15 @@
-#' Compute the Optimal Bandwidth for Circular Data using Jones-Faddy Method
+#' Compute the Optimal Bandwidth for Circular Data using circular version of the additive method from Jones and Foster.
 #'
 #' This function computes the optimal smoothing parameter (bandwidth) for circular data
-#' using the Jones-Faddy method. The method is based on higher-order approximations
-#' to estimate the optimal bandwidth for kernel density estimation with circular data.
+#' using the circular version of the additive method from Jones and Foster (1993). The method
+#' is based on the new class of higher order kernel functions with new moments introduced by Tsurunga (see <doi:doi.org/10.1016/j.spl.2017.08.003>).
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using `circular::conversion.circular`.
 #'   Can be a numeric vector or an object of class `circular`.
 #'
 #' @return The computed optimal smoothing parameter, a numeric value derived from
-#'   the Jones-Faddy method for circular kernel density estimation.
+#'   the circular version of the additive method for circular kernel density estimation.
 #'
 #' @export
 #'
