@@ -35,10 +35,7 @@
 #' @importFrom stats optimize
 #' @import circular
 #' @import cli
-bw.ts <- function(x,
-                  lower = 0,
-                  upper = 60,
-                  tol = 0.1) {
+bw.ts <- function(x) {
   n <- length(x)
   if (n == 0) {
     cli::cli_abort(
@@ -63,22 +60,22 @@ bw.ts <- function(x,
   attr(x, "class") <- attr(x, "circularp") <- NULL
 
   n <- length(x)
-  kappa.hat <- circular::mle.vonmises(x)$kappa
-  I0 <- besselI(kappa.hat, 0)
-  I0k2 <- besselI(2 * kappa.hat, 0)
-  I1k2 <- besselI(2 * kappa.hat, 1)
-  I2k2 <- besselI(2 * kappa.hat, 2)
-  I3k2 <- besselI(2 * kappa.hat, 3)
+  nu.hat <- circular::mle.vonmises(x)$kappa
+  b0.nu <- besselI(nu.hat, 0)
+  b0.2nu <- besselI(2 * nu.hat, 0)
+  b1.2nu <- besselI(2 * nu.hat, 1)
+  b2.2nu <- besselI(2 * nu.hat, 2)
+  b3.2nu <- besselI(2 * nu.hat, 3)
 
-  R.fVM2 <- (3 * kappa.hat^2 * I2k2 + 2 * kappa.hat * I1k2) / (8 * pi * I0^2)
-  R.fVM3 <- (4 * kappa.hat * I1k2 + 30 * kappa.hat^2 * I2k2 + 15 * kappa.hat^3 * I3k2) / (16 * pi * I0^2)
-  R.fVM4 <- (8 * kappa.hat^2 * I0k2 + 105 * kappa.hat^4 * I2k2 +
-               105 * kappa.hat^3 * I3k2 + 244 * kappa.hat^2 * I2k2) / (32 * pi * I0^2)
+  r.fVM2 <- (3 * nu.hat^2 * b2.2nu + 2 * nu.hat * b1.2nu) / (8 * pi * b0.nu^2)
+  r.fVM3 <- (4 * nu.hat * b1.2nu + 30 * nu.hat^2 * b2.2nu + 15 * nu.hat^3 * b3.2nu) / (16 * pi * b0.nu^2)
+  r.fVM4 <- (8 * nu.hat^2 * b0.2nu + 105 * nu.hat^4 * b2.2nu +
+               105 * nu.hat^3 * b3.2nu + 244 * nu.hat^2 * b2.2nu) / (32 * pi * b0.nu^2)
 
   # Approximation to m_vm functional (Appendix E, simplified form)
-  R.hat <- 0.25 * R.fVM2 - 1.25 * R.fVM3 + 0.25 * R.fVM4
+  R.hat <- 0.25 * r.fVM2 - 1.25 * r.fVM3 + 0.25 * r.fVM4
 
-  nu <- (288 / (33 - 16 * sqrt(2) / sqrt(5)) * R.hat * n)^(2/9)
+  bw <- (288 / (33 - 16 * sqrt(2) / sqrt(5)) * R.hat * n)^(2/9)
 
-  return(nu)
+  return(bw)
 }
