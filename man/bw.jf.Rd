@@ -2,7 +2,7 @@
 % Please edit documentation in R/bw.jf.R
 \name{bw.jf}
 \alias{bw.jf}
-\title{Compute the Optimal Bandwidth for Circular Data using Jones-Faddy Method}
+\title{Compute the Optimal Bandwidth for Circular Data using circular version of the additive method from Jones and Foster.}
 \usage{
 bw.jf(x)
 }
@@ -13,12 +13,12 @@ Can be a numeric vector or an object of class \code{circular}.}
 }
 \value{
 The computed optimal smoothing parameter, a numeric value derived from
-the Jones-Faddy method for circular kernel density estimation.
+the circular version of the additive method for circular kernel density estimation.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
-using the Jones-Faddy method. The method is based on higher-order approximations
-to estimate the optimal bandwidth for kernel density estimation with circular data.
+using the circular version of the additive method from Jones and Foster (1993). The method
+is based on the new class of higher order kernel functions with new moments introduced by Tsurunga (see \url{doi:doi.org/10.1016/j.spl.2017.08.003}).
 }
 \examples{
 # Example with circular data

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bw.ts.R
 \name{bw.ts}
 \alias{bw.ts}
-\title{Compute the Optimal Bandwidth for Circular Data using Taylor Series Method}
+\title{Compute the Optimal Bandwidth for Circular Data using circular vesion of multiplicative method from Terrell and Scott.}
 \usage{
 bw.ts(x)
 }
@@ -13,13 +13,12 @@ Can be a numeric vector or an object of class \code{circular}.}
 }
 \value{
 The computed optimal smoothing parameter, a numeric value derived from
-the Taylor Series method for circular kernel density estimation.
+the circular version of the multiplicative method for circular kernel density estimation.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
-using the Taylor Series method. The method is based on Taylor series approximations
-to the von Mises functional and provides an alternative approach for bandwidth
-selection in circular kernel density estimation.
+using the circular version of the multiplicative method from Terrell and Scott (1980). The method
+is based on the new class of higher order kernel functions with new moments introduced by Tsurunga (see \url{doi:doi.org/10.1016/j.spl.2017.08.003}).
 }
 \examples{
 # Example with circular data
