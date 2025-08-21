@@ -26,10 +26,9 @@
 #' print(bw)
 #'
 #' @references
-#' García-Portugués, E. (2013). Exact risk improvement of bandwidth selectors
-#' for kernel density estimation with directional data. \emph{Electronic
-#' Journal of Statistics}, 7:1655--1685.
-#' \doi{10.1214/13-ejs821}
+#' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density 
+#' estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
+#' \doi{10.1016/j.spl.2017.07.027}
 #'
 #' @importFrom stats optimize
 #' @import circular
@@ -58,7 +57,7 @@ bw.jf <- function(x) {
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
-    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
     x <- x[!is.na(x)]
   }
 
