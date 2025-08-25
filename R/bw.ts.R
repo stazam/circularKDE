@@ -84,3 +84,4 @@ bw.ts <- function(x) {
 
   return(bw)
 }
+
