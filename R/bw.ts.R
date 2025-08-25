@@ -1,4 +1,4 @@
-#' Compute the Optimal Bandwidth for Circular Data using circular version of multiplicative method from Terrell and Scott. 
+#' Compute the Optimal Bandwidth for Circular Data using circular version of multiplicative method from Terrell and Scott.
 #'
 #' This function computes the optimal smoothing parameter (bandwidth) for circular data
 #' using the circular version of the multiplicative method from Terrell and Scott (1980). The method
@@ -26,7 +26,7 @@
 #' print(bw)
 #'
 #' @references
-#' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density 
+#' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density
 #' estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
 #' \doi{10.1016/j.spl.2017.07.027}
 #'
@@ -66,6 +66,7 @@ bw.ts <- function(x) {
   b0.kappa <- besselI(kappa.hat, 0)
   b0.2kappa <- besselI(2 * kappa.hat, 0)
   b1.2kappa <- besselI(2 * kappa.hat, 1)
+  b2.kappa <- besselI(kappa.hat, 2)
   b2.2kappa <- besselI(2 * kappa.hat, 2)
   b3.2kappa <- besselI(2 * kappa.hat, 3)
 
@@ -73,11 +74,13 @@ bw.ts <- function(x) {
   r.fVM3 <- (4 * kappa.hat * b1.2kappa + 30 * kappa.hat^2 * b2.2kappa + 15 * kappa.hat^3 * b3.2kappa) / (16 * pi * b0.kappa^2)
   r.fVM4 <- (8 * kappa.hat^2 * b0.2kappa + 105 * kappa.hat^4 * b2.2kappa +
                105 * kappa.hat^3 * b3.2kappa + 244 * kappa.hat^2 * b2.2kappa) / (32 * pi * b0.kappa^2)
+  r.fVM2VM1 <- (41 * kappa.hat^4 * b2.2kappa + 12 * kappa.hat^2 * b2.kappa - 87 * kappa.hat^3 * b3.2kappa) / (32 * pi * b0.kappa^2)
+  integral.1 <- (4 * kappa.hat^3 * b1.2kappa - 14 * kappa.hat^2 * b2.2kappa - 3 * kappa.hat^3 * b3.2kappa) / (16 * pi * b0.kappa^2)
+  integral.2 <- (36 * kappa.hat^2 * b2.2kappa + 9 * kappa.hat^4 * b2.2kappa + 25 * kappa.hat^3 * b3.2kappa) / (32 * pi * b0.kappa^2)
 
-  # Taylor series approximation to von Mises functional
-  r.hat <- 0.25 * r.fVM2 - 1.25 * r.fVM3 + 0.25 * r.fVM4
+  r.hat <- 0.25 * r.fVM2VM1 + 1.5625 * r.fVM2 - 1.25 * r.fVM3 + 0.25 * r.fVM4 - 1.25 * integral.1 - 0.5 * integral.2
 
-  bw <- (288 / ((33 - 16 * sqrt(2) / sqrt(5)) * r.hat * n))^(2/9)
+  bw <- (288 / (33 - 16 * sqrt(2) / sqrt(5)) * r.hat * n)^(2/9)
 
   return(bw)
 }

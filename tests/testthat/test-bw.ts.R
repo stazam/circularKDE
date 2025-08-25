@@ -11,7 +11,7 @@ test_that("bw.ts returns a numeric value for valid input", {
   set.seed(123)
   x <- rvonmises(50, circular(pi / 2), 1)
   result <- bw.ts(x)
-  expect_equal(result, 1.50822824)
+  expect_equal(result, 2.04356088)
   expect_type(result, "double")
   expect_length(result, 1)
 })

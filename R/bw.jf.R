@@ -26,7 +26,7 @@
 #' print(bw)
 #'
 #' @references
-#' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density 
+#' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density
 #' estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
 #' \doi{10.1016/j.spl.2017.07.027}
 #'
@@ -75,7 +75,7 @@ bw.jf <- function(x) {
                105 * kappa.hat^3 * b3.2kappa + 244 * kappa.hat^2 * b2.2kappa) / (32 * pi * b0.kappa^2)
 
   r.hat <- 25 * r.fVM2 / 144 - 5 * r.fVM3 / 36 + r.fVM4 / 36
-  bw <- (16 * sqrt(pi) / (3 * r.hat * n))^(2/9)
+  bw <- ((16 * sqrt(pi)) / 3 * (r.hat * n))^(2/9)
 
   return(bw)
 }
