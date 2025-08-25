@@ -2,7 +2,7 @@
 #'
 #' This function computes the optimal smoothing parameter (bandwidth) for circular data
 #' using a smoothed cross-validation (SCV) method (see <doi:doi.org/10.1007/s00180-023-01401-0>).
-#' It searches for the value of the smoothing parameter `nu` that minimizes the SCV criterion within the
+#' It searches for the value of the smoothing parameter `kappa` that minimizes the SCV criterion within the
 #' specified interval `[lower, upper]`.
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
@@ -12,15 +12,15 @@
 #'   to evaluate the SCV criterion. A higher number increases precision but also
 #'   computational cost. Default is 500.
 #' @param lower Lower boundary of the interval for the optimization of the smoothing
-#'   parameter `nu`. Must be a positive numeric value smaller than `upper`.
+#'   parameter `kappa`. Must be a positive numeric value smaller than `upper`.
 #'   Default is 0.
 #' @param upper Upper boundary of the interval for the optimization of the smoothing
-#'   parameter `nu`. Must be a positive numeric value greater than `lower`.
+#'   parameter `kappa`. Must be a positive numeric value greater than `lower`.
 #'   Default is 60.
 #' @param tol Convergence tolerance used in the `optimize` function. Determines how
 #'   precisely the optimal value is estimated. Default is 0.1.
 #'
-#' @return The computed optimal smoothing parameter `nu`, the numeric value
+#' @return The computed optimal smoothing parameter `kappa`, the numeric value
 #' that minimizes the smoothed cross-validation criterion.
 #'
 #' @export
@@ -35,6 +35,12 @@
 #' x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 #' bw <- bw.scv(x)
 #' print(bw)
+#'
+#' @references
+#' Zámeček, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive 
+#' method for bandwidth selection in circular kernel density estimation. 
+#' \emph{Computational Statistics}.
+#' \doi{10.1007/s00180-023-01401-0}
 #'
 #' @importFrom stats optimize
 #' @import circular
@@ -74,7 +80,7 @@ bw.scv <- function(x,
     cli::cli_alert_warning(
       c(
         "Argument {.var np} must be numeric. ",
-        "Default value 500 for number of points for evalutaion of numerical integration was used."
+        "Default value 500 for number of points for evaluation of numerical integration was used."
       )
     )
     np <- 500
@@ -107,7 +113,7 @@ bw.scv <- function(x,
     lower <- 0
     upper <- 60
   }
-  scv <- function(x, nu, np) {
+  scv <- function(x, kappa, np) {
     # trapezoidal rule for numerical integration is used
     n <- length(x)
     h <- 2 * pi / np
@@ -115,23 +121,23 @@ bw.scv <- function(x,
 
     C <- cos(outer(knots, x, "-"))
     D <- cos(outer(x, x, "-"))
-    B <- besselI(nu * sqrt(2 * (1 + C)), 0)
-    E <- exp(nu * C)
-    b0.nu <- besselI(nu, 0)
+    B <- besselI(kappa * sqrt(2 * (1 + C)), 0)
+    E <- exp(kappa * C)
+    b0.kappa <- besselI(kappa, 0)
 
-    factor.1 <- 1 / (4 * pi ^ 2 * n * (n - 1) * b0.nu ^ 4)
+    factor.1 <- 1 / (4 * pi ^ 2 * n * (n - 1) * b0.kappa ^ 4)
     arg.1 <- t(B) %*% B
     part.1 <- factor.1 * h *  (sum(arg.1) - sum(diag(arg.1)))
 
-    factor.2 <- 1 / (2 * n * (n - 1) * pi ^ 2 * b0.nu ^ 3)
+    factor.2 <- 1 / (2 * n * (n - 1) * pi ^ 2 * b0.kappa ^ 3)
     arg.2 <- t(B) %*% E
     part.2 <- factor.2 * h * (sum(arg.2) - sum(diag(arg.2)))
 
-    factor.3 <- 1 / (2 * n * (n - 1) * pi * b0.nu ^ 2)
-    arg.3 <- besselI(nu * sqrt(2 * (1 + D)), 0)
+    factor.3 <- 1 / (2 * n * (n - 1) * pi * b0.kappa ^ 2)
+    arg.3 <- besselI(kappa * sqrt(2 * (1 + D)), 0)
     part.3 <- factor.3 * (sum(arg.3) - sum(diag(arg.3)))
 
-    part.4 <- besselI(2 * nu, 0) / (2 * n * pi * b0.nu ^ 2)
+    part.4 <- besselI(2 * kappa, 0) / (2 * n * pi * b0.kappa ^ 2)
 
     # ISB + IV
     result <- (part.1 - part.2 + part.3) + part.4

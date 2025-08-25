@@ -16,24 +16,24 @@ to evaluate the SCV criterion. A higher number increases precision but also
 computational cost. Default is 500.}
 
 \item{lower}{Lower boundary of the interval for the optimization of the smoothing
-parameter \code{nu}. Must be a positive numeric value smaller than \code{upper}.
+parameter \code{kappa}. Must be a positive numeric value smaller than \code{upper}.
 Default is 0.}
 
 \item{upper}{Upper boundary of the interval for the optimization of the smoothing
-parameter \code{nu}. Must be a positive numeric value greater than \code{lower}.
+parameter \code{kappa}. Must be a positive numeric value greater than \code{lower}.
 Default is 60.}
 
 \item{tol}{Convergence tolerance used in the \code{optimize} function. Determines how
 precisely the optimal value is estimated. Default is 0.1.}
 }
 \value{
-The computed optimal smoothing parameter \code{nu}, the numeric value
+The computed optimal smoothing parameter \code{kappa}, the numeric value
 that minimizes the smoothed cross-validation criterion.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
 using a smoothed cross-validation (SCV) method (see \url{doi:doi.org/10.1007/s00180-023-01401-0}).
-It searches for the value of the smoothing parameter \code{nu} that minimizes the SCV criterion within the
+It searches for the value of the smoothing parameter \code{kappa} that minimizes the SCV criterion within the
 specified interval \verb{[lower, upper]}.
 }
 \examples{
@@ -46,4 +46,10 @@ x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 bw <- bw.scv(x)
 print(bw)
 
+}
+\references{
+Zámeček, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive
+method for bandwidth selection in circular kernel density estimation.
+\emph{Computational Statistics}.
+\doi{10.1007/s00180-023-01401-0}
 }

@@ -1,7 +1,7 @@
 ---
 title: "README"
 author: "Stanislav Zámečník"
-date: "15 04 2025"
+date: "25.08.2025"
 output:
   html_document: default
   pdf_document: default

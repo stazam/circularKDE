@@ -2,7 +2,7 @@
 #'
 #' This function computes the optimal smoothing parameter (bandwidth) for circular data
 #' using a generalized least squares cross-validation method (see <doi:10.1007/s00180-023-01401-0>).
-#' It searches for the value of the smoothing parameter `nu` that minimizes the cross-validation criterion within the
+#' It searches for the value of the smoothing parameter `kappa` that minimizes the cross-validation criterion within the
 #' specified interval `[lower, upper]`.
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
@@ -12,15 +12,15 @@
 #'   procedure. It influences the scaling in the internal calculations, affecting the
 #'   bandwidth estimation. Default is 4.
 #' @param lower Lower boundary of the interval to be used in the search for the
-#'   smoothing parameter `nu`. Must be a positive numeric value less than `upper`.
+#'   smoothing parameter `kappa`. Must be a positive numeric value less than `upper`.
 #'   Default is 0.
 #' @param upper Upper boundary of the interval to be used in the search for the
-#'   smoothing parameter `nu`. Must be a positive numeric value greater than `lower`.
+#'   smoothing parameter `kappa`. Must be a positive numeric value greater than `lower`.
 #'   Default is 60.
 #' @param tol Convergence tolerance for the `optimize` function, determining the
 #'   precision of the optimization process. Default is 0.1.
 #'
-#' @return The computed optimal smoothing parameter `nu`, a numeric value that
+#' @return The computed optimal smoothing parameter `kappa`, a numeric value that
 #'   minimizes the least squares cross-validation criterion within the interval
 #'   `[lower, upper]`.
 #'
@@ -109,27 +109,27 @@ bw.lscvg <- function(x,
     upper <- 60
   }
 
-  lscvg <- function(x, nu, g) {
+  lscvg <- function(x, kappa, g) {
     n <- length(x)
     grid <- outer(x, x, '-')
     cos.grid <- cos(grid)
 
-    b0.nu      <- besselI(nu, 0)
-    b0.2.nu     <- besselI(2 * nu, 0)
-    b0.nu.g    <- besselI(nu / g, 0)
-    b0.nu.half <- besselI(nu / 2, 0)
+    b0.kappa      <- besselI(kappa, 0)
+    b0.2.kappa     <- besselI(2 * kappa, 0)
+    b0.kappa.g    <- besselI(kappa / g, 0)
+    b0.kappa.half <- besselI(kappa / 2, 0)
 
-    part.1 <- b0.2.nu / (2 * pi * n * (b0.nu ^ 2))
+    part.1 <- b0.2.kappa / (2 * pi * n * (b0.kappa ^ 2))
 
-    factor.2 <- (2 / (g * (g - 2))) * (1 / (2 * pi * b0.nu.g))
-    part.2 <- factor.2 * (sum(exp((nu / g) * cos.grid)) - n * exp(nu / g))
+    factor.2 <- (2 / (g * (g - 2))) * (1 / (2 * pi * b0.kappa.g))
+    part.2 <- factor.2 * (sum(exp((kappa / g) * cos.grid)) - n * exp(kappa / g))
 
-    arg.3 <- nu * sqrt(2 * (1 + cos.grid))
-    factor.3 <- ((n - 1) / n) * (1 / (2 * pi * (b0.nu ^ 2)))
-    part.3 <- factor.3 * (sum(besselI(arg.3, 0)) - n * b0.2.nu)
+    arg.3 <- kappa * sqrt(2 * (1 + cos.grid))
+    factor.3 <- ((n - 1) / n) * (1 / (2 * pi * (b0.kappa ^ 2)))
+    part.3 <- factor.3 * (sum(besselI(arg.3, 0)) - n * b0.2.kappa)
 
-    factor.4 <- ((g - 1) / (g - 2)) * (1 / (2 * pi * b0.nu.half))
-    part.4 <-  factor.4 * (sum(exp((nu / 2) * cos.grid)) - n * exp(nu / 2))
+    factor.4 <- ((g - 1) / (g - 2)) * (1 / (2 * pi * b0.kappa.half))
+    part.4 <-  factor.4 * (sum(exp((kappa / 2) * cos.grid)) - n * exp(kappa / 2))
 
     result <- part.1 + (part.2 + part.3 - part.4) / (n * (n - 1))
     return(result)

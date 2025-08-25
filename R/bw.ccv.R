@@ -2,22 +2,22 @@
 #'
 #' This function calculates the optimal smoothing parameter (bandwidth) for circular data
 #' using the complete cross-validation (CCV) method (see <doi:10.59170/stattrans-2024-024>). It searches for the value of the
-#' smoothing parameter `nu` that minimizes the CCV criterion within a specified interval
+#' smoothing parameter `kappa` that minimizes the CCV criterion within a specified interval
 #' `[lower, upper]`.
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using `circular::conversion.circular`.
 #'   Can be a numeric vector or an object of class `circular`.
 #' @param lower Lower boundary of the interval to be used in the search for the
-#'   smoothing parameter `nu`. Must be a positive numeric value less than `upper`.
+#'   smoothing parameter `kappa`. Must be a positive numeric value less than `upper`.
 #'   Default is 0.
 #' @param upper Upper boundary of the interval to be used in the search for the
-#'   smoothing parameter `nu`. Must be a positive numeric value greater than `lower`.
+#'   smoothing parameter `kappa`. Must be a positive numeric value greater than `lower`.
 #'   Default is 60.
 #' @param tol Convergence tolerance for the `optimize` function, determining the
 #'   precision of the optimization process. Default is 0.1.
 #'
-#' @return The computed optimal smoothing parameter `nu`, a numeric value that
+#' @return The computed optimal smoothing parameter `kappa`, a numeric value that
 #'   minimizes the complete cross-validation criterion within the interval
 #'   `[lower, upper]`.
 #'
@@ -34,6 +34,11 @@
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
 #' bw <- bw.ccv(x)
 #' print(bw)
+#'
+#' @references
+#' A comprehensive exploration of complete cross-validation for circular data 
+#' (2024). \emph{Statistics in Transition New Series}, 25(3):1--12.
+#' \doi{10.59170/stattrans-2024-024}
 #'
 #' @importFrom stats optimize
 #' @import circular
@@ -97,40 +102,40 @@ bw.ccv <- function(x,
     upper <- 60
   }
 
-  ccv <- function(x, nu) {
+  ccv <- function(x, kappa) {
     n <- length(x)
     grid <- outer(x, x, "-")
 
-    b0.nu <- besselI(nu, 0)
-    b1.nu <- besselI(nu, 1)
-    b2.nu <- besselI(nu, 2)
+    b0.kappa <- besselI(kappa, 0)
+    b1.kappa <- besselI(kappa, 1)
+    b2.kappa <- besselI(kappa, 2)
 
     cos.grid <- cos(grid)
     sin.grid <- sin(grid)
-    exp.nu.cos <- exp(nu * cos.grid)
+    exp.kappa.cos <- exp(kappa * cos.grid)
 
     cos.0 <- 1
     sin.0 <- 0
-    exp.0 <- exp(nu * cos.0)
+    exp.0 <- exp(kappa * cos.0)
 
-    factor.1 <- 1 / (2 * pi * n ^ 2 * b0.nu ^ 2)
-    part.1 <- factor.1 * sum(besselI(nu * sqrt(2 * (1 + cos.grid)), 0))
+    factor.1 <- 1 / (2 * pi * n ^ 2 * b0.kappa ^ 2)
+    part.1 <- factor.1 * sum(besselI(kappa * sqrt(2 * (1 + cos.grid)), 0))
 
-    factor.2 <- 1 / (n * (n - 1) * 2 * pi * b0.nu)
-    part.2 <- factor.2 * (sum(exp.nu.cos) - n * exp.0)
+    factor.2 <- 1 / (n * (n - 1) * 2 * pi * b0.kappa)
+    part.2 <- factor.2 * (sum(exp.kappa.cos) - n * exp.0)
 
-    factor.3 <- (1 / (2 * nu)) * (b1.nu / b0.nu) * (1 / (2 * pi * b0.nu * n * (n - 1)))
-    arg.3 <- exp.nu.cos * (nu ^ 2 * sin.grid ^ 2 - nu * cos.grid)
-    arg.3.1 <- exp.0 * (-nu)
+    factor.3 <- (1 / (2 * kappa)) * (b1.kappa / b0.kappa) * (1 / (2 * pi * b0.kappa * n * (n - 1)))
+    arg.3 <- exp.kappa.cos * (kappa ^ 2 * sin.grid ^ 2 - kappa * cos.grid)
+    arg.3.1 <- exp.0 * (-kappa)
     part.3 <- -factor.3 * (sum(arg.3) - n * arg.3.1)
 
-    factor.4 <- (1 / (8 * nu ^ 2)) * (2 * (b1.nu / b0.nu) ^ 2 - b2.nu / b0.nu) * (1 / (2 * pi * b0.nu * n * (n - 1)))
-    arg.4 <- exp.nu.cos * (
-      nu ^ 4 * sin.grid ^ 4 - 6 * nu ^ 3 * sin.grid ^ 2 * cos.grid +
-        3 * nu ^ 2 * (cos.grid ^ 2 - sin.grid ^ 2) - nu ^
-        2 * sin.grid ^ 2 + nu * cos.grid
+    factor.4 <- (1 / (8 * kappa ^ 2)) * (2 * (b1.kappa / b0.kappa) ^ 2 - b2.kappa / b0.kappa) * (1 / (2 * pi * b0.kappa * n * (n - 1)))
+    arg.4 <- exp.kappa.cos * (
+      kappa ^ 4 * sin.grid ^ 4 - 6 * kappa ^ 3 * sin.grid ^ 2 * cos.grid +
+        3 * kappa ^ 2 * (cos.grid ^ 2 - sin.grid ^ 2) - kappa ^
+        2 * sin.grid ^ 2 + kappa * cos.grid
     )
-    arg.4.1 <- exp.0 * (3 * nu ^ 2 + nu)
+    arg.4.1 <- exp.0 * (3 * kappa ^ 2 + kappa)
     part.4 <- factor.4 * (sum(arg.4) - n * arg.4.1)
 
     result <- part.1 - part.2 + part.3 + part.4
