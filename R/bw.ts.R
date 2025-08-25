@@ -78,7 +78,7 @@ bw.ts <- function(x) {
   integral.1 <- (4 * kappa.hat^3 * b1.2kappa - 14 * kappa.hat^2 * b2.2kappa - 3 * kappa.hat^3 * b3.2kappa) / (16 * pi * b0.kappa^2)
   integral.2 <- (36 * kappa.hat^2 * b2.2kappa + 9 * kappa.hat^4 * b2.2kappa + 25 * kappa.hat^3 * b3.2kappa) / (32 * pi * b0.kappa^2)
 
-  r.hat <- 0.25 * r.fVM2VM1 + 1.5625 * r.fVM2 - 1.25 * r.fVM3 + 0.25 * r.fVM4 - 1.25 * integral.1 - 0.5 * integral.2
+  r.hat <- 1/4 * r.fVM2VM1 + 25/16 * r.fVM2 - 5/4 * r.fVM3 + 1/4 * r.fVM4 - 5/4 * integral.1 - 1/2 * integral.2
 
   bw <- (288 / (33 - 16 * sqrt(2) / sqrt(5)) * r.hat * n)^(2/9)
 
