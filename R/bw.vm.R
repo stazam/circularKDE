@@ -1,9 +1,8 @@
-#' Compute the Optimal Bandwidth for Circular Data using von Mises Method
+#' Compute the Optimal Bandwidth for Circular Data using plug in introduced by Tsuruta and Sagae.
 #'
 #' This function computes the optimal smoothing parameter (bandwidth) for circular data
-#' using the von Mises method. The optimal bandwidth is derived based on the maximum
-#' likelihood estimate of the concentration parameter kappa from a von Mises distribution
-#' fitted to the data.
+#' using the plug-in method introduced by Tsuruta and Sagae with assumption of Von Mises distribution as a reference density. The method
+#' is based on the higher order kernel functions with new moments introduced by Tsuruta and Sagae (see <doi:doi.org/10.1016/j.spl.2017.08.003>).
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using `circular::conversion.circular`.
