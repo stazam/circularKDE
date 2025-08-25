@@ -2,7 +2,7 @@
 % Please edit documentation in R/bw.vm.R
 \name{bw.vm}
 \alias{bw.vm}
-\title{Compute the Optimal Bandwidth for Circular Data using von Mises Method}
+\title{Compute the Optimal Bandwidth for Circular Data using plug in introduced by Tsuruta and Sagae.}
 \usage{
 bw.vm(x)
 }
@@ -17,9 +17,8 @@ the von Mises distribution fit to the data.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
-using the von Mises method. The optimal bandwidth is derived based on the maximum
-likelihood estimate of the concentration parameter kappa from a von Mises distribution
-fitted to the data.
+using the plug-in method introduced by Tsuruta and Sagae with assumption of Von Mises distribution as a reference density. The method
+is based on the higher order kernel functions with new moments introduced by Tsuruta and Sagae (see \url{doi:doi.org/10.1016/j.spl.2017.08.003}).
 }
 \examples{
 # Example with circular data
