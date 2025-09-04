@@ -36,9 +36,9 @@
 #' print(bw)
 #'
 #' @references
-#' A comprehensive exploration of complete cross-validation for circular data 
-#' (2024). \emph{Statistics in Transition New Series}, 25(3):1--12.
-#' \doi{10.59170/stattrans-2024-024}
+#' Hasilová, K., Horová, I., Valis, D., & Zámečník, S. (2024).
+#' A comprehensive exploration of complete cross-validation for circular data.
+#' \emph{Statistics in Transition New Series}, 25(3):1--12. \doi{10.59170/stattrans-2024-024}
 #'
 #' @importFrom stats optimize
 #' @import circular
