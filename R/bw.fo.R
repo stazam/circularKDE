@@ -2,7 +2,7 @@
 #'
 #' 
 #' This function computes the optimal smoothing parameter (bandwidth) for circular data
-#' using the Fourier series-based direct plug-in approach based on delta sequence estimators (see <doi:doi.org/10.1080/10485252.2022.2057974>).
+#' using the Fourier series-based direct plug-in approach based on delta sequence estimators (see <doi:10.1080/10485252.2022.2057974>).
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using `circular::conversion.circular`.
@@ -54,7 +54,8 @@ bw.fo <- function(x) {
     units = "radians",
     zero = 0,
     rotation = "counter",
-    modulo = "2pi"
+    modulo = "2pi",
+    template = "none"
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {

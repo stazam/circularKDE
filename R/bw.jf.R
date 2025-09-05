@@ -2,7 +2,7 @@
 #'
 #' This function computes the optimal smoothing parameter (bandwidth) for circular data
 #' using the circular version of the additive method from Jones and Foster (1993). The method
-#' is based on the higher order kernel functions with new moments introduced by Tsuruta and Sagae (see <doi:doi.org/10.1016/j.spl.2017.08.003>).
+#' is based on the higher order kernel functions with new moments introduced by Tsuruta and Sagae (see <doi:10.1016/j.spl.2017.08.003>).
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using `circular::conversion.circular`.
