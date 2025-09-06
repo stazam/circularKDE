@@ -40,7 +40,7 @@ generated automatically.}
 Must be finite. Default is \code{circular(0)} (0 radians).}
 
 \item{to}{Ending point of the evaluation range, a numeric value in radians. Must
-be finite. Default is \code{circular(2 * pi)} (2π radians).}
+be finite. Default is \code{circular(2 * pi)} (2*pi radians).}
 
 \item{n}{Positive integer specifying the number of evaluation points (default is
 500). Ignored if \code{z} is provided. Determines the resolution of the density
@@ -75,7 +75,7 @@ plot(z, dens, type = "l", main = "Density with Custom Points")
 
 }
 \references{
-Zámeček, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive
+Zámečník, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive
 method for bandwidth selection in circular kernel density estimation.
 \emph{Computational Statistics}.
 \doi{10.1007/s00180-023-01401-0}
