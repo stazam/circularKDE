@@ -18,7 +18,7 @@ the circular version of the multiplicative method for circular kernel density es
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
 using the circular version of the multiplicative method from Terrell and Scott (1980). The method
-is based on the higher order kernel functions with new moments introduced by Tsuruta and Sagae (see \url{doi:doi.org/10.1016/j.spl.2017.08.003}).
+is based on the higher order kernel functions with new moments introduced by Tsuruta and Sagae (see \url{doi:10.1016/j.spl.2017.08.003}).
 }
 \examples{
 # Example with circular data

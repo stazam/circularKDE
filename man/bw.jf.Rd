@@ -18,7 +18,7 @@ the circular version of the additive method for circular kernel density estimati
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
 using the circular version of the additive method from Jones and Foster (1993). The method
-is based on the higher order kernel functions with new moments introduced by Tsuruta and Sagae (see \url{doi:doi.org/10.1016/j.spl.2017.08.003}).
+is based on the higher order kernel functions with new moments introduced by Tsuruta and Sagae (see \url{doi:10.1016/j.spl.2017.08.003}).
 }
 \examples{
 # Example with circular data

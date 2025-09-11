@@ -17,7 +17,7 @@ the Fourier method for circular kernel density estimation.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
-using the Fourier series-based direct plug-in approach based on delta sequence estimators (see \url{doi:doi.org/10.1080/10485252.2022.2057974}).
+using the Fourier series-based direct plug-in approach based on delta sequence estimators (see \url{doi:10.1080/10485252.2022.2057974}).
 }
 \examples{
 # Example with circular data
