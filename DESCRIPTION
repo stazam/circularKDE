@@ -1,5 +1,5 @@
 Package: circularKDE
-Title: Methods for kernel density estimation for circular data
+Title: Recent Methods for kernel density estimation for circular data
 Version: 0.2.2
 Authors@R: 
       c(person(given = "Stanislav", family = "Zamecnik", email = c("zamecnik@math.muni.cz"), role = c("aut", "cre")),
