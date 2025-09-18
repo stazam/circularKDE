@@ -1,9 +1,14 @@
 #' Compute the Optimal Bandwidth for Circular Data using Smoothed Cross-Validation
 #'
-#' This function computes the optimal smoothing parameter (bandwidth) for circular data
-#' using a smoothed cross-validation (SCV) method (see <doi:doi.org/10.1007/s00180-023-01401-0>).
-#' It searches for the value of the smoothing parameter `kappa` that minimizes the SCV criterion within the
-#' specified interval `[lower, upper]`.
+#' This function computes the optimal smoothing parameter (bandwidth) for circular data using a smoothed cross-validation (SCV) method (see \texttt{doi:10.1007/s00180-023-01401-0}). 
+#' The SCV criterion is given by
+#' \[
+#' \mathrm{SCV}(\kappa) = \frac{R(K)}{nh} 
+#'  + \frac{1}{n^{2}} \sum_{i=1}^{n} \sum_{j=1}^{n} 
+#'     \big(K_{\kappa} * K_{\kappa} * K_{\kappa} * K_{\kappa} - 2K_{\kappa} * K_{\kappa} *K_{\kappa} + K_{\kappa} * K_{\kappa}\big)(\Theta_i - \Theta_j)
+#' \]
+#' where $K_\kappa$ is the Von Mises kernel with concentration $\kappa$. The function searches for the value of $\kappa$ 
+#' that minimizes this criterion over the interval \texttt{[lower, upper]}.
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using `circular::conversion.circular`.
@@ -19,6 +24,9 @@
 #'   Default is 60.
 #' @param tol Convergence tolerance used in the `optimize` function. Determines how
 #'   precisely the optimal value is estimated. Default is 0.1.
+#' 
+#' @details The integral expressions involved in the SCV criterion are evaluated numerically using the trapezoidal rule 
+#' on a uniform grid of length \texttt{np}. 
 #'
 #' @return The computed optimal smoothing parameter `kappa`, the numeric value
 #' that minimizes the smoothed cross-validation criterion.
