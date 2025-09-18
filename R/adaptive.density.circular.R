@@ -124,22 +124,20 @@ adaptive.density.circular <- function(x,
     n <- length(x)
     factor <- 1 / (2 * n * pi)
 
-    main.part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)))
+    main.part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)), na.rm = TRUE)
     result <- factor * main.part
     return(result)
   }
   y <- sapply(
-    z = z,
-    kernel.density.adaptive.est,
+    X = z,
+    FUN=kernel.density.adaptive.est,
     x = x,
     bw0 = bw0,
     alpha = alpha,
     type = type,
     lambda = lambda
   )
-  if (any(is.na(x))) {
-    cli::cli_alert_warning("Some values were not computed properly, and will be rounded to 0.")
-    y[is.na(y)] <- 0
-  }
   return(y)
 }
+
+
