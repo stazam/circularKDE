@@ -51,8 +51,8 @@
 #' plot(z, dens, type = "l", main = "Density with Custom Points")
 #'
 #' @references
-#' Zámečník, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive 
-#' method for bandwidth selection in circular kernel density estimation. 
+#' Zámečník, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive
+#' method for bandwidth selection in circular kernel density estimation.
 #' \emph{Computational Statistics}.
 #' \doi{10.1007/s00180-023-01401-0}
 #'
@@ -137,5 +137,9 @@ adaptive.density.circular <- function(x,
     type = type,
     lambda = lambda
   )
+  if (any(is.na(x))) {
+    cli::cli_alert_warning("Some values were not computed properly, and will be rounded to 0.")
+    y[is.na(y)] <- 0
+  }
   return(y)
 }
