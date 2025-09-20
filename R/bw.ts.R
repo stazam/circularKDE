@@ -11,9 +11,9 @@
 #' @details The plug-in approach estimates the optimal bandwidth through the following steps:
 #' \enumerate{
 #'   \item Apply the multiplicative method from Terrell and Scott (1980) to construct a p-th order kernel function.
-#'   \item Plug-in the required functionals into AMISE expression.
-#'   \item Solving for the bandwidth that minimizes the asymptotic mean integrated squared error (AMISE). 
-#'         The optimal bandwidth for the multiplicative Terrell-Scott method is given by:
+#'   \item Plug-in the required functionals into asymptotic mean integrated squared error (AMISE) expression.
+#'   \item Solving for the bandwidth that minimizes the AMISE. The optimal
+#'         bandwidth for the multiplicative Terrell-Scott method is given by:
 #'         \deqn{\hat{\kappa}_{TS} = \left[\frac{288}{33 - 16\sqrt{2/5}} \hat{R}_{\hat{\tau}}(m_{VM}) n\right]^{2/9}}
 #'         where the computational formula is:
 #'         \deqn{m_{VM}(\theta) := [2\{f_{VM}^{(2)}\}^2/f_{VM} - 5f_{VM}^{(2)} + 2f_{VM}^{(4)}]/4}

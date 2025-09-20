@@ -21,9 +21,6 @@ using the plug-in method introduced by Tsuruta and Sagae (see \doi{10.1016/j.spl
 multiplicative method from Terrell and Scott (1980) to form higher-order kernel functions.
 }
 \details{
-The method is the plug-in bandwidth selection approach developed by Tsuruta and Sagae (2017)
-using p-th order kernel functions with higher moments.
-
 The plug-in approach estimates the optimal bandwidth through the following steps:
 \enumerate{
 \item Apply the multiplicative method from Terrell and Scott (1980) to construct a p-th order kernel function.
