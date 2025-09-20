@@ -18,14 +18,18 @@
 #' @param tol Convergence tolerance used in the \code{\link[stats]{optimize}} function. Determines how
 #'   precisely the optimal value is estimated. Default is 0.1.
 #' 
-#' @details The SCV criterion is given by
+#' @details The smoothed cross-validation (SCV) method is an alternative bandwidth 
+#' selection approach, originally introduced by Hall & Marron (1992) for linear 
+#' densities and adapted for circular data by Zámečník et al. (2023).
+#' 
+#' The SCV criterion is given by
 #' \deqn{\mathrm{SCV}(\kappa) = \frac{R(K)}{nh} 
 #'  + \frac{1}{n^{2}} \sum_{i=1}^{n} \sum_{j=1}^{n} 
 #'     \big(K_{\kappa} * K_{\kappa} * K_{\kappa} * K_{\kappa} - 2K_{\kappa} * K_{\kappa} *K_{\kappa} + K_{\kappa} * K_{\kappa}\big)(\Theta_i - \Theta_j)}
-#' where \eqn{K_\kappa} is the Von Mises kernel with concentration \eqn{\kappa}. The function searches for the value of \eqn{\kappa} 
-#' that minimizes this criterion over the interval \code{[lower, upper]}. 
+#' where \eqn{K_\kappa} is the Von Mises kernel with concentration \eqn{\kappa} (for the formula see 3.7, 3.8 in Zámečník et al. (2023)). The optimal bandwidth minimizes the sum 
+#' \eqn{ISB(\kappa) + IV(\kappa)} over the interval \code{[lower, upper]}. 
 #' 
-#' The integral expressions involved in the SCV criterion (see Section 3.8 in Zámečník et al., 2023) are evaluated numerically using the trapezoidal rule 
+#' The integral expressions involved in the SCV criterion (see Sections 3.2 in Zámečník et al., 2023) are evaluated numerically using the trapezoidal rule 
 #' on a uniform grid of length \code{np}. 
 #'
 #' @return The computed optimal smoothing parameter \code{kappa}, the numeric value
@@ -49,6 +53,10 @@
 #' method for bandwidth selection in circular kernel density estimation. 
 #' \emph{Computational Statistics}.
 #' \doi{10.1007/s00180-023-01401-0}
+#' 
+#' Hall, P., & Marron, J. S. (1992). On the amount of noise inherent in bandwidth 
+#' selection for a kernel density estimator. \emph{The Annals of Statistics}, 
+#' 20(1), 163-181.
 #'
 #' @importFrom stats optimize
 #' @import circular
