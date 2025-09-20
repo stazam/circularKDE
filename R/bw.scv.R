@@ -1,14 +1,7 @@
-#' Compute the Optimal Bandwidth for Circular Data using Smoothed Cross-Validation
+#' @title Compute the Optimal Bandwidth for Circular Data using Smoothed Cross-Validation
 #'
-#' This function computes the optimal smoothing parameter (bandwidth) for circular data using a smoothed cross-validation (SCV) method (see \texttt{doi:10.1007/s00180-023-01401-0}). 
-#' The SCV criterion is given by
-#' \[
-#' \mathrm{SCV}(\kappa) = \frac{R(K)}{nh} 
-#'  + \frac{1}{n^{2}} \sum_{i=1}^{n} \sum_{j=1}^{n} 
-#'     \big(K_{\kappa} * K_{\kappa} * K_{\kappa} * K_{\kappa} - 2K_{\kappa} * K_{\kappa} *K_{\kappa} + K_{\kappa} * K_{\kappa}\big)(\Theta_i - \Theta_j)
-#' \]
-#' where $K_\kappa$ is the Von Mises kernel with concentration $\kappa$. The function searches for the value of $\kappa$ 
-#' that minimizes this criterion over the interval \texttt{[lower, upper]}.
+#' @description This function computes the optimal smoothing parameter (bandwidth) for circular data using a smoothed cross-validation 
+#' (SCV) method (see \doi{10.1007/s00180-023-01401-0}). 
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using `circular::conversion.circular`.
@@ -25,10 +18,17 @@
 #' @param tol Convergence tolerance used in the `optimize` function. Determines how
 #'   precisely the optimal value is estimated. Default is 0.1.
 #' 
-#' @details The integral expressions involved in the SCV criterion are evaluated numerically using the trapezoidal rule 
-#' on a uniform grid of length \texttt{np}. 
+#' @details The SCV criterion is given by
+#' \deqn{\mathrm{SCV}(\kappa) = \frac{R(K)}{nh} 
+#'  + \frac{1}{n^{2}} \sum_{i=1}^{n} \sum_{j=1}^{n} 
+#'     \big(K_{\kappa} * K_{\kappa} * K_{\kappa} * K_{\kappa} - 2K_{\kappa} * K_{\kappa} *K_{\kappa} + K_{\kappa} * K_{\kappa}\big)(\Theta_i - \Theta_j)}
+#' where \eqn{K_\kappa} is the Von Mises kernel with concentration \eqn{\kappa}. The function searches for the value of \eqn{\kappa} 
+#' that minimizes this criterion over the interval \code{[lower, upper]}. 
+#' 
+#' The integral expressions involved in the SCV criterion (see 3.8 in <doi:10.1007/s00180-023-01401-0>) are evaluated numerically using the trapezoidal rule 
+#' on a uniform grid of length \code{np}. 
 #'
-#' @return The computed optimal smoothing parameter `kappa`, the numeric value
+#' @return The computed optimal smoothing parameter \code{kappa}, the numeric value
 #' that minimizes the smoothed cross-validation criterion.
 #'
 #' @export
@@ -100,7 +100,7 @@ bw.scv <- function(x,
         "Default value 0 for lower boundary was used."
       )
     )
-    upper <- 0
+    lower <- 0
   }
   if (!is.numeric(upper)) {
     cli::cli_alert_warning(
@@ -114,7 +114,7 @@ bw.scv <- function(x,
   if (lower < 0 | lower >= upper) {
     cli::cli_alert_warning(
       c(
-        "The boundaries must be positive numbers and 'lower' must be smaller that 'upper'. ",
+        "The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. ",
         "Default boundaries lower=0, upper=60 were used."
       )
     )
