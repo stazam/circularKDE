@@ -35,7 +35,7 @@ test_that("bw.lscvg removes NA values and returns result", {
   expect_type(result, "double")
   expect_cli_warning(bw.lscvg(x),
                      1,
-                     "! `x` contains missing values, which will be removed")
+                     "! `x` contains missing values, which will be removed.")
 })
 
 test_that("bw.lscvg handles non-numeric g", {
