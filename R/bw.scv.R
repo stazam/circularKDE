@@ -1,4 +1,4 @@
-#' @title Compute the Optimal Bandwidth for Circular Data using Smoothed Cross-Validation
+#' @title Smoothed Cross-Validation for Circular Data 
 #'
 #' @description This function computes the optimal smoothing parameter (bandwidth) for circular data using a smoothed cross-validation 
 #' (SCV) method (see \doi{10.1007/s00180-023-01401-0}). 
