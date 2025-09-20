@@ -8,10 +8,7 @@
 #'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
 #'   Can be a numeric vector or an object of class \code{circular}.
 #' 
-#' @details The method is the plug-in bandwidth selection approach developed by Tsuruta and Sagae (2017)
-#' using p-th order kernel functions with higher moments.
-#'
-#' The plug-in approach estimates the optimal bandwidth through the following steps:
+#' @details The plug-in approach estimates the optimal bandwidth through the following steps:
 #' \enumerate{
 #'   \item Apply the additive method from Jones and Foster (1993) to construct a p-th order kernel function.
 #'   \item Plug-in the required functionals into AMISE expression.

@@ -58,12 +58,12 @@ density (see \doi{10.1007/s00180-023-01401-0}).
 \details{
 The method extends the classical idea of variable bandwidth estimators from the linear case (Breiman et al., 1977) to the circular setting by employing the von Mises kernel. Specifically, the procedure follows three steps:
 \enumerate{
-\item A pilot density estimate is obtained using a fixed global bandwidth \code{bw0}.
+\item A pilot density estimate is obtained using a fixed global bandwidth \eqn{\kappa} (\code{bw0}).
 \item Local adaptation factors \eqn{\lambda_i} are computed at each data point \eqn{\Theta_i} according to
 \deqn{\lambda_i = \left\{ g / \hat{f}(\Theta_i) \right\}^{\alpha},}
 where \eqn{g} is a global measure of central tendency (typically the geometric mean) and \eqn{\alpha \in [0,1]} is a sensitivity parameter.
 \item The adaptive density is evaluated using local bandwidths \eqn{\lambda_i \cdot \kappa}, resulting in the estimator
-\deqn{\hat{f}(\theta) = \frac{1}{2n\pi} \sum_{i=1}^{n} \frac{1}{I_0(\lambda_i \kappa)} 
+\deqn{\hat{f}(\theta) = \frac{1}{2n\pi} \sum_{i=1}^{n} \frac{1}{I_0(\lambda_i \kappa)}
 \exp\!\big(\lambda_i \kappa \cos(\theta - \Theta_i)\big).}
 }
 }
