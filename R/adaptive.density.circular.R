@@ -1,4 +1,4 @@
-#' @title Adaptive Circular Kernel Density Estimation
+#' @title Adaptive Kernel Density Estimation for circular data
 #'
 #' @description This function computes an adaptive kernel density estimate for circular data,
 #' adjusting the bandwidth locally based on a global bandwidth parameter and data

@@ -1,4 +1,4 @@
-#' @title Compute the Optimal Bandwidth for Circular Data Using the Plug-in Method by Tsuruta and Sagae with additive Jones-Foster approach
+#' @title Plug-in Method by Tsuruta and Sagae with additive Jones-Foster approach
 #'
 #' @description This function computes the optimal smoothing parameter (bandwidth) for circular data
 #' using the plug-in method introduced by Tsuruta and Sagae (see \doi{10.1016/j.spl.2017.08.003}) with the

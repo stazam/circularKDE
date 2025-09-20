@@ -1,4 +1,4 @@
-#' @title Compute the Optimal Bandwidth for Circular Data using Generalized Least Squares Cross-Validation
+#' @title Generalized Least Squares Cross-Validation for Circular Data
 #'
 #' @description This function computes the optimal smoothing parameter (bandwidth) for circular data
 #' using a generalized least squares cross-validation method (see \doi{10.1007/s00180-023-01401-0}).
