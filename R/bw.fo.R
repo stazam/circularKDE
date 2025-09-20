@@ -7,8 +7,7 @@
 #'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
 #'   Can be a numeric vector or an object of class \code{circular}.
 #' 
-#' @details 
-#' The Fourier-based plug-in estimator computes the optimal bandwidth using the formula:
+#' @details The Fourier-based plug-in estimator computes the optimal bandwidth using the formula:
 #' \deqn{\hat{h}_{FO} := (4\pi)^{-1/10} \hat{\theta}_{2,\hat{m}}^{-1/5} n^{-1/5}
 #' where \eqn{\hat{\theta}_{2,\hat{m}}} is the estimator of the second-order functional 
 #' \eqn{\theta_2(f)} based on the selected number of Fourier coefficients \eqn{\hat{m}}.
