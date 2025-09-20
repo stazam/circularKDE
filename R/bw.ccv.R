@@ -75,7 +75,7 @@ bw.ccv <- function(x,
       cli::cli_abort("{.var x} contains all missing values.")
     }
     cli::cli_abort(
-      c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
+      c("{.var x} must be a numeric vector.", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
   x <- circular(
@@ -87,7 +87,7 @@ bw.ccv <- function(x,
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
-    cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
   if (!is.numeric(lower)) {

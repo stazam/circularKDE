@@ -50,9 +50,9 @@
 #' print(bw)
 #' 
 #' @references
-#' #' Zámečník, S., Horová, I., & Hasilová, K. (2025). Generalised least square 
+#' Zámečník, S., Horová, I., & Hasilová, K. (2025). Generalised least square 
 #' cross-validation for circular data. \emph{Communications in Statistics}. 
-#' \doi{10.1007/s00180-023-01401-1}
+#' \doi{10.1007/s00180-023-01401-0}
 #' 
 #' Zhang, J. (2015). Generalized least squares cross-validation in kernel density 
 #' estimation. \emph{Statistica Neerlandica}, 69(3), 315-328. 
@@ -77,7 +77,7 @@ bw.lscvg <- function(x,
       cli::cli_abort("{.var x} contains all missing values.")
     }
     cli::cli_abort(
-      c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
+      c("{.var x} must be a numeric vector.", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
   x <- circular(
@@ -90,7 +90,7 @@ bw.lscvg <- function(x,
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
-    cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
   if (!is.numeric(g)) {

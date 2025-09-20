@@ -70,11 +70,12 @@ bw.ts <- function(x) {
     units = "radians",
     zero = 0,
     rotation = "counter",
-    modulo = "2pi"
+    modulo = "2pi",
+    template = "none"
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
-    cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
 
@@ -97,7 +98,7 @@ bw.ts <- function(x) {
 
   r.hat <- 1/4 * r.fVM2VM1 + 25/16 * r.fVM2 - 5/4 * r.fVM3 + 1/4 * r.fVM4 - 5/4 * integral.1 - 1/2 * integral.2
 
-  bw <- (288 / (33 - 16 * sqrt(2) / sqrt(5)) * r.hat * n)^(2/9)
+  bw <- (288 / (33 - 16 * sqrt(2/5)) * r.hat * n)^(2/9)
 
   return(bw)
 }
