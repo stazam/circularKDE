@@ -2,13 +2,13 @@
 % Please edit documentation in R/bw.fo.R
 \name{bw.fo}
 \alias{bw.fo}
-\title{Compute the Optimal Bandwidth for Circular Data using Fourier series-based direct plug-in approach}
+\title{Plug-in estimator of Tenreiro based on Fourier series}
 \usage{
 bw.fo(x)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
-coerced to a numeric vector in radians using \code{circular::conversion.circular}.
+coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
 Can be a numeric vector or an object of class \code{circular}.}
 }
 \value{
@@ -17,7 +17,7 @@ the Fourier method for circular kernel density estimation.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
-using the Fourier series-based direct plug-in approach based on delta sequence estimators (see \url{doi:10.1080/10485252.2022.2057974}).
+using the Fourier series-based direct plug-in approach based on delta sequence estimators (see \doi{10.1080/10485252.2022.2057974}).
 }
 \examples{
 # Example with circular data

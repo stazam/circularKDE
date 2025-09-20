@@ -2,13 +2,13 @@
 % Please edit documentation in R/bw.lscvg.R
 \name{bw.lscvg}
 \alias{bw.lscvg}
-\title{Compute the Optimal Bandwidth for Circular Data using Generalized Least Squares Cross-Validation}
+\title{Generalized Least Squares Cross-Validation for Circular Data}
 \usage{
 bw.lscvg(x, g = 4, lower = 0, upper = 60, tol = 0.1)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
-coerced to a numeric vector in radians using \code{circular::conversion.circular}.
+coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
 Can be a numeric vector or an object of class \code{circular}.}
 
 \item{g}{A numeric scalar that controls the variability in the cross-validation
@@ -23,19 +23,31 @@ Default is 0.}
 smoothing parameter \code{kappa}. Must be a positive numeric value greater than \code{lower}.
 Default is 60.}
 
-\item{tol}{Convergence tolerance for the \code{optimize} function, determining the
+\item{tol}{Convergence tolerance for the \code{\link[stats]{optimize}} function, determining the
 precision of the optimization process. Default is 0.1.}
 }
 \value{
 The computed optimal smoothing parameter \code{kappa}, a numeric value that
 minimizes the least squares cross-validation criterion within the interval
-\verb{[lower, upper]}.
+\code{[lower, upper]}.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
-using a generalized least squares cross-validation method (see \url{doi:10.1007/s00180-023-01401-0}).
-It searches for the value of the smoothing parameter \code{kappa} that minimizes the cross-validation criterion within the
-specified interval \verb{[lower, upper]}.
+using a generalized least squares cross-validation method (see \doi{10.1007/s00180-023-01401-0}).
+}
+\details{
+The generalized least squares cross-validation method (LSCV_g) is an
+adaptation of the method originally introduced by Zhang for linear data, developed
+for circular data (see Zamecnik, et.al 2025) to address the finite-sample performance issues of standard LSCV.
+
+The LSCV_g criterion is defined as:
+\deqn{LSCV_g(\kappa) = \frac{1}{n}R(K_{\kappa}) + \frac{1}{n(n-1)} \sum_{i=1}^n \sum_{j \neq i}^n \left(\frac{n-1}{n} (K_{\kappa}*K_{\kappa})(\theta_i-\theta_j) + \frac{2}{g(g-2)} K_{\kappa/g}(\theta_i-\theta_j) - \frac{g-1}{g-2} K_{\kappa/2}(\theta_i-\theta_j)\right)}
+
+Using the von Mises kernel, this takes the computational form:
+\deqn{LSCV_g(\kappa) = \frac{1}{2\pi n^2} \sum_{i=1}^n \sum_{j=1}^n \frac{I_0(\kappa \sqrt{2(1+\cos(\theta_i-\theta_j))})}{I_0^2(\kappa)} + \frac{1}{n(n-1)} \sum_{i=1}^n \sum_{j \neq i}^n \left(\frac{2}{g(g-2)} \frac{\exp(\frac{\kappa}{g}\cos(\theta_i-\theta_j))}{2\pi I_0(\kappa/g)} - \frac{g-1}{g-2} \frac{\exp(\frac{\kappa}{2}\cos(\theta_i-\theta_j))}{2\pi I_0(\kappa/2)}\right)}
+
+The optimal bandwidth is obtained by minimizing this criterion over the interval
+\code{[lower, upper]}.
 }
 \examples{
 # Example with circular data
@@ -49,4 +61,13 @@ x <- rvonmises(100, mu = circular(0), kappa = 1)
 bw <- bw.lscvg(x)
 print(bw)
 
+}
+\references{
+Zámečník, S., Horová, I., & Hasilová, K. (2025). Generalised least square
+cross-validation for circular data. \emph{Communications in Statistics}.
+\doi{10.1007/s00180-023-01401-0}
+
+Zhang, J. (2015). Generalized least squares cross-validation in kernel density
+estimation. \emph{Statistica Neerlandica}, 69(3), 315-328.
+\doi{10.1111/stan.12061}
 }

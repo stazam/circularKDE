@@ -43,7 +43,7 @@
 #' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 #' bw <- bw.scv(x)
 #' print(bw)
-#
+#'
 #' x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 #' bw <- bw.scv(x)
 #' print(bw)
@@ -85,7 +85,8 @@ bw.scv <- function(x,
     units = "radians",
     zero = 0,
     rotation = "counter",
-    modulo = "2pi"
+    modulo = "2pi",
+    template = "none"
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
