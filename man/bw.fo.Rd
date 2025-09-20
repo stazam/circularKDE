@@ -2,13 +2,13 @@
 % Please edit documentation in R/bw.fo.R
 \name{bw.fo}
 \alias{bw.fo}
-\title{Compute the Optimal Bandwidth for Circular Data using Fourier series-based direct plug-in approach}
+\title{Plug-in estimator of Tenreiro based on Fourier series}
 \usage{
 bw.fo(x)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
-coerced to a numeric vector in radians using \code{circular::conversion.circular}.
+coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
 Can be a numeric vector or an object of class \code{circular}.}
 }
 \value{
@@ -17,7 +17,18 @@ the Fourier method for circular kernel density estimation.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
-using the Fourier series-based direct plug-in approach based on delta sequence estimators (see \url{doi:10.1080/10485252.2022.2057974}).
+using the Fourier series-based direct plug-in approach based on delta sequence estimators (see \doi{10.1080/10485252.2022.2057974}).
+}
+\details{
+The Fourier-based plug-in estimator computes the optimal bandwidth using the formula:
+\deqn{\hat{h}_{FO} := (4\pi)^{-1/10} \hat{\theta}_{2,\hat{m}}^{-1/5} n^{-1/5}}
+where \eqn{\hat{\theta}_{2,\hat{m}}} is the estimator of the second-order functional
+\eqn{\theta_2(f)} based on the selected number of Fourier coefficients \eqn{\hat{m}}.
+
+Under the assumption of von Mises density, this formula becomes:
+\deqn{\hat{h}_{VM} = (4\pi)^{-1/10} \left(\frac{3\hat{\kappa}^2 I_0(2\hat{\kappa}) - \hat{\kappa}I_1(2\hat{\kappa})}{8\pi I_0(\hat{\kappa})^2}\right)^{-1/5} n^{-1/5}}
+where \eqn{I_0} and \eqn{I_1} are the modified Bessel functions of the first kind of orders 0 and 1,
+and \eqn{\hat{\kappa}} is the estimated concentration parameter of the von Mises distribution.
 }
 \examples{
 # Example with circular data

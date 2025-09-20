@@ -2,13 +2,13 @@
 % Please edit documentation in R/bw.scv.R
 \name{bw.scv}
 \alias{bw.scv}
-\title{Compute the Optimal Bandwidth for Circular Data using Smoothed Cross-Validation}
+\title{Smoothed Cross-Validation for Circular Data}
 \usage{
 bw.scv(x, np = 500, lower = 0, upper = 60, tol = 0.1)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
-coerced to a numeric vector in radians using \code{circular::conversion.circular}.
+coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
 Can be a numeric vector or an object of class \code{circular}.}
 
 \item{np}{An integer specifying the number of points used in numerical integration
@@ -23,7 +23,7 @@ Default is 0.}
 parameter \code{kappa}. Must be a positive numeric value greater than \code{lower}.
 Default is 60.}
 
-\item{tol}{Convergence tolerance used in the \code{optimize} function. Determines how
+\item{tol}{Convergence tolerance used in the \code{\link[stats]{optimize}} function. Determines how
 precisely the optimal value is estimated. Default is 0.1.}
 }
 \value{
@@ -31,10 +31,23 @@ The computed optimal smoothing parameter \code{kappa}, the numeric value
 that minimizes the smoothed cross-validation criterion.
 }
 \description{
-This function computes the optimal smoothing parameter (bandwidth) for circular data
-using a smoothed cross-validation (SCV) method (see \url{doi:doi.org/10.1007/s00180-023-01401-0}).
-It searches for the value of the smoothing parameter \code{kappa} that minimizes the SCV criterion within the
-specified interval \verb{[lower, upper]}.
+This function computes the optimal smoothing parameter (bandwidth) for circular data using a smoothed cross-validation
+(SCV) method (see \doi{10.1007/s00180-023-01401-0}).
+}
+\details{
+The smoothed cross-validation (SCV) method is an alternative bandwidth
+selection approach, originally introduced by Hall & Marron (1992) for linear
+densities and adapted for circular data by Zámečník et al. (2023).
+
+The SCV criterion is given by
+\deqn{\mathrm{SCV}(\kappa) = \frac{R(K)}{nh} 
+ + \frac{1}{n^{2}} \sum_{i=1}^{n} \sum_{j=1}^{n} 
+    \big(K_{\kappa} * K_{\kappa} * K_{\kappa} * K_{\kappa} - 2K_{\kappa} * K_{\kappa} *K_{\kappa} + K_{\kappa} * K_{\kappa}\big)(\Theta_i - \Theta_j)}
+where \eqn{K_\kappa} is the Von Mises kernel with concentration \eqn{\kappa} (for the formula see 3.7, 3.8 in Zámečník et al. (2023)). The optimal bandwidth minimizes the sum
+\eqn{ISB(\kappa) + IV(\kappa)} over the interval \code{[lower, upper]}.
+
+The integral expressions involved in the SCV criterion (see Sections 3.2 in Zámečník et al., 2023) are evaluated numerically using the trapezoidal rule
+on a uniform grid of length \code{np}.
 }
 \examples{
 # Example with circular data
@@ -42,6 +55,7 @@ library(circular)
 x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 bw <- bw.scv(x)
 print(bw)
+
 x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 bw <- bw.scv(x)
 print(bw)
@@ -52,4 +66,8 @@ Zámečník, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive
 method for bandwidth selection in circular kernel density estimation.
 \emph{Computational Statistics}.
 \doi{10.1007/s00180-023-01401-0}
+
+Hall, P., & Marron, J. S. (1992). On the amount of noise inherent in bandwidth
+selection for a kernel density estimator. \emph{The Annals of Statistics},
+20(1), 163-181.
 }

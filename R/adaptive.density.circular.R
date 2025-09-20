@@ -1,10 +1,8 @@
-#' Adaptive Circular Kernel Density Estimation
+#' @title Adaptive Kernel Density Estimation for circular data
 #'
-#' This function computes an adaptive kernel density estimate for circular data,
+#' @description This function computes an adaptive kernel density estimate for circular data,
 #' adjusting the bandwidth locally based on a global bandwidth parameter and data
-#' density (see <doi:10.1007/s00180-023-01401-0>). The density is evaluated over
-#' a specified range of points between `from` and `to`, using a local adaptation
-#' factor to refine the estimate.
+#' density (see \doi{10.1007/s00180-023-01401-0}).
 #'
 #' @param x Data for which the density is to be estimated. The object is coerced to a
 #'   numeric vector in radians using `circular::conversion.circular`. Can be a numeric
@@ -19,18 +17,29 @@
 #'   adaptation factor (default is "n"). Options depend on the implementation of the
 #'   `local.factor` function (not shown here).
 #' @param z Optional numeric vector of points at which to evaluate the density. If
-#'   `NULL` (default), a grid of `n` equally spaced points between `from` and `to` is
+#'   \code{NULL} (default), a grid of \code{n} equally spaced points between \code{from} and \code{to} is
 #'   generated automatically.
 #' @param from Starting point of the evaluation range, a numeric value in radians.
-#'   Must be finite. Default is `circular(0)` (0 radians).
+#'   Must be finite. Default is \code{circular(0)} (0 radians).
 #' @param to Ending point of the evaluation range, a numeric value in radians. Must
-#'   be finite. Default is `circular(2 * pi)` (2*pi radians).
+#'   be finite. Default is \code{circular(2 * pi)} (2*pi radians).
 #' @param n Positive integer specifying the number of evaluation points (default is
-#'   500). Ignored if `z` is provided. Determines the resolution of the density
-#'   estimate when `z` is `NULL`.
+#'   500). Ignored if \code{z} is provided. Determines the resolution of the density
+#'   estimate when \code{z} is \code{NULL}.
 #'
-#' @return A numeric vector of length equal to the length of `z` (or `n` if `z` is
-#'   `NULL`), containing the estimated density values at each evaluation point.
+#' @details The method extends the classical idea of variable bandwidth estimators from the linear case (Breiman et al., 1977) to the circular setting by employing the von Mises kernel. Specifically, the procedure follows three steps:
+#' \enumerate{
+#' \item A pilot density estimate is obtained using a fixed global bandwidth \eqn{\kappa} (\code{bw0}).
+#' \item Local adaptation factors \eqn{\lambda_i} are computed at each data point \eqn{\Theta_i} according to
+#' \deqn{\lambda_i = \left\{ g / \hat{f}(\Theta_i) \right\}^{\alpha},}
+#' where \eqn{g} is a global measure of central tendency (typically the geometric mean) and \eqn{\alpha \in [0,1]} is a sensitivity parameter.
+#' \item The adaptive density is evaluated using local bandwidths \eqn{\lambda_i \cdot \kappa}, resulting in the estimator
+#' \deqn{\hat{f}(\theta) = \frac{1}{2n\pi} \sum_{i=1}^{n} \frac{1}{I_0(\lambda_i \kappa)}
+#' \exp\!\big(\lambda_i \kappa \cos(\theta - \Theta_i)\big).}
+#' }
+#'
+#' @return A numeric vector of length equal to the length of \code{z} (or \code{n} if \code{z} is
+#'   \code{NULL}), containing the estimated density values at each evaluation point.
 #'
 #' @export
 #'
@@ -51,10 +60,14 @@
 #' plot(z, dens, type = "l", main = "Density with Custom Points")
 #'
 #' @references
-#' Zámečník, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive 
-#' method for bandwidth selection in circular kernel density estimation. 
+#' Zámečník, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive
+#' method for bandwidth selection in circular kernel density estimation.
 #' \emph{Computational Statistics}.
 #' \doi{10.1007/s00180-023-01401-0}
+#'
+#' Breiman, L., Meisel, W., & Purcell, E. (1977). Variable kernel estimates of
+#' multivariate densities. \emph{Technometrics}, 19(2), 135-144.
+#' \doi{10.2307/1268623}
 #'
 #' @import circular
 #' @import cli
@@ -94,16 +107,16 @@ adaptive.density.circular <- function(x,
     x <- x[!is.na(x)]
   }
   if (!is.numeric(from) | !is.finite(from)) {
-    cli_abort("Argument {.var from} must be finite numeric value.")
+    cli::cli_abort("Argument {.var from} must be finite numeric value.")
   }
   if (!is.numeric(to) | !is.finite(to)) {
-    cli_abort("Argument {.var to} must be finite numeric value.")
+    cli::cli_abort("Argument {.var to} must be finite numeric value.")
   }
   if (!is.numeric(n) | !is.finite(n)) {
-    cli_abort("Argument {.var n} must be finite numeric value.")
+    cli::cli_abort("Argument {.var n} must be finite numeric value.")
   }
   if (round(n) != n | n <= 0) {
-    cli_abort("Argument {.var n} must be positive integer.")
+    cli::cli_abort("Argument {.var n} must be positive integer.")
   }
   if (is.null(z)) {
     z <- circular(
@@ -124,13 +137,13 @@ adaptive.density.circular <- function(x,
     n <- length(x)
     factor <- 1 / (2 * n * pi)
 
-    main.part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)))
+    main.part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)), na.rm = TRUE)
     result <- factor * main.part
     return(result)
   }
   y <- sapply(
-    z = z,
-    kernel.density.adaptive.est,
+    X = z,
+    FUN = kernel.density.adaptive.est,
     x = x,
     bw0 = bw0,
     alpha = alpha,
@@ -139,3 +152,5 @@ adaptive.density.circular <- function(x,
   )
   return(y)
 }
+
+

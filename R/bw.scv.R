@@ -1,26 +1,38 @@
-#' Compute the Optimal Bandwidth for Circular Data using Smoothed Cross-Validation
+#' @title Smoothed Cross-Validation for Circular Data 
 #'
-#' This function computes the optimal smoothing parameter (bandwidth) for circular data
-#' using a smoothed cross-validation (SCV) method (see <doi:doi.org/10.1007/s00180-023-01401-0>).
-#' It searches for the value of the smoothing parameter `kappa` that minimizes the SCV criterion within the
-#' specified interval `[lower, upper]`.
+#' @description This function computes the optimal smoothing parameter (bandwidth) for circular data using a smoothed cross-validation 
+#' (SCV) method (see \doi{10.1007/s00180-023-01401-0}). 
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
-#'   coerced to a numeric vector in radians using `circular::conversion.circular`.
-#'   Can be a numeric vector or an object of class `circular`.
+#'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+#'   Can be a numeric vector or an object of class \code{circular}.
 #' @param np An integer specifying the number of points used in numerical integration
 #'   to evaluate the SCV criterion. A higher number increases precision but also
 #'   computational cost. Default is 500.
 #' @param lower Lower boundary of the interval for the optimization of the smoothing
-#'   parameter `kappa`. Must be a positive numeric value smaller than `upper`.
+#'   parameter \code{kappa}. Must be a positive numeric value smaller than \code{upper}.
 #'   Default is 0.
 #' @param upper Upper boundary of the interval for the optimization of the smoothing
-#'   parameter `kappa`. Must be a positive numeric value greater than `lower`.
+#'   parameter \code{kappa}. Must be a positive numeric value greater than \code{lower}.
 #'   Default is 60.
-#' @param tol Convergence tolerance used in the `optimize` function. Determines how
+#' @param tol Convergence tolerance used in the \code{\link[stats]{optimize}} function. Determines how
 #'   precisely the optimal value is estimated. Default is 0.1.
+#' 
+#' @details The smoothed cross-validation (SCV) method is an alternative bandwidth 
+#' selection approach, originally introduced by Hall & Marron (1992) for linear 
+#' densities and adapted for circular data by Zámečník et al. (2023).
+#' 
+#' The SCV criterion is given by
+#' \deqn{\mathrm{SCV}(\kappa) = \frac{R(K)}{nh} 
+#'  + \frac{1}{n^{2}} \sum_{i=1}^{n} \sum_{j=1}^{n} 
+#'     \big(K_{\kappa} * K_{\kappa} * K_{\kappa} * K_{\kappa} - 2K_{\kappa} * K_{\kappa} *K_{\kappa} + K_{\kappa} * K_{\kappa}\big)(\Theta_i - \Theta_j)}
+#' where \eqn{K_\kappa} is the Von Mises kernel with concentration \eqn{\kappa} (for the formula see 3.7, 3.8 in Zámečník et al. (2023)). The optimal bandwidth minimizes the sum 
+#' \eqn{ISB(\kappa) + IV(\kappa)} over the interval \code{[lower, upper]}. 
+#' 
+#' The integral expressions involved in the SCV criterion (see Sections 3.2 in Zámečník et al., 2023) are evaluated numerically using the trapezoidal rule 
+#' on a uniform grid of length \code{np}. 
 #'
-#' @return The computed optimal smoothing parameter `kappa`, the numeric value
+#' @return The computed optimal smoothing parameter \code{kappa}, the numeric value
 #' that minimizes the smoothed cross-validation criterion.
 #'
 #' @export
@@ -31,7 +43,7 @@
 #' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 #' bw <- bw.scv(x)
 #' print(bw)
-#
+#'
 #' x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 #' bw <- bw.scv(x)
 #' print(bw)
@@ -41,6 +53,10 @@
 #' method for bandwidth selection in circular kernel density estimation. 
 #' \emph{Computational Statistics}.
 #' \doi{10.1007/s00180-023-01401-0}
+#' 
+#' Hall, P., & Marron, J. S. (1992). On the amount of noise inherent in bandwidth 
+#' selection for a kernel density estimator. \emph{The Annals of Statistics}, 
+#' 20(1), 163-181.
 #'
 #' @importFrom stats optimize
 #' @import circular
@@ -69,7 +85,8 @@ bw.scv <- function(x,
     units = "radians",
     zero = 0,
     rotation = "counter",
-    modulo = "2pi"
+    modulo = "2pi",
+    template = "none"
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
@@ -92,7 +109,7 @@ bw.scv <- function(x,
         "Default value 0 for lower boundary was used."
       )
     )
-    upper <- 0
+    lower <- 0
   }
   if (!is.numeric(upper)) {
     cli::cli_alert_warning(
@@ -106,7 +123,7 @@ bw.scv <- function(x,
   if (lower < 0 | lower >= upper) {
     cli::cli_alert_warning(
       c(
-        "The boundaries must be positive numbers and 'lower' must be smaller that 'upper'. ",
+        "The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. ",
         "Default boundaries lower=0, upper=60 were used."
       )
     )

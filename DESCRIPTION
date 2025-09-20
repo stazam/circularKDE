@@ -1,15 +1,12 @@
 Package: circularKDE
-Title: Methods for kernel density estimation for circular data
-Version: 0.2.2
+Title: Recent Methods for kernel density estimation for circular data
+Version: 0.2.4
 Authors@R: 
       c(person(given = "Stanislav", family = "Zamecnik", email = c("zamecnik@math.muni.cz"), role = c("aut", "cre")),
       person(given = "Ivanka", family = "Hórová", email = c("horova@math.muni.cz"), role = c("aut")),
       person(given = "Kamila", family = "Hasilová", email = c("kamila.hasilova@unob.cz"), role = c("aut")),
       person(given = "Stanislav", family = "Katina", email = c("katina@math.muni.cz"), role = c("aut")))
-Description: Package for kernel density estimation of circular data using recently developed methods. Methdos are based on the following research articles: 
- - Zámečník, S., Horová, I., Katina, S. et al. An adaptive method for bandwidth selection in circular kernel density estimation. Comput Stat 39, 1709–1728 (2024). https://doi.org/10.1007/s00180-023-01401-0
- - Hasilová K., Horová I., Vališ D., Zámecník S., 2024. A comprehensive exploration of complete cross-validation for circular data. Statistics in Transition new series, 25(3), pp. 1-12. https://doi.org/10.59170/stattrans-2024-024
- - Zámečník, S., Hasilová K., Horová, I. Generalised least square cross-validation for circular data.
+Description: This package provides kernel density estimation methods for circular data using recently developed techniques. The methods are based on several research articles including adaptive bandwidth selection methods (Zámečník et al. 2024 <doi:10.1007/s00180-023-01401-0>), complete cross-validation approaches (Hasilová et al. 2024 <doi:10.59170/stattrans-2024-024>), Fourier series-based plug-in bandwidth selection (Tenreiro 2022 <doi:10.1080/10485252.2022.2057974>), and higher order kernel density estimation techniques (Tsuruta & Sagae 2017 <doi:10.1016/j.spl.2017.07.027>) and more.
 Depends: R(>= 3.5.0), circular, cli
 License: GPL (>=2)
 Encoding: UTF-8
@@ -17,4 +14,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)
+URL: https://github.com/stazam/circularKDE
+BugReports: https://github.com/stazam/circularKDE/issues
 Config/testthat/edition: 3

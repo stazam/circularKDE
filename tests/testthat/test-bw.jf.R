@@ -35,6 +35,6 @@ test_that("bw.jf removes NA values and returns result", {
   expect_type(result, "double")
   expect_cli_warning(bw.jf(x),
                      1,
-                     "! `x` contains missing values, which will be removed")
+                     "! `x` contains missing values, which will be removed.")
 })
 

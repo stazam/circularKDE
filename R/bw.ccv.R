@@ -1,25 +1,42 @@
-#' Compute the Optimal Bandwidth for Circular Data using Complete Cross-Validation
+#' @title Complete Cross-Validation for Circular Data
 #'
-#' This function calculates the optimal smoothing parameter (bandwidth) for circular data
-#' using the complete cross-validation (CCV) method (see <doi:10.59170/stattrans-2024-024>). It searches for the value of the
-#' smoothing parameter `kappa` that minimizes the CCV criterion within a specified interval
-#' `[lower, upper]`.
+#' @description This function calculates the optimal smoothing parameter (bandwidth) for circular data
+#' using the complete cross-validation (CCV) method (see \doi{10.59170/stattrans-2024-024}). 
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
-#'   coerced to a numeric vector in radians using `circular::conversion.circular`.
-#'   Can be a numeric vector or an object of class `circular`.
+#'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+#'   Can be a numeric vector or an object of class \code{circular}.
 #' @param lower Lower boundary of the interval to be used in the search for the
-#'   smoothing parameter `kappa`. Must be a positive numeric value less than `upper`.
+#'   smoothing parameter \code{kappa}. Must be a positive numeric value less than \code{upper}.
 #'   Default is 0.
 #' @param upper Upper boundary of the interval to be used in the search for the
-#'   smoothing parameter `kappa`. Must be a positive numeric value greater than `lower`.
+#'   smoothing parameter \code{kappa}. Must be a positive numeric value greater than \code{lower}.
 #'   Default is 60.
-#' @param tol Convergence tolerance for the `optimize` function, determining the
+#' @param tol Convergence tolerance for the \code{\link[stats]{optimize}} function, determining the
 #'   precision of the optimization process. Default is 0.1.
+#' 
+#' @details The complete cross-validation (CCV) method is an alternative for bandwidth 
+#' selection, originally proposed by Jones (1991) for linear densities. Its adaptation 
+#' to the circular setting was recently studied by Hasilová et al. (2024).
+#' 
+#' The method uses functionals \eqn{T_m} defined as:
+#' \deqn{T_m(\kappa) = \frac{(-1)^m}{n(n-1)}\sum_{i=1}^n\sum_{j \neq i}^n K_{\kappa}^{(2m)}(\theta_{i} - \theta_{j})}
+#' where \eqn{K_{\kappa}^{(2m)}} is the (2m)-th derivative of \eqn{K_{\kappa}}.
+#' 
+#' The CCV criterion can be expressed as:
+#' \deqn{CCV(\kappa) = R(f(\kappa)) - T_0(\kappa) + \frac{1}{2}\bar{\sigma}_h^2 T_1(\kappa) + \frac{1}{24}(\eta_{2}^4(K_{\kappa}) - \eta_{4}(K_{\kappa}))T_2(\kappa)}
+#' where \eqn{\eta_{j}(K_{\kappa})} denotes the j-th moment of the kernel.
+#' 
+#' For the von Mises kernel, the explicit CCV criterion becomes:
+#' \deqn{CCV(\kappa) = \frac{1}{n^2} \sum_{i=1}^n \sum_{j=1}^n (K_{\kappa} * K_{\kappa})(\theta_i - \theta_j) - T_0(\kappa) + \frac{A_1(\kappa)}{2\kappa}T_1(\kappa) + \frac{2A_1^2(\kappa) - A_2(\kappa)}{8\kappa^2}T_2(\kappa)}
+#' where \eqn{A_k(\kappa) = I_k(\kappa)/I_0(\kappa)} is the ratio of modified Bessel functions.
+#' 
+#' The optimal bandwidth is obtained by minimizing this criterion over the interval 
+#' \code{[lower, upper]}.
 #'
-#' @return The computed optimal smoothing parameter `kappa`, a numeric value that
+#' @return The computed optimal smoothing parameter \code{kappa}, a numeric value that
 #'   minimizes the complete cross-validation criterion within the interval
-#'   `[lower, upper]`.
+#'   \code{[lower, upper]}.
 #'
 #' @export
 #'
@@ -58,7 +75,7 @@ bw.ccv <- function(x,
       cli::cli_abort("{.var x} contains all missing values.")
     }
     cli::cli_abort(
-      c("{.var x} must be a numeric vector", "x" = "You've supplied a {.cls {class(x)}} vector.")
+      c("{.var x} must be a numeric vector.", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
   x <- circular(
@@ -70,7 +87,7 @@ bw.ccv <- function(x,
   )
   attr(x, "class") <- attr(x, "circularp") <- NULL
   if (any(is.na(x))) {
-    cli::cli_alert_warning("{.var x} contains missing values, which will be removed")
+    cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
   if (!is.numeric(lower)) {
@@ -80,7 +97,7 @@ bw.ccv <- function(x,
         "Default value 0 for lower boundary was used."
       )
     )
-    upper <- 0
+    lower <- 0
   }
   if (!is.numeric(upper)) {
     cli::cli_alert_warning(
@@ -94,7 +111,7 @@ bw.ccv <- function(x,
   if (lower < 0 | lower >= upper) {
     cli::cli_alert_warning(
       c(
-        "The boundaries must be positive numbers and 'lower' must be smaller that 'upper'. ",
+        "The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. ",
         "Default boundaries lower=0, upper=60 were used."
       )
     )

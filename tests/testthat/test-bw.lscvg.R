@@ -35,7 +35,7 @@ test_that("bw.lscvg removes NA values and returns result", {
   expect_type(result, "double")
   expect_cli_warning(bw.lscvg(x),
                      1,
-                     "! `x` contains missing values, which will be removed")
+                     "! `x` contains missing values, which will be removed.")
 })
 
 test_that("bw.lscvg handles non-numeric g", {
@@ -73,14 +73,14 @@ test_that("bw.lscvg warns and resets invalid boundary values", {
   expect_cli_warning(
     result <- bw.lscvg(x, lower = -5, upper = 5),
     1,
-    "! The boundaries must be positive numbers and 'lower' must be smaller that 'upper'. Default boundaries lower=0, upper=60 were used."
+    "! The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. Default boundaries lower=0, upper=60 were used."
   )
   expect_type(result, "double")
 
   expect_cli_warning(
     result <- bw.lscvg(x, lower = 10, upper = 5),
     1,
-    "! The boundaries must be positive numbers and 'lower' must be smaller that 'upper'. Default boundaries lower=0, upper=60 were used."
+    "! The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. Default boundaries lower=0, upper=60 were used."
   )
   expect_type(result, "double")
 })

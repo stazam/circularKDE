@@ -35,5 +35,5 @@ test_that("bw.ts removes NA values and returns result", {
   expect_type(result, "double")
   expect_cli_warning(bw.ts(x),
                      1,
-                     "! `x` contains missing values, which will be removed")
+                     "! `x` contains missing values, which will be removed.")
 })
