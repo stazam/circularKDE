@@ -11,7 +11,7 @@
 #' @details The plug-in approach estimates the optimal bandwidth through the following steps:
 #' \enumerate{
 #'   \item Apply the additive method from Jones and Foster (1993) to construct a p-th order kernel function.
-#'   \item Plug-in the required functionals into the asymptotic mean integrated squared error (AMISE) expression.
+#'   \item Derive expression for asymptotic mean integrated squared error (AMISE) expression.
 #'   \item Solving for the bandwidth that minimizes the AMISE. The optimal
 #'         bandwidth for the additive Jones-Foster method is given by:
 #'         \deqn{\hat{\kappa}_{JF} = \left[\frac{16\sqrt{\pi}}{3} \hat{R}_{\hat{\tau}}\left(\frac{5f_{VM}^{(2)} + 2f_{VM}^{(4)}}{12}\right)n\right]^{2/9}}
