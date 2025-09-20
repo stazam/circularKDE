@@ -73,14 +73,14 @@ test_that("bw.lscvg warns and resets invalid boundary values", {
   expect_cli_warning(
     result <- bw.lscvg(x, lower = -5, upper = 5),
     1,
-    "! The boundaries must be positive numbers and 'lower' must be smaller that 'upper'. Default boundaries lower=0, upper=60 were used."
+    "! The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. Default boundaries lower=0, upper=60 were used."
   )
   expect_type(result, "double")
 
   expect_cli_warning(
     result <- bw.lscvg(x, lower = 10, upper = 5),
     1,
-    "! The boundaries must be positive numbers and 'lower' must be smaller that 'upper'. Default boundaries lower=0, upper=60 were used."
+    "! The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. Default boundaries lower=0, upper=60 were used."
   )
   expect_type(result, "double")
 })
