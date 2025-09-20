@@ -4,18 +4,18 @@
 #' (SCV) method (see \doi{10.1007/s00180-023-01401-0}). 
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
-#'   coerced to a numeric vector in radians using `circular::conversion.circular`.
-#'   Can be a numeric vector or an object of class `circular`.
+#'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+#'   Can be a numeric vector or an object of class \code{circular}.
 #' @param np An integer specifying the number of points used in numerical integration
 #'   to evaluate the SCV criterion. A higher number increases precision but also
 #'   computational cost. Default is 500.
 #' @param lower Lower boundary of the interval for the optimization of the smoothing
-#'   parameter `kappa`. Must be a positive numeric value smaller than `upper`.
+#'   parameter \code{kappa}. Must be a positive numeric value smaller than \code{upper}.
 #'   Default is 0.
 #' @param upper Upper boundary of the interval for the optimization of the smoothing
-#'   parameter `kappa`. Must be a positive numeric value greater than `lower`.
+#'   parameter \code{kappa}. Must be a positive numeric value greater than \code{lower}.
 #'   Default is 60.
-#' @param tol Convergence tolerance used in the `optimize` function. Determines how
+#' @param tol Convergence tolerance used in the \code{\link[stats]{optimize}} function. Determines how
 #'   precisely the optimal value is estimated. Default is 0.1.
 #' 
 #' @details The SCV criterion is given by
@@ -25,7 +25,7 @@
 #' where \eqn{K_\kappa} is the Von Mises kernel with concentration \eqn{\kappa}. The function searches for the value of \eqn{\kappa} 
 #' that minimizes this criterion over the interval \code{[lower, upper]}. 
 #' 
-#' The integral expressions involved in the SCV criterion (see 3.8 in <doi:10.1007/s00180-023-01401-0>) are evaluated numerically using the trapezoidal rule 
+#' The integral expressions involved in the SCV criterion (see Section 3.8 in Zámečník et al., 2023) are evaluated numerically using the trapezoidal rule 
 #' on a uniform grid of length \code{np}. 
 #'
 #' @return The computed optimal smoothing parameter \code{kappa}, the numeric value
