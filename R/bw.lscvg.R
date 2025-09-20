@@ -1,7 +1,7 @@
-#' Compute the Optimal Bandwidth for Circular Data using Generalized Least Squares Cross-Validation
+#' @title Compute the Optimal Bandwidth for Circular Data using Generalized Least Squares Cross-Validation
 #'
-#' This function computes the optimal smoothing parameter (bandwidth) for circular data
-#' using a generalized least squares cross-validation method (see <doi:10.1007/s00180-023-01401-0>).
+#' @description This function computes the optimal smoothing parameter (bandwidth) for circular data
+#' using a generalized least squares cross-validation method (see \doi{10.1007/s00180-023-01401-0}).
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
