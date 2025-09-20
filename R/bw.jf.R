@@ -1,12 +1,26 @@
-#' @title Compute the Optimal Bandwidth for Circular Data using circular version of the additive method from Jones and Foster
+#' @title Compute the Optimal Bandwidth for Circular Data Using the Plug-in Method by Tsuruta and Sagae with additive Jones-Foster approach
 #'
 #' @description This function computes the optimal smoothing parameter (bandwidth) for circular data
-#' using the circular version of the additive method from Jones and Foster (1993). The method
-#' is based on the higher order kernel functions with new moments introduced by Tsuruta and Sagae (see \doi{10.1016/j.spl.2017.08.003}).
+#' using the plug-in method introduced by Tsuruta and Sagae (see \doi{10.1016/j.spl.2017.08.003}) with the
+#' additive method from Jones and Foster (1993) to form higher-order kernel functions.
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
-#'   coerced to a numeric vector in radians using `circular::conversion.circular`.
-#'   Can be a numeric vector or an object of class `circular`.
+#'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+#'   Can be a numeric vector or an object of class \code{circular}.
+#' 
+#' @details The method is the plug-in bandwidth selection approach developed by Tsuruta and Sagae (2017)
+#' using p-th order kernel functions with higher moments.
+#'
+#' The plug-in approach estimates the optimal bandwidth through the following steps:
+#' \enumerate{
+#'   \item Apply the additive method from Jones and Foster (1993) to construct a p-th order kernel function.
+#'   \item Plug-in the required functionals into AMISE expression.
+#'   \item Solving for the bandwidth that minimizes the asymptotic mean integrated squared error (AMISE). The optimal
+#'         bandwidth for the additive Jones-Foster method is given by:
+#'         \deqn{\hat{\kappa}_{JF} = \left[\frac{16\sqrt{\pi}}{3} \hat{R}_{\hat{\tau}}\left(\frac{5f_{VM}^{(2)} + 2f_{VM}^{(4)}}{12}\right)n\right]^{2/9}}
+#'         where the functional \eqn{\hat{R}_{\hat{\tau}}} is computed as a weighted linear combination under the von Mises assumption
+#'         and \eqn{\hat{\tau}} is the MLE estimate of the von Mises concentration parameter used as the initial value.
+#' }
 #'
 #' @return The computed optimal smoothing parameter, a numeric value derived from
 #'   the circular version of the additive method for circular kernel density estimation.
@@ -28,7 +42,7 @@
 #' @references
 #' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density
 #' estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
-#' \doi{10.1016/j.spl.2017.07.027}
+#' \doi{10.1016/j.spl.2017.08.003}
 #'
 #' @importFrom stats optimize
 #' @import circular

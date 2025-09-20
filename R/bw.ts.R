@@ -5,8 +5,8 @@
 #' multiplicative method from Terrell and Scott (1980) to form higher-order kernel functions.
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
-#'   coerced to a numeric vector in radians using `circular::conversion.circular`.
-#'   Can be a numeric vector or an object of class `circular`.
+#'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+#'   Can be a numeric vector or an object of class \code{circular}.
 #' 
 #' @details The method is the plug-in bandwidth selection approach developed by Tsuruta and Sagae (2017)
 #' using p-th order kernel functions with higher moments.
