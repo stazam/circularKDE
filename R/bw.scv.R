@@ -140,24 +140,24 @@ bwScv <- function(x,
     D <- cos(outer(x, x, "-"))
     B <- besselI(kappa * sqrt(2 * (1 + C)), 0)
     E <- exp(kappa * C)
-    b0.kappa <- besselI(kappa, 0)
+    b0_kappa <- besselI(kappa, 0)
 
-    factor.1 <- 1 / (4 * pi ^ 2 * n * (n - 1) * b0.kappa ^ 4)
-    arg.1 <- t(B) %*% B
-    part.1 <- factor.1 * h *  (sum(arg.1) - sum(diag(arg.1)))
+    factor_1 <- 1 / (4 * pi ^ 2 * n * (n - 1) * b0_kappa ^ 4)
+    arg_1 <- t(B) %*% B
+    part_1 <- factor_1 * h *  (sum(arg_1) - sum(diag(arg_1)))
 
-    factor.2 <- 1 / (2 * n * (n - 1) * pi ^ 2 * b0.kappa ^ 3)
-    arg.2 <- t(B) %*% E
-    part.2 <- factor.2 * h * (sum(arg.2) - sum(diag(arg.2)))
+    factor_2 <- 1 / (2 * n * (n - 1) * pi ^ 2 * b0_kappa ^ 3)
+    arg_2 <- t(B) %*% E
+    part_2 <- factor_2 * h * (sum(arg_2) - sum(diag(arg_2)))
 
-    factor.3 <- 1 / (2 * n * (n - 1) * pi * b0.kappa ^ 2)
-    arg.3 <- besselI(kappa * sqrt(2 * (1 + D)), 0)
-    part.3 <- factor.3 * (sum(arg.3) - sum(diag(arg.3)))
+    factor_3 <- 1 / (2 * n * (n - 1) * pi * b0_kappa ^ 2)
+    arg_3 <- besselI(kappa * sqrt(2 * (1 + D)), 0)
+    part_3 <- factor_3 * (sum(arg_3) - sum(diag(arg_3)))
 
-    part.4 <- besselI(2 * kappa, 0) / (2 * n * pi * b0.kappa ^ 2)
+    part_4 <- besselI(2 * kappa, 0) / (2 * n * pi * b0_kappa ^ 2)
 
     # ISB + IV
-    result <- (part.1 - part.2 + part.3) + part.4
+    result <- (part_1 - part_2 + part_3) + part_4
     return(result)
   }
   bw <- optimize(

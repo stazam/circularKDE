@@ -86,14 +86,14 @@ bwFo <- function(x) {
   c1 <- (mean(cos(x)))^2 + (mean(sin(x)))^2
   theta2[1] <- c1 / pi 
   
-  c.bar <- (n / (n - 1)) * (c1 - 1/n)
-  H[1] <- 1/n - gamma * (1 + 1/n) * c.bar
+  c_bar <- (n / (n - 1)) * (c1 - 1/n)
+  H[1] <- 1/n - gamma * (1 + 1/n) * c_bar
   
   for (k in 2:Un) {
-    c.k <- (mean(cos(k * x)))^2 + (mean(sin(k * x)))^2
-    theta2[k] <- theta2[k - 1] + (k^4 * c.k) / pi
-    c.bar <- c.bar + (n / (n - 1)) * (c.k - 1/n)
-    H[k] <- k / n - gamma * (1 + 1/n) * c.bar
+    c_k <- (mean(cos(k * x)))^2 + (mean(sin(k * x)))^2
+    theta2[k] <- theta2[k - 1] + (k^4 * c_k) / pi
+    c_bar <- c_bar + (n / (n - 1)) * (c_k - 1/n)
+    H[k] <- k / n - gamma * (1 + 1/n) * c_bar
   }
   m <- (Ln - 1) + which.min(H[Ln:Un])
   bw <- (4 * pi)^(-1/10) * (theta2[m] * n)^(-1/5)

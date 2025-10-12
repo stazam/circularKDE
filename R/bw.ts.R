@@ -77,25 +77,25 @@ bwTs <- function(x) {
   }
 
   n <- length(x)
-  kappa.hat <- circular::mle.vonmises(x)$kappa
-  b0.kappa <- besselI(kappa.hat, 0)
-  b0.2kappa <- besselI(2 * kappa.hat, 0)
-  b1.2kappa <- besselI(2 * kappa.hat, 1)
-  b2.kappa <- besselI(kappa.hat, 2)
-  b2.2kappa <- besselI(2 * kappa.hat, 2)
-  b3.2kappa <- besselI(2 * kappa.hat, 3)
+  kappa_hat <- circular::mle.vonmises(x)$kappa
+  b0_kappa <- besselI(kappa_hat, 0)
+  b0_2kappa <- besselI(2 * kappa_hat, 0)
+  b1_2kappa <- besselI(2 * kappa_hat, 1)
+  b2_kappa <- besselI(kappa_hat, 2)
+  b2_2kappa <- besselI(2 * kappa_hat, 2)
+  b3_2kappa <- besselI(2 * kappa_hat, 3)
 
-  r.fVM2 <- (3 * kappa.hat^2 * b2.2kappa + 2 * kappa.hat * b1.2kappa) / (8 * pi * b0.kappa^2)
-  r.fVM3 <- (4 * kappa.hat * b1.2kappa + 30 * kappa.hat^2 * b2.2kappa + 15 * kappa.hat^3 * b3.2kappa) / (16 * pi * b0.kappa^2)
-  r.fVM4 <- (8 * kappa.hat^2 * b0.2kappa + 105 * kappa.hat^4 * b2.2kappa +
-               105 * kappa.hat^3 * b3.2kappa + 244 * kappa.hat^2 * b2.2kappa) / (32 * pi * b0.kappa^2)
-  r.fVM2VM1 <- (41 * kappa.hat^4 * b2.2kappa + 12 * kappa.hat^2 * b2.kappa - 87 * kappa.hat^3 * b3.2kappa) / (32 * pi * b0.kappa^2)
-  integral.1 <- (4 * kappa.hat^3 * b1.2kappa - 14 * kappa.hat^2 * b2.2kappa - 3 * kappa.hat^3 * b3.2kappa) / (16 * pi * b0.kappa^2)
-  integral.2 <- (36 * kappa.hat^2 * b2.2kappa + 9 * kappa.hat^4 * b2.2kappa + 25 * kappa.hat^3 * b3.2kappa) / (32 * pi * b0.kappa^2)
+  r_fVM2 <- (3 * kappa_hat^2 * b2_2kappa + 2 * kappa_hat * b1_2kappa) / (8 * pi * b0_kappa^2)
+  r_fVM3 <- (4 * kappa_hat * b1_2kappa + 30 * kappa_hat^2 * b2_2kappa + 15 * kappa_hat^3 * b3_2kappa) / (16 * pi * b0_kappa^2)
+  r_fVM4 <- (8 * kappa_hat^2 * b0_2kappa + 105 * kappa_hat^4 * b2_2kappa +
+               105 * kappa_hat^3 * b3_2kappa + 244 * kappa_hat^2 * b2_2kappa) / (32 * pi * b0_kappa^2)
+  r_fVM2VM1 <- (41 * kappa_hat^4 * b2_2kappa + 12 * kappa_hat^2 * b2_kappa - 87 * kappa_hat^3 * b3_2kappa) / (32 * pi * b0_kappa^2)
+  integral_1 <- (4 * kappa_hat^3 * b1_2kappa - 14 * kappa_hat^2 * b2_2kappa - 3 * kappa_hat^3 * b3_2kappa) / (16 * pi * b0_kappa^2)
+  integral_2 <- (36 * kappa_hat^2 * b2_2kappa + 9 * kappa_hat^4 * b2_2kappa + 25 * kappa_hat^3 * b3_2kappa) / (32 * pi * b0_kappa^2)
 
-  r.hat <- 1/4 * r.fVM2VM1 + 25/16 * r.fVM2 - 5/4 * r.fVM3 + 1/4 * r.fVM4 - 5/4 * integral.1 - 1/2 * integral.2
+  r_hat <- 1/4 * r_fVM2VM1 + 25/16 * r_fVM2 - 5/4 * r_fVM3 + 1/4 * r_fVM4 - 5/4 * integral_1 - 1/2 * integral_2
 
-  bw <- (288 / (33 - 16 * sqrt(2/5)) * r.hat * n)^(2/9)
+  bw <- (288 / (33 - 16 * sqrt(2/5)) * r_hat * n)^(2/9)
 
   return(bw)
 }

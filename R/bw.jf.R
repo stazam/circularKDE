@@ -74,20 +74,20 @@ bwJf <- function(x) {
   }
 
   n <- length(x)
-  kappa.hat <- circular::mle.vonmises(x)$kappa
-  b0.kappa <- besselI(kappa.hat, 0)
-  b0.2kappa <- besselI(2 * kappa.hat, 0)
-  b1.2kappa <- besselI(2 * kappa.hat, 1)
-  b2.2kappa <- besselI(2 * kappa.hat, 2)
-  b3.2kappa <- besselI(2 * kappa.hat, 3)
+  kappa_hat <- circular::mle.vonmises(x)$kappa
+  b0_kappa <- besselI(kappa_hat, 0)
+  b0_2kappa <- besselI(2 * kappa_hat, 0)
+  b1_2kappa <- besselI(2 * kappa_hat, 1)
+  b2_2kappa <- besselI(2 * kappa_hat, 2)
+  b3_2kappa <- besselI(2 * kappa_hat, 3)
 
-  r.fVM2 <- (3 * kappa.hat^2 * b2.2kappa + 2 * kappa.hat * b1.2kappa) / (8 * pi * b0.kappa^2)
-  r.fVM3 <- (4 * kappa.hat * b1.2kappa + 30 * kappa.hat^2 * b2.2kappa + 15 * kappa.hat^3 * b3.2kappa) / (16 * pi * b0.kappa^2)
-  r.fVM4 <- (8 * kappa.hat^2 * b0.2kappa + 105 * kappa.hat^4 * b2.2kappa +
-               105 * kappa.hat^3 * b3.2kappa + 244 * kappa.hat^2 * b2.2kappa) / (32 * pi * b0.kappa^2)
+  r_fVM2 <- (3 * kappa_hat^2 * b2_2kappa + 2 * kappa_hat * b1_2kappa) / (8 * pi * b0_kappa^2)
+  r_fVM3 <- (4 * kappa_hat * b1_2kappa + 30 * kappa_hat^2 * b2_2kappa + 15 * kappa_hat^3 * b3_2kappa) / (16 * pi * b0_kappa^2)
+  r_fVM4 <- (8 * kappa_hat^2 * b0_2kappa + 105 * kappa_hat^4 * b2_2kappa +
+               105 * kappa_hat^3 * b3_2kappa + 244 * kappa_hat^2 * b2_2kappa) / (32 * pi * b0_kappa^2)
 
-  r.hat <- 25 * r.fVM2 / 144 - 5 * r.fVM3 / 36 + r.fVM4 / 36
-  bw <- ((16 * sqrt(pi)) / 3 * (r.hat * n))^(2/9)
+  r_hat <- 25 * r_fVM2 / 144 - 5 * r_fVM3 / 36 + r_fVM4 / 36
+  bw <- ((16 * sqrt(pi)) / 3 * (r_hat * n))^(2/9)
 
   return(bw)
 }

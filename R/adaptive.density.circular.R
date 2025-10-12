@@ -137,8 +137,8 @@ adaptiveDensityCircular <- function(x,
     n <- length(x)
     factor <- 1 / (2 * n * pi)
 
-    main.part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)), na.rm = TRUE)
-    result <- factor * main.part
+    main_part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)), na.rm = TRUE)
+    result <- factor * main_part
     return(result)
   }
   y <- sapply(

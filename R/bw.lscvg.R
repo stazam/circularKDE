@@ -132,26 +132,26 @@ bwLscvg <- function(x,
   lscvg <- function(x, kappa, g) {
     n <- length(x)
     grid <- outer(x, x, '-')
-    cos.grid <- cos(grid)
+    cos_grid <- cos(grid)
 
-    b0.kappa      <- besselI(kappa, 0)
-    b0.2.kappa     <- besselI(2 * kappa, 0)
-    b0.kappa.g    <- besselI(kappa / g, 0)
-    b0.kappa.half <- besselI(kappa / 2, 0)
+    b0_kappa      <- besselI(kappa, 0)
+    b0_2_kappa     <- besselI(2 * kappa, 0)
+    b0_kappa_g    <- besselI(kappa / g, 0)
+    b0_kappa_half <- besselI(kappa / 2, 0)
 
-    part.1 <- b0.2.kappa / (2 * pi * n * (b0.kappa ^ 2))
+    part_1 <- b0_2_kappa / (2 * pi * n * (b0_kappa ^ 2))
 
-    factor.2 <- (2 / (g * (g - 2))) * (1 / (2 * pi * b0.kappa.g))
-    part.2 <- factor.2 * (sum(exp((kappa / g) * cos.grid)) - n * exp(kappa / g))
+    factor_2 <- (2 / (g * (g - 2))) * (1 / (2 * pi * b0_kappa_g))
+    part_2 <- factor_2 * (sum(exp((kappa / g) * cos_grid)) - n * exp(kappa / g))
 
-    arg.3 <- kappa * sqrt(2 * (1 + cos.grid))
-    factor.3 <- ((n - 1) / n) * (1 / (2 * pi * (b0.kappa ^ 2)))
-    part.3 <- factor.3 * (sum(besselI(arg.3, 0)) - n * b0.2.kappa)
+    arg_3 <- kappa * sqrt(2 * (1 + cos_grid))
+    factor_3 <- ((n - 1) / n) * (1 / (2 * pi * (b0_kappa ^ 2)))
+    part_3 <- factor_3 * (sum(besselI(arg_3, 0)) - n * b0_2_kappa)
 
-    factor.4 <- ((g - 1) / (g - 2)) * (1 / (2 * pi * b0.kappa.half))
-    part.4 <-  factor.4 * (sum(exp((kappa / 2) * cos.grid)) - n * exp(kappa / 2))
+    factor_4 <- ((g - 1) / (g - 2)) * (1 / (2 * pi * b0_kappa_half))
+    part_4 <-  factor_4 * (sum(exp((kappa / 2) * cos_grid)) - n * exp(kappa / 2))
 
-    result <- part.1 + (part.2 + part.3 - part.4) / (n * (n - 1))
+    result <- part_1 + (part_2 + part_3 - part_4) / (n * (n - 1))
     return(result)
   }
   bw <- optimize(

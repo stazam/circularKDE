@@ -123,39 +123,39 @@ bwCcv <- function(x,
     n <- length(x)
     grid <- outer(x, x, "-")
 
-    b0.kappa <- besselI(kappa, 0)
-    b1.kappa <- besselI(kappa, 1)
-    b2.kappa <- besselI(kappa, 2)
+    b0_kappa <- besselI(kappa, 0)
+    b1_kappa <- besselI(kappa, 1)
+    b2_kappa <- besselI(kappa, 2)
 
-    cos.grid <- cos(grid)
-    sin.grid <- sin(grid)
-    exp.kappa.cos <- exp(kappa * cos.grid)
+    cos_grid <- cos(grid)
+    sin_grid <- sin(grid)
+    exp_kappa_cos <- exp(kappa * cos_grid)
 
-    cos.0 <- 1
-    sin.0 <- 0
-    exp.0 <- exp(kappa * cos.0)
+    cos_0 <- 1
+    sin_0 <- 0
+    exp_0 <- exp(kappa * cos_0)
 
-    factor.1 <- 1 / (2 * pi * n ^ 2 * b0.kappa ^ 2)
-    part.1 <- factor.1 * sum(besselI(kappa * sqrt(2 * (1 + cos.grid)), 0))
+    factor_1 <- 1 / (2 * pi * n ^ 2 * b0_kappa ^ 2)
+    part_1 <- factor_1 * sum(besselI(kappa * sqrt(2 * (1 + cos_grid)), 0))
 
-    factor.2 <- 1 / (n * (n - 1) * 2 * pi * b0.kappa)
-    part.2 <- factor.2 * (sum(exp.kappa.cos) - n * exp.0)
+    factor_2 <- 1 / (n * (n - 1) * 2 * pi * b0_kappa)
+    part_2 <- factor_2 * (sum(exp_kappa_cos) - n * exp_0)
 
-    factor.3 <- (1 / (2 * kappa)) * (b1.kappa / b0.kappa) * (1 / (2 * pi * b0.kappa * n * (n - 1)))
-    arg.3 <- exp.kappa.cos * (kappa ^ 2 * sin.grid ^ 2 - kappa * cos.grid)
-    arg.3.1 <- exp.0 * (-kappa)
-    part.3 <- -factor.3 * (sum(arg.3) - n * arg.3.1)
+    factor_3 <- (1 / (2 * kappa)) * (b1_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
+    arg_3 <- exp_kappa_cos * (kappa ^ 2 * sin_grid ^ 2 - kappa * cos_grid)
+    arg_3_1 <- exp_0 * (-kappa)
+    part_3 <- -factor_3 * (sum(arg_3) - n * arg_3_1)
 
-    factor.4 <- (1 / (8 * kappa ^ 2)) * (2 * (b1.kappa / b0.kappa) ^ 2 - b2.kappa / b0.kappa) * (1 / (2 * pi * b0.kappa * n * (n - 1)))
-    arg.4 <- exp.kappa.cos * (
-      kappa ^ 4 * sin.grid ^ 4 - 6 * kappa ^ 3 * sin.grid ^ 2 * cos.grid +
-        3 * kappa ^ 2 * (cos.grid ^ 2 - sin.grid ^ 2) - kappa ^
-        2 * sin.grid ^ 2 + kappa * cos.grid
+    factor_4 <- (1 / (8 * kappa ^ 2)) * (2 * (b1_kappa / b0_kappa) ^ 2 - b2_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
+    arg_4 <- exp_kappa_cos * (
+      kappa ^ 4 * sin_grid ^ 4 - 6 * kappa ^ 3 * sin_grid ^ 2 * cos_grid +
+        3 * kappa ^ 2 * (cos_grid ^ 2 - sin_grid ^ 2) - kappa ^
+        2 * sin_grid ^ 2 + kappa * cos_grid
     )
-    arg.4.1 <- exp.0 * (3 * kappa ^ 2 + kappa)
-    part.4 <- factor.4 * (sum(arg.4) - n * arg.4.1)
+    arg_4_1 <- exp_0 * (3 * kappa ^ 2 + kappa)
+    part_4 <- factor_4 * (sum(arg_4) - n * arg_4_1)
 
-    result <- part.1 - part.2 + part.3 + part.4
+    result <- part_1 - part_2 + part_3 + part_4
     return(result)
   }
   bw <- optimize(
