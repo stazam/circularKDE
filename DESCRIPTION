@@ -2,10 +2,10 @@ Package: circularKDE
 Title: Recent Methods for kernel density estimation for circular data
 Version: 0.2.4
 Authors@R: 
-      c(person(given = "Stanislav", family = "Zamecnik", email = c("zamecnik@math.muni.cz"), role = c("aut", "cre")),
-      person(given = "Ivanka", family = "Hórová", email = c("horova@math.muni.cz"), role = c("aut")),
-      person(given = "Kamila", family = "Hasilová", email = c("kamila.hasilova@unob.cz"), role = c("aut")),
-      person(given = "Stanislav", family = "Katina", email = c("katina@math.muni.cz"), role = c("aut")))
+      c(person(given = "Stanislav", family = "Zamecnik", email = "zamecnik@math.muni.cz", role = c("aut", "cre")),
+      person(given = "Ivanka", family = "Hórová", email = "horova@math.muni.cz", role = c("aut")),
+      person(given = "Kamila", family = "Hasilová", email = "kamila.hasilova@unob.cz", role = c("aut")),
+      person(given = "Stanislav", family = "Katina", email = "katina@math.muni.cz", role = c("aut")))
 Description: This package provides kernel density estimation methods for circular data using recently developed techniques. The methods are based on several research articles including adaptive bandwidth selection methods (Zámečník et al. 2024 <doi:10.1007/s00180-023-01401-0>), complete cross-validation approaches (Hasilová et al. 2024 <doi:10.59170/stattrans-2024-024>), Fourier series-based plug-in bandwidth selection (Tenreiro 2022 <doi:10.1080/10485252.2022.2057974>), and higher order kernel density estimation techniques (Tsuruta & Sagae 2017 <doi:10.1016/j.spl.2017.07.027>) and more.
 Keywords: circular data, kernel density estimation, bandwidth selection, directional statistics, smoothing
 Depends: R(>= 3.5.0), circular, cli
