@@ -42,11 +42,11 @@
 #' library(circular)
 #' set.seed(123)
 #' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
-#' bw <- bw.lscvg(x)
+#' bw <- bwLscvg(x)
 #' print(bw)
 #'
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
-#' bw <- bw.lscvg(x)
+#' bw <- bwLscvg(x)
 #' print(bw)
 #' 
 #' @references
@@ -61,7 +61,7 @@
 #' @importFrom stats optimize
 #' @import circular
 #' @import cli
-bw.lscvg <- function(x,
+bwLscvg <- function(x,
                      g = 4,
                      lower = 0,
                      upper = 60,

@@ -27,11 +27,11 @@
 #' library(circular)
 #' set.seed(123)
 #' x <- rvonmises(100, mu = circular(0), kappa = 2)
-#' bw <- bw.fo(x)
+#' bw <- bwFo(x)
 #' print(bw)
 #'
 #' x <- rwrappednormal(100, mu = circular(1), rho = 0.7)
-#' bw <- bw.fo(x)
+#' bw <- bwFo(x)
 #' print(bw)
 #'
 #' @references
@@ -43,7 +43,7 @@
 #' @importFrom stats optimize
 #' @import circular
 #' @import cli
-bw.fo <- function(x) {
+bwFo <- function(x) {
   n <- length(x)
   if (n == 0) {
     cli::cli_abort(

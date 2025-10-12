@@ -32,11 +32,11 @@
 #' library(circular)
 #' set.seed(123)
 #' x <- rvonmises(100, mu = circular(0), kappa = 2)
-#' bw <- bw.ts(x)
+#' bw <- bwTs(x)
 #' print(bw)
 #'
 #' x <- rwrappednormal(100, mu = circular(1), rho = 0.7)
-#' bw <- bw.ts(x)
+#' bw <- bwTs(x)
 #' print(bw)
 #'
 #' @references
@@ -47,7 +47,7 @@
 #' @importFrom stats optimize
 #' @import circular
 #' @import cli
-bw.ts <- function(x) {
+bwTs <- function(x) {
   n <- length(x)
   if (n == 0) {
     cli::cli_abort(

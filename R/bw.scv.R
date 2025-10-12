@@ -41,11 +41,11 @@
 #' # Example with circular data
 #' library(circular)
 #' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
-#' bw <- bw.scv(x)
+#' bw <- bwScv(x)
 #' print(bw)
 #'
 #' x <- rvonmises(100, mu = circular(0.5), kappa = 2)
-#' bw <- bw.scv(x)
+#' bw <- bwScv(x)
 #' print(bw)
 #'
 #' @references
@@ -61,7 +61,7 @@
 #' @importFrom stats optimize
 #' @import circular
 #' @import cli
-bw.scv <- function(x,
+bwScv <- function(x,
                    np = 500,
                    lower = 0,
                    upper = 60,

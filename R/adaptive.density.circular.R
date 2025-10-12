@@ -47,16 +47,16 @@
 #' # Example with numeric data in radians
 #' library(circular)
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
-#' bw0 <- bw.lscvg(x = x)
-#' dens <- adaptive.density.circular(x, bw0 = bw0)
+#' bw0 <- bwLscvg(x = x)
+#' dens <- adaptiveDensityCircular(x, bw0 = bw0)
 #' plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
 #'      main = "Adaptive Circular Density")
 #'
 #' # Example with circular data and custom evaluation points
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
-#' bw0 <- bw.lscvg(x = x)
+#' bw0 <- bwLscvg(x = x)
 #' z <- seq(0, 2 * pi, length.out = 200)
-#' dens <- adaptive.density.circular(x, bw0 = 0.5, z = z)
+#' dens <- adaptiveDensityCircular(x, bw0 = 0.5, z = z)
 #' plot(z, dens, type = "l", main = "Density with Custom Points")
 #'
 #' @references
@@ -71,7 +71,7 @@
 #'
 #' @import circular
 #' @import cli
-adaptive.density.circular <- function(x,
+adaptiveDensityCircular <- function(x,
                                       bw0,
                                       alpha = 0.5,
                                       type = "n",
@@ -132,8 +132,8 @@ adaptive.density.circular <- function(x,
       template = "none"
     )
   }
-  lambda <- local.factor(x, bw0, alpha, type)
-  kernel.density.adaptive.est <- function(x, z, bw0, alpha, type, lambda) {
+  lambda <- localFactor(x, bw0, alpha, type)
+  kernelDensityAdaptiveEst <- function(x, z, bw0, alpha, type, lambda) {
     n <- length(x)
     factor <- 1 / (2 * n * pi)
 
@@ -143,7 +143,7 @@ adaptive.density.circular <- function(x,
   }
   y <- sapply(
     X = z,
-    FUN = kernel.density.adaptive.est,
+    FUN = kernelDensityAdaptiveEst,
     x = x,
     bw0 = bw0,
     alpha = alpha,
