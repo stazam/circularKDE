@@ -13,7 +13,9 @@
 #'   smoothing parameter \code{kappa}. Must be a positive numeric value greater than \code{lower}.
 #'   Default is 60.
 #' @param tol Convergence tolerance for the \code{\link[stats]{optimize}} function, determining the
-#'   precision of the optimization process. Default is 0.1.
+#'   precision of the optimization process. Also used to detect convergence near boundaries:
+#'   if the optimal value is within \code{tol} of \code{lower} or \code{upper}, a warning
+#'   is issued suggesting interval adjustment. Default is 0.1.
 #' 
 #' @details The complete cross-validation (CCV) method is an alternative for bandwidth 
 #' selection, originally proposed by Jones (1991) for linear densities. Its adaptation 
@@ -36,7 +38,8 @@
 #'
 #' @return The computed optimal smoothing parameter \code{kappa}, a numeric value that
 #'   minimizes the complete cross-validation criterion within the interval
-#'   \code{[lower, upper]}.
+#'   \code{[lower, upper]} and the value of objective function at that point. If the
+#'   optimization fails, the warning is issued.
 #'
 #' @export
 #'
@@ -46,20 +49,69 @@
 #' set.seed(123)
 #' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 #' bw <- bwCcv(x)
-#' print(bw)
+#' print(round(bw, 2))
 #'
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
 #' bw <- bwCcv(x)
-#' print(bw)
+#' print(round(bw, 2))
 #'
 #' @references
 #' Hasilová, K., Horová, I., Valis, D., & Zámečník, S. (2024).
 #' A comprehensive exploration of complete cross-validation for circular data.
 #' \emph{Statistics in Transition New Series}, 25(3):1--12. \doi{10.59170/stattrans-2024-024}
 #'
+#' @seealso \link{bwScv}, \link{bwLscv}, \link{bwCcv}
+#'
 #' @importFrom stats optimize
 #' @import circular
 #' @import cli
+
+.ccv_objective <- function(x, kappa) {
+  kappa_min <- sqrt(.Machine$double.eps)
+  if (kappa < kappa_min) {
+    kappa <- kappa_min
+  }
+  
+  n <- length(x)
+  grid <- outer(x, x, "-")
+
+  b0_kappa <- suppressWarnings(besselI(kappa, 0))
+  b0_kappacosgrid <- suppressWarnings(besselI(kappa * sqrt(2 * (1 + cos_grid)), 0))
+  b1_kappa <- suppressWarnings(besselI(kappa, 1))
+  b2_kappa <- suppressWarnings(besselI(kappa, 2))
+
+  cos_grid <- cos(grid)
+  sin_grid <- sin(grid)
+  exp_kappa_cos <- exp(kappa * cos_grid)
+
+  cos_0 <- 1
+  sin_0 <- 0
+  exp_0 <- exp(kappa * cos_0)
+
+  factor_1 <- 1 / (2 * pi * n ^ 2 * b0_kappa ^ 2)
+  part_1 <- factor_1 * sum(b0_kappacosgrid)
+
+  factor_2 <- 1 / (n * (n - 1) * 2 * pi * b0_kappa)
+  part_2 <- factor_2 * (sum(exp_kappa_cos) - n * exp_0)
+
+  factor_3 <- (1 / (2 * kappa)) * (b1_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
+  arg_3 <- exp_kappa_cos * (kappa ^ 2 * sin_grid ^ 2 - kappa * cos_grid)
+  arg_3_1 <- exp_0 * (-kappa)
+  part_3 <- -factor_3 * (sum(arg_3) - n * arg_3_1)
+
+  factor_4 <- (1 / (8 * kappa ^ 2)) * (2 * (b1_kappa / b0_kappa) ^ 2 - b2_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
+  arg_4 <- exp_kappa_cos * (
+    kappa ^ 4 * sin_grid ^ 4 - 6 * kappa ^ 3 * sin_grid ^ 2 * cos_grid +
+      3 * kappa ^ 2 * (cos_grid ^ 2 - sin_grid ^ 2) - kappa ^
+      2 * sin_grid ^ 2 + kappa * cos_grid
+  )
+  arg_4_1 <- exp_0 * (3 * kappa ^ 2 + kappa)
+  part_4 <- factor_4 * (sum(arg_4) - n * arg_4_1)
+
+  result <- part_1 - part_2 + part_3 + part_4
+  return(result)
+}
+
 bwCcv <- function(x,
                    lower = 0,
                    upper = 60,
@@ -85,7 +137,7 @@ bwCcv <- function(x,
     rotation = "counter",
     modulo = "2pi"
   )
-  attr(x, "class") <- attr(x, "circularp") <- NULL
+  x <- as.numeric(conversion.circular(x))
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
@@ -119,51 +171,13 @@ bwCcv <- function(x,
     upper <- 60
   }
 
-  ccv <- function(x, kappa) {
-    n <- length(x)
-    grid <- outer(x, x, "-")
-
-    b0_kappa <- besselI(kappa, 0)
-    b1_kappa <- besselI(kappa, 1)
-    b2_kappa <- besselI(kappa, 2)
-
-    cos_grid <- cos(grid)
-    sin_grid <- sin(grid)
-    exp_kappa_cos <- exp(kappa * cos_grid)
-
-    cos_0 <- 1
-    sin_0 <- 0
-    exp_0 <- exp(kappa * cos_0)
-
-    factor_1 <- 1 / (2 * pi * n ^ 2 * b0_kappa ^ 2)
-    part_1 <- factor_1 * sum(besselI(kappa * sqrt(2 * (1 + cos_grid)), 0))
-
-    factor_2 <- 1 / (n * (n - 1) * 2 * pi * b0_kappa)
-    part_2 <- factor_2 * (sum(exp_kappa_cos) - n * exp_0)
-
-    factor_3 <- (1 / (2 * kappa)) * (b1_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
-    arg_3 <- exp_kappa_cos * (kappa ^ 2 * sin_grid ^ 2 - kappa * cos_grid)
-    arg_3_1 <- exp_0 * (-kappa)
-    part_3 <- -factor_3 * (sum(arg_3) - n * arg_3_1)
-
-    factor_4 <- (1 / (8 * kappa ^ 2)) * (2 * (b1_kappa / b0_kappa) ^ 2 - b2_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
-    arg_4 <- exp_kappa_cos * (
-      kappa ^ 4 * sin_grid ^ 4 - 6 * kappa ^ 3 * sin_grid ^ 2 * cos_grid +
-        3 * kappa ^ 2 * (cos_grid ^ 2 - sin_grid ^ 2) - kappa ^
-        2 * sin_grid ^ 2 + kappa * cos_grid
-    )
-    arg_4_1 <- exp_0 * (3 * kappa ^ 2 + kappa)
-    part_4 <- factor_4 * (sum(arg_4) - n * arg_4_1)
-
-    result <- part_1 - part_2 + part_3 + part_4
-    return(result)
-  }
   bw <- optimize(
-    ccv,
+    .ccv_objective,
     interval = c(lower, upper),
     maximum = FALSE,
+    tol = tol,
     x = x
-  )$minimum
+  )
   if (bw < lower + tol | bw > upper - tol) {
     cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
   }
