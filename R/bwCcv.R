@@ -49,11 +49,11 @@
 #' set.seed(123)
 #' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 #' bw <- bwCcv(x)
-#' print(round(bw, 2))
+#' print(round(bw$minimum, 2))
 #'
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
 #' bw <- bwCcv(x)
-#' print(round(bw, 2))
+#' print(round(bw$minimum, 2))
 #'
 #' @references
 #' Hasilová, K., Horová, I., Valis, D., & Zámečník, S. (2024).
@@ -178,7 +178,7 @@ bwCcv <- function(x,
     tol = tol,
     x = x
   )
-  if (bw < lower + tol | bw > upper - tol) {
+  if (bw$minimum < lower + tol | bw$minimum > upper - tol) {
     cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
   }
   return(bw)
