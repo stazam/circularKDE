@@ -36,10 +36,12 @@
 #' The optimal bandwidth is obtained by minimizing this criterion over the interval 
 #' \code{[lower, upper]}.
 #'
-#' @return The computed optimal smoothing parameter \code{kappa}, a numeric value that
-#'   minimizes the complete cross-validation criterion within the interval
-#'   \code{[lower, upper]} and the value of objective function at that point. If the
-#'   optimization fails, the warning is issued.
+#' @return The computed optimal smoothing parameter \code{kappa}, a numeric concentration 
+#' parameter (analogous to inverse radians) that minimizes the smoothed cross-validation 
+#' criterion within the interval \code{[lower, upper]} and the value of objective function 
+#' at that point. Higher values indicate sharper, more concentrated kernels and less 
+#' smoothing; lower values indicate broader kernels and more smoothing. If the 
+#' optimization fails, a warning is issued. 
 #'
 #' @export
 #'

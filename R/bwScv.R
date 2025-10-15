@@ -5,10 +5,12 @@
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
-#'   Can be a numeric vector or an object of class \code{circular}.
+#'   Can be a numeric vector or an object of class \code{circular}. Note: computational
+#'   complexity scales as O(n²) due to outer product operations; datasets with n > 2000
+#'   may cause performance and memory issues.
 #' @param np An integer specifying the number of points used in numerical integration
 #'   to evaluate the SCV criterion. A higher number increases precision but also
-#'   computational cost. Default is 500.
+#'   computational cost (recommended value is >= 100). Default is 500.
 #' @param lower Lower boundary of the interval for the optimization of the smoothing
 #'   parameter \code{kappa}. Must be a positive numeric value smaller than \code{upper}.
 #'   Default is 0.
@@ -34,17 +36,21 @@
 #' The integral expressions involved in the SCV criterion (see Sections 3.2 in Zámečník et al., 2023) are evaluated numerically using the trapezoidal rule 
 #' on a uniform grid of length \code{np}. 
 #'
-#' @return The computed optimal smoothing parameter \code{kappa}, the numeric value
-#' that minimizes the smoothed cross-validation criterion.
+#' @return The computed optimal smoothing parameter \code{kappa}, a numeric concentration 
+#' parameter (analogous to inverse radians) that minimizes the smoothed cross-validation 
+#' criterion within the interval \code{[lower, upper]} and the value of objective function 
+#' at that point. Higher values indicate sharper, more concentrated kernels and less 
+#' smoothing; lower values indicate broader kernels and more smoothing. If the 
+#' optimization fails, a warning is issued. 
 #'
 #' @export
 #'
 #' @examples
-#' # Example with circular data
+#' # Example with circular data (Lower `nu` = more smoothing; higher = sharper peaks).
 #' library(circular)
 #' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 #' bw <- bwScv(x)
-#' print(round(bw$minimum, 2))
+#' print(round(bw$minimum, 2)) 
 #'
 #' x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 #' bw <- bwScv(x)
@@ -95,10 +101,10 @@ bwScv <- function(x,
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
-  if (!is.numeric(np)) {
+  if (!is.numeric(np) || np < 50) {
     cli::cli_alert_warning(
       c(
-        "Argument {.var np} must be numeric. ",
+        "Argument {.var np} must be numeric and greater than or equal to 50 (recommended values is >=100).",
         "Default value 500 for number of points for evaluation of numerical integration was used."
       )
     )
