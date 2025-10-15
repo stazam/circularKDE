@@ -67,7 +67,7 @@ bwJf <- function(x) {
     modulo = "2pi",
     template = "none"
   )
-  x <- as.numeric(conversion.circular(x))
+  x <- as.numeric(x)
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]

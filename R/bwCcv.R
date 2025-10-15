@@ -139,7 +139,7 @@ bwCcv <- function(x,
     rotation = "counter",
     modulo = "2pi"
   )
-  x <- as.numeric(conversion.circular(x))
+  x <- as.numeric(x)
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
