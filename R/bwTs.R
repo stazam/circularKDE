@@ -64,12 +64,12 @@ bwTs <- function(x, verbose = FALSE) {
       c("{.var x} must be a non-empty object.", "x" = "You've supplied an object of length {n}.")
     )
   }
-  if (!is.numeric(x) || n < 5) {
+  if (!is.numeric(x)) {
     if (all(is.na(x))) {
       cli::cli_abort("{.var x} contains all missing values.")
     }
     cli::cli_abort(
-      c("{.var x} must be a numeric vector of length at least 5.", "x" = "You've supplied a {.cls {class(x)}} vector.")
+      c("{.var x} must be a numeric vector.", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
   }
   x <- circular(
@@ -84,6 +84,12 @@ bwTs <- function(x, verbose = FALSE) {
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
+    if (length(x) < 5) {
+      cli::cli_abort(
+        c("{.var x} must be a numeric vector of length at least 5 after removing missing values.", 
+          "x" = "You've supplied an object of length {length(x)} after removing missing values.")
+      )
+    }
   }
 
   n <- length(x)

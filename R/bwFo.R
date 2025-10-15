@@ -1,4 +1,4 @@
-#' @title Plug-in estimator of Tenreiro based on Fourier series
+#' @title Optimal Bandwidth Selection via Fourier Plug-in Method
 #'
 #' @description This function computes the optimal smoothing parameter (bandwidth) for circular data
 #' using the Fourier series-based direct plug-in approach based on delta sequence estimators (see \doi{10.1080/10485252.2022.2057974}).
@@ -70,6 +70,12 @@ bwFo <- function(x) {
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
+    if (length(x) < 5) {
+      cli::cli_abort(
+        c("{.var x} must be a numeric vector of length at least 5 after removing missing values.", 
+          "x" = "You've supplied an object of length {length(x)} after removing missing values.")
+      )
+    }
   }
   
   n <- length(x)
