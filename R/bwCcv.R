@@ -127,8 +127,54 @@ bwCcv <- function(x,
     upper <- 60
   }
 
+  ccv <- function(x, kappa) {
+    kappa_min <- sqrt(.Machine$double.eps)
+    if (kappa < kappa_min) {
+      kappa <- kappa_min
+    }
+    
+    n <- length(x)
+    grid <- outer(x, x, "-")
+
+    cos_grid <- cos(grid)
+    sin_grid <- sin(grid)
+    exp_kappa_cos <- exp(kappa * cos_grid)
+
+    cos_0 <- 1
+    sin_0 <- 0
+    exp_0 <- exp(kappa * cos_0)
+
+    b0_kappa <- suppressWarnings(besselI(kappa, 0))
+    b0_kappacosgrid <- suppressWarnings(besselI(kappa * sqrt(2 * (1 + cos_grid)), 0))
+    b1_kappa <- suppressWarnings(besselI(kappa, 1))
+    b2_kappa <- suppressWarnings(besselI(kappa, 2))
+
+    factor_1 <- 1 / (2 * pi * n ^ 2 * b0_kappa ^ 2)
+    part_1 <- factor_1 * sum(b0_kappacosgrid)
+
+    factor_2 <- 1 / (n * (n - 1) * 2 * pi * b0_kappa)
+    part_2 <- factor_2 * (sum(exp_kappa_cos) - n * exp_0)
+
+    factor_3 <- (1 / (2 * kappa)) * (b1_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
+    arg_3 <- exp_kappa_cos * (kappa ^ 2 * sin_grid ^ 2 - kappa * cos_grid)
+    arg_3_1 <- exp_0 * (-kappa)
+    part_3 <- -factor_3 * (sum(arg_3) - n * arg_3_1)
+
+    factor_4 <- (1 / (8 * kappa ^ 2)) * (2 * (b1_kappa / b0_kappa) ^ 2 - b2_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
+    arg_4 <- exp_kappa_cos * (
+      kappa ^ 4 * sin_grid ^ 4 - 6 * kappa ^ 3 * sin_grid ^ 2 * cos_grid +
+        3 * kappa ^ 2 * (cos_grid ^ 2 - sin_grid ^ 2) - kappa ^
+        2 * sin_grid ^ 2 + kappa * cos_grid
+    )
+    arg_4_1 <- exp_0 * (3 * kappa ^ 2 + kappa)
+    part_4 <- factor_4 * (sum(arg_4) - n * arg_4_1)
+
+    result <- part_1 - part_2 + part_3 + part_4
+    return(result)
+  }
+
   bw <- optimize(
-    .ccv_objective,
+    ccv,
     interval = c(lower, upper),
     maximum = FALSE,
     tol = tol,
@@ -138,50 +184,4 @@ bwCcv <- function(x,
     cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
   }
   return(bw)
-}
-
-.ccv_objective <- function(x, kappa) {
-  kappa_min <- sqrt(.Machine$double.eps)
-  if (kappa < kappa_min) {
-    kappa <- kappa_min
-  }
-  
-  n <- length(x)
-  grid <- outer(x, x, "-")
-
-  b0_kappa <- suppressWarnings(besselI(kappa, 0))
-  b0_kappacosgrid <- suppressWarnings(besselI(kappa * sqrt(2 * (1 + cos_grid)), 0))
-  b1_kappa <- suppressWarnings(besselI(kappa, 1))
-  b2_kappa <- suppressWarnings(besselI(kappa, 2))
-
-  cos_grid <- cos(grid)
-  sin_grid <- sin(grid)
-  exp_kappa_cos <- exp(kappa * cos_grid)
-
-  cos_0 <- 1
-  sin_0 <- 0
-  exp_0 <- exp(kappa * cos_0)
-
-  factor_1 <- 1 / (2 * pi * n ^ 2 * b0_kappa ^ 2)
-  part_1 <- factor_1 * sum(b0_kappacosgrid)
-
-  factor_2 <- 1 / (n * (n - 1) * 2 * pi * b0_kappa)
-  part_2 <- factor_2 * (sum(exp_kappa_cos) - n * exp_0)
-
-  factor_3 <- (1 / (2 * kappa)) * (b1_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
-  arg_3 <- exp_kappa_cos * (kappa ^ 2 * sin_grid ^ 2 - kappa * cos_grid)
-  arg_3_1 <- exp_0 * (-kappa)
-  part_3 <- -factor_3 * (sum(arg_3) - n * arg_3_1)
-
-  factor_4 <- (1 / (8 * kappa ^ 2)) * (2 * (b1_kappa / b0_kappa) ^ 2 - b2_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
-  arg_4 <- exp_kappa_cos * (
-    kappa ^ 4 * sin_grid ^ 4 - 6 * kappa ^ 3 * sin_grid ^ 2 * cos_grid +
-      3 * kappa ^ 2 * (cos_grid ^ 2 - sin_grid ^ 2) - kappa ^
-      2 * sin_grid ^ 2 + kappa * cos_grid
-  )
-  arg_4_1 <- exp_0 * (3 * kappa ^ 2 + kappa)
-  part_4 <- factor_4 * (sum(arg_4) - n * arg_4_1)
-
-  result <- part_1 - part_2 + part_3 + part_4
-  return(result)
 }

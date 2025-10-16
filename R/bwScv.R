@@ -4,7 +4,7 @@
 #' (SCV) method (see <doi:10.1007/s00180-023-01401-0>). 
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
-#'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+#'   coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
 #'   Can be a numeric vector or an object of class \code{circular}. Note: computational
 #'   complexity scales as O(n²) due to outer product operations; datasets with n > 2000
 #'   may cause performance and memory issues.
@@ -67,7 +67,7 @@
 #' 20(1), 163-181.
 #'
 #' @importFrom stats optimize
-#' @import circular
+#' @importFrom circular mle.vonmises
 #' @import cli
 bwScv <- function(x,
                    np = 500,

@@ -8,7 +8,7 @@
 #'   Can be a numeric vector or an object of class \code{circular}.
 #' @param g A numeric scalar that controls the variability in the cross-validation
 #'   procedure. It influences the scaling in the internal calculations, affecting the
-#'   bandwidth estimation. Default is 4.
+#'   bandwidth estimation. It needs to be positive number not equal to 2. Default is 4.
 #' @param lower Lower boundary of the interval to be used in the search for the
 #'   smoothing parameter \code{kappa}. Must be a positive numeric value less than \code{upper}.
 #'   Default is 0.
@@ -31,9 +31,12 @@
 #' The optimal bandwidth is obtained by minimizing this criterion over the interval 
 #' \code{[lower, upper]}. 
 #'
-#' @return The computed optimal smoothing parameter \code{kappa}, a numeric value that
-#'   minimizes the least squares cross-validation criterion within the interval
-#'   \code{[lower, upper]}.
+#' @return The computed optimal smoothing parameter \code{kappa}, a numeric concentration 
+#' parameter (analogous to inverse radians) that minimizes the smoothed cross-validation 
+#' criterion within the interval \code{[lower, upper]} and the value of objective function 
+#' at that point. Higher values indicate sharper, more concentrated kernels and less 
+#' smoothing; lower values indicate broader kernels and more smoothing. If the 
+#' optimization fails, a warning is issued. 
 #'
 #' @export
 #'
@@ -43,11 +46,12 @@
 #' set.seed(123)
 #' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 #' bw <- bwLscvg(x)
-#' print(bw)
+#' print(round(bw$minimum, 2))
 #'
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
 #' bw <- bwLscvg(x)
-#' print(bw)
+#' print(round(bw$minimum, 2))
+#' plot(density.circular(x, bw = bw$minimum))
 #' 
 #' @references
 #' Zámečník, S., Horová, I., & Hasilová, K. (2025). Generalised least square 
@@ -93,9 +97,9 @@ bwLscvg <- function(x,
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
-  if (!is.numeric(g)) {
+  if (!is.numeric(g) || g != 2) {
     cli::cli_alert_warning(c(
-      "Argument {.var g} must be numeric. ",
+      "Argument {.var g} must be numeric not equal to 2.",
       "Default value 4 for coefficient was used."
     ))
     g <- 4
@@ -151,6 +155,11 @@ bwLscvg <- function(x,
     factor_4 <- ((g - 1) / (g - 2)) * (1 / (2 * pi * b0_kappa_half))
     part_4 <-  factor_4 * (sum(exp((kappa / 2) * cos_grid)) - n * exp(kappa / 2))
 
+    if (any(is.na(c(part_1, part_2, part_3, part_4)))) {
+      cli::cli_abort(c("Numerical issues encountered during optimization. ",
+                       "Try adjusting the interval [{.var lower}, {.var upper}]."))
+    }
+
     result <- part_1 + (part_2 + part_3 - part_4) / (n * (n - 1))
     return(result)
   }
@@ -160,7 +169,7 @@ bwLscvg <- function(x,
     maximum = FALSE,
     x = x ,
     g = g
-  )$minimum
+  )
   if (bw < lower + tol | bw > upper - tol) {
     cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
   }
