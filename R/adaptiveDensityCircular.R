@@ -5,8 +5,8 @@
 #' density (see \doi{10.1007/s00180-023-01401-0}).
 #'
 #' @param x Data for which the density is to be estimated. The object is coerced to a
-#'   numeric vector in radians using `circular::conversion.circular`. Can be a numeric
-#'   vector or an object of class `circular`.
+#'   numeric vector in radians using \code{\link[circular]{circular}}. Can be a numeric
+#'   vector or an object of class \code{circular}.
 #' @param bw0 Global bandwidth parameter, a positive numeric value that sets the
 #'   baseline smoothness of the density estimate. Controls the overall scale of the
 #'   kernel.

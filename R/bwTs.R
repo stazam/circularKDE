@@ -55,7 +55,7 @@
 #' \doi{10.1016/j.spl.2017.08.003}
 #'
 #' @importFrom stats optimize
-#' @importFrom circular mle.vonmises, conversion.circular, circular
+#' @importFrom circular mle.vonmises
 #' @import cli
 bwTs <- function(x, verbose = FALSE) {
   n <- length(x)

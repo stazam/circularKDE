@@ -4,7 +4,7 @@
 #' using the Fourier series-based direct plug-in approach based on delta sequence estimators (see \doi{10.1080/10485252.2022.2057974}).
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
-#'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+#'   coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
 #'   Can be a numeric vector or an object of class \code{circular}.
 #' 
 #' @details The Fourier-based plug-in estimator computes the optimal bandwidth using the formula:
@@ -41,7 +41,7 @@
 #' \doi{10.1080/10485252.2022.2057974}
 #'
 #' @importFrom stats optimize
-#' @import circular
+#' @importFrom circular mle.vonmises
 #' @import cli
 bwFo <- function(x) {
   n <- length(x)

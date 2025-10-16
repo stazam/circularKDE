@@ -4,7 +4,7 @@
 #' using the complete cross-validation (CCV) method (see \doi{10.59170/stattrans-2024-024}). 
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
-#'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+#'   coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
 #'   Can be a numeric vector or an object of class \code{circular}.
 #' @param lower Lower boundary of the interval to be used in the search for the
 #'   smoothing parameter \code{kappa}. Must be a positive numeric value less than \code{upper}.
@@ -65,54 +65,8 @@
 #' @seealso \link{bwScv}, \link{bwLscv}, \link{bwCcv}
 #'
 #' @importFrom stats optimize
-#' @import circular
+#' @importFrom circular mle.vonmises
 #' @import cli
-
-.ccv_objective <- function(x, kappa) {
-  kappa_min <- sqrt(.Machine$double.eps)
-  if (kappa < kappa_min) {
-    kappa <- kappa_min
-  }
-  
-  n <- length(x)
-  grid <- outer(x, x, "-")
-
-  b0_kappa <- suppressWarnings(besselI(kappa, 0))
-  b0_kappacosgrid <- suppressWarnings(besselI(kappa * sqrt(2 * (1 + cos_grid)), 0))
-  b1_kappa <- suppressWarnings(besselI(kappa, 1))
-  b2_kappa <- suppressWarnings(besselI(kappa, 2))
-
-  cos_grid <- cos(grid)
-  sin_grid <- sin(grid)
-  exp_kappa_cos <- exp(kappa * cos_grid)
-
-  cos_0 <- 1
-  sin_0 <- 0
-  exp_0 <- exp(kappa * cos_0)
-
-  factor_1 <- 1 / (2 * pi * n ^ 2 * b0_kappa ^ 2)
-  part_1 <- factor_1 * sum(b0_kappacosgrid)
-
-  factor_2 <- 1 / (n * (n - 1) * 2 * pi * b0_kappa)
-  part_2 <- factor_2 * (sum(exp_kappa_cos) - n * exp_0)
-
-  factor_3 <- (1 / (2 * kappa)) * (b1_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
-  arg_3 <- exp_kappa_cos * (kappa ^ 2 * sin_grid ^ 2 - kappa * cos_grid)
-  arg_3_1 <- exp_0 * (-kappa)
-  part_3 <- -factor_3 * (sum(arg_3) - n * arg_3_1)
-
-  factor_4 <- (1 / (8 * kappa ^ 2)) * (2 * (b1_kappa / b0_kappa) ^ 2 - b2_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
-  arg_4 <- exp_kappa_cos * (
-    kappa ^ 4 * sin_grid ^ 4 - 6 * kappa ^ 3 * sin_grid ^ 2 * cos_grid +
-      3 * kappa ^ 2 * (cos_grid ^ 2 - sin_grid ^ 2) - kappa ^
-      2 * sin_grid ^ 2 + kappa * cos_grid
-  )
-  arg_4_1 <- exp_0 * (3 * kappa ^ 2 + kappa)
-  part_4 <- factor_4 * (sum(arg_4) - n * arg_4_1)
-
-  result <- part_1 - part_2 + part_3 + part_4
-  return(result)
-}
 
 bwCcv <- function(x,
                    lower = 0,
@@ -184,4 +138,50 @@ bwCcv <- function(x,
     cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
   }
   return(bw)
+}
+
+.ccv_objective <- function(x, kappa) {
+  kappa_min <- sqrt(.Machine$double.eps)
+  if (kappa < kappa_min) {
+    kappa <- kappa_min
+  }
+  
+  n <- length(x)
+  grid <- outer(x, x, "-")
+
+  b0_kappa <- suppressWarnings(besselI(kappa, 0))
+  b0_kappacosgrid <- suppressWarnings(besselI(kappa * sqrt(2 * (1 + cos_grid)), 0))
+  b1_kappa <- suppressWarnings(besselI(kappa, 1))
+  b2_kappa <- suppressWarnings(besselI(kappa, 2))
+
+  cos_grid <- cos(grid)
+  sin_grid <- sin(grid)
+  exp_kappa_cos <- exp(kappa * cos_grid)
+
+  cos_0 <- 1
+  sin_0 <- 0
+  exp_0 <- exp(kappa * cos_0)
+
+  factor_1 <- 1 / (2 * pi * n ^ 2 * b0_kappa ^ 2)
+  part_1 <- factor_1 * sum(b0_kappacosgrid)
+
+  factor_2 <- 1 / (n * (n - 1) * 2 * pi * b0_kappa)
+  part_2 <- factor_2 * (sum(exp_kappa_cos) - n * exp_0)
+
+  factor_3 <- (1 / (2 * kappa)) * (b1_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
+  arg_3 <- exp_kappa_cos * (kappa ^ 2 * sin_grid ^ 2 - kappa * cos_grid)
+  arg_3_1 <- exp_0 * (-kappa)
+  part_3 <- -factor_3 * (sum(arg_3) - n * arg_3_1)
+
+  factor_4 <- (1 / (8 * kappa ^ 2)) * (2 * (b1_kappa / b0_kappa) ^ 2 - b2_kappa / b0_kappa) * (1 / (2 * pi * b0_kappa * n * (n - 1)))
+  arg_4 <- exp_kappa_cos * (
+    kappa ^ 4 * sin_grid ^ 4 - 6 * kappa ^ 3 * sin_grid ^ 2 * cos_grid +
+      3 * kappa ^ 2 * (cos_grid ^ 2 - sin_grid ^ 2) - kappa ^
+      2 * sin_grid ^ 2 + kappa * cos_grid
+  )
+  arg_4_1 <- exp_0 * (3 * kappa ^ 2 + kappa)
+  part_4 <- factor_4 * (sum(arg_4) - n * arg_4_1)
+
+  result <- part_1 - part_2 + part_3 + part_4
+  return(result)
 }

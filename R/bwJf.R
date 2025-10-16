@@ -5,7 +5,7 @@
 #' additive method from Jones and Foster (1993) to form higher-order kernel functions.
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
-#'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+#'   coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
 #'   Can be a numeric vector or an object of class \code{circular}.
 #' 
 #' @details The plug-in approach estimates the optimal bandwidth through the following steps:
@@ -42,7 +42,7 @@
 #' \doi{10.1016/j.spl.2017.08.003}
 #'
 #' @importFrom stats optimize
-#' @import circular
+#' @importFrom circular mle.vonmises
 #' @import cli
 bwJf <- function(x) {
   n <- length(x)
