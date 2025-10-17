@@ -65,6 +65,8 @@
 #' Hall, P., & Marron, J. S. (1992). On the amount of noise inherent in bandwidth 
 #' selection for a kernel density estimator. \emph{The Annals of Statistics}, 
 #' 20(1), 163-181.
+#' 
+#' @seealso \link{bwTs}, \link{bwLscvg}, \link{bwCcv}
 #'
 #' @importFrom stats optimize
 #' @importFrom circular circular
