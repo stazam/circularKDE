@@ -63,7 +63,7 @@
 #' \doi{10.1111/stan.12061}
 #'
 #' @importFrom stats optimize
-#' @importFrom circular mle.vonmises
+#' @importFrom circular circular
 #' @import cli
 bwLscvg <- function(x,
                      g = 4,

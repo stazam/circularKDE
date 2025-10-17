@@ -14,8 +14,13 @@
 #'   sensitivity of the local bandwidth adaptation. Higher values increase the
 #'   influence of local data density on the bandwidth.
 #' @param type Character string specifying the method for calculating the local
-#'   adaptation factor (default is "n"). Options depend on the implementation of the
-#'   `local.factor` function (not shown here).
+#'   adaptation factor (default is "n"). Available options are:
+#'   \describe{
+#'     \item{"am"}{Arithmetic mean of pilot density estimates}
+#'     \item{"gm"}{Geometric mean of pilot density estimates (requires all positive values)}
+#'     \item{"rv"}{Range (max - min) of pilot density estimates}
+#'     \item{"n"}{No scaling factor (equivalent to fixed bandwidth)}
+#'   }
 #' @param z Optional numeric vector of points at which to evaluate the density. If
 #'   \code{NULL} (default), a grid of \code{n} equally spaced points between \code{from} and \code{to} is
 #'   generated automatically.
@@ -52,12 +57,12 @@
 #' plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
 #'      main = "Adaptive Circular Density")
 #'
-#' # Example with circular data and custom evaluation points
+#' # Example with numerical integration over interval [0,2\pi] to verify normalization of computed density
+#' library(circular)
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
 #' bw0 <- bwLscvg(x = x)
-#' z <- seq(0, 2 * pi, length.out = 200)
-#' dens <- adaptiveDensityCircular(x, bw0 = 0.5, z = z)
-#' plot(z, dens, type = "l", main = "Density with Custom Points")
+#' dens <- function(z)adaptiveDensityCircular(z = z, bw0 = bw0, x=x)
+#' integrate(dens, lower = 0, upper = 2*pi) # 1 with absolute error < 4e-07
 #'
 #' @references
 #' Zámečník, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive
@@ -106,6 +111,12 @@ adaptiveDensityCircular <- function(x,
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
+  if (bw0 <= 0 | !is.numeric(bw0)) {
+    cli::cli_abort("Argument {.var bw0} must be a positive numeric value.")
+  }
+  if (!is.numeric(alpha) | alpha < 0 | alpha > 1) {
+    cli::cli_abort("Argument {.var alpha} must be a numeric value between 0 and 1.")
+  }
   if (!is.numeric(from) | !is.finite(from)) {
     cli::cli_abort("Argument {.var from} must be finite numeric value.")
   }
@@ -131,13 +142,14 @@ adaptiveDensityCircular <- function(x,
       modulo = "2pi",
       template = "none"
     )
+    z <- as.numeric(z)
   }
   lambda <- localFactor(x, bw0, alpha, type)
   kernelDensityAdaptiveEst <- function(x, z, bw0, alpha, type, lambda) {
     n <- length(x)
     factor <- 1 / (2 * n * pi)
 
-    main_part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)), na.rm = TRUE)
+    main_part <- sum(1 / besselI(lambda * bw0, 0, expon.scaled = TRUE) * exp (lambda * bw0 * cos(z - x)), na.rm = TRUE)
     result <- factor * main_part
     return(result)
   }
