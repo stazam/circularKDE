@@ -62,6 +62,8 @@
 #' estimation. \emph{Statistica Neerlandica}, 69(3), 315-328. 
 #' \doi{10.1111/stan.12061}
 #'
+#' @seealso \link{bwScv}, \link{bwFo}, \link{bwCcv}
+#'
 #' @importFrom stats optimize
 #' @importFrom circular circular
 #' @import cli

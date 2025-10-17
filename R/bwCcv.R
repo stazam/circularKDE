@@ -62,7 +62,7 @@
 #' A comprehensive exploration of complete cross-validation for circular data.
 #' \emph{Statistics in Transition New Series}, 25(3):1--12. \doi{10.59170/stattrans-2024-024}
 #'
-#' @seealso \link{bwScv}, \link{bwLscv}, \link{bwCcv}
+#' @seealso \link{bwScv}, \link{bwLscvg}, \link{bwTs}
 #'
 #' @importFrom stats optimize
 #' @importFrom circular circular

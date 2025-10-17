@@ -7,6 +7,9 @@
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
 #'   Can be a numeric vector or an object of class \code{circular}.
+#' @param verbose Logical indicating whether to print intermediate computational values
+#'   for debugging and teaching purposes. Shows kappa_hat, r_hat, and component
+#'   calculations. Default is FALSE.
 #' 
 #' @details The plug-in approach estimates the optimal bandwidth through the following steps:
 #' \enumerate{
@@ -40,11 +43,17 @@
 #' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density
 #' estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
 #' \doi{10.1016/j.spl.2017.08.003}
+#' 
+#' Jones, M. C. & Foster, P. J. (1993). Generalized jackknifing and higher-order kernels. 
+#' \emph{Journal of Nonparametric Statistics}, 3:81--94.
+#' \doi{10.1080/10485259308832573}
+#' 
+#' @seealso \link{bwScv}, \link{bwLscvg}, \link{bwCcv}
 #'
 #' @importFrom stats optimize
 #' @importFrom circular mle.vonmises
 #' @import cli
-bwJf <- function(x) {
+bwJf <- function(x, verbose = FALSE) {
   n <- length(x)
   if (n == 0) {
     cli::cli_abort(
@@ -75,6 +84,16 @@ bwJf <- function(x) {
 
   n <- length(x)
   kappa_hat <- mle.vonmises(x)$kappa
+  
+  if (!is.finite(kappa_hat) || kappa_hat <= 0) {
+    cli::cli_abort(
+      c("MLE estimation of concentration parameter failed.",
+        "x" = "Computed kappa_hat: {.val {kappa_hat}}",
+        "i" = "This may indicate insufficient data or degenerate distribution.")
+    )
+  }
+
+
   b0_kappa <- besselI(kappa_hat, 0)
   b0_2kappa <- besselI(2 * kappa_hat, 0)
   b1_2kappa <- besselI(2 * kappa_hat, 1)
@@ -87,6 +106,12 @@ bwJf <- function(x) {
                105 * kappa_hat^3 * b3_2kappa + 244 * kappa_hat^2 * b2_2kappa) / (32 * pi * b0_kappa^2)
 
   r_hat <- 25 * r_fVM2 / 144 - 5 * r_fVM3 / 36 + r_fVM4 / 36
+  if (verbose) {
+    cli::cli_alert_info("MLE concentration parameter estimate:")
+    cli::cli_alert_info("  kappa_hat = {.val {round(kappa_hat, 6)}}")
+    cli::cli_alert_info("Computed components:")
+    cli::cli_alert_info("  r_hat = {.val {round(r_hat, 6)}}")
+  }
   bw <- ((16 * sqrt(pi)) / 3 * (r_hat * n))^(2/9)
 
   return(bw)

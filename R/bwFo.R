@@ -39,6 +39,8 @@
 #' series-based plug-in approach for bandwidth selection. \emph{Journal of 
 #' Nonparametric Statistics}, 34(2):377--406.
 #' \doi{10.1080/10485252.2022.2057974}
+#' 
+#' @seealso \link{bwScv}, \link{bwLscvg}, \link{bwCcv}
 #'
 #' @importFrom stats optimize
 #' @importFrom circular circular

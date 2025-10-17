@@ -53,6 +53,8 @@
 #' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density
 #' estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
 #' \doi{10.1016/j.spl.2017.08.003}
+#' 
+#' @seealso \link{bwScv}, \link{bwLscvg}, \link{bwCcv}
 #'
 #' @importFrom stats optimize
 #' @importFrom circular mle.vonmises
