@@ -69,7 +69,7 @@
 #' multivariate densities. \emph{Technometrics}, 19(2), 135-144.
 #' \doi{10.2307/1268623}
 #'
-#' @import circular
+#' @importFrom circular circular
 #' @import cli
 adaptiveDensityCircular <- function(x,
                                       bw0,
@@ -101,7 +101,7 @@ adaptiveDensityCircular <- function(x,
     modulo = "2pi",
     template = "none"
   )
-  attr(x, "class") <- attr(x, "circularp") <- NULL
+  x <- as.numeric(x)
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]

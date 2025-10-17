@@ -67,7 +67,7 @@
 #' 20(1), 163-181.
 #'
 #' @importFrom stats optimize
-#' @importFrom circular mle.vonmises
+#' @importFrom circular circular
 #' @import cli
 bwScv <- function(x,
                    np = 500,

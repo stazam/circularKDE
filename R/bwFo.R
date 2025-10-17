@@ -41,7 +41,7 @@
 #' \doi{10.1080/10485252.2022.2057974}
 #'
 #' @importFrom stats optimize
-#' @importFrom circular mle.vonmises
+#' @importFrom circular circular
 #' @import cli
 bwFo <- function(x) {
   n <- length(x)

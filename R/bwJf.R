@@ -74,7 +74,7 @@ bwJf <- function(x) {
   }
 
   n <- length(x)
-  kappa_hat <- circular::mle.vonmises(x)$kappa
+  kappa_hat <- mle.vonmises(x)$kappa
   b0_kappa <- besselI(kappa_hat, 0)
   b0_2kappa <- besselI(2 * kappa_hat, 0)
   b1_2kappa <- besselI(2 * kappa_hat, 1)

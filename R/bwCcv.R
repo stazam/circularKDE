@@ -65,9 +65,8 @@
 #' @seealso \link{bwScv}, \link{bwLscv}, \link{bwCcv}
 #'
 #' @importFrom stats optimize
-#' @importFrom circular mle.vonmises
+#' @importFrom circular circular
 #' @import cli
-
 bwCcv <- function(x,
                    lower = 0,
                    upper = 60,
