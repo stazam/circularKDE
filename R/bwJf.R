@@ -22,8 +22,11 @@
 #'         and \eqn{\hat{\tau}} is the MLE estimate of the von Mises concentration parameter used as the initial value.
 #' }
 #'
-#' @return The computed optimal smoothing parameter, a numeric value derived from
-#'   the circular version of the additive method for circular kernel density estimation.
+#' @return The computed optimal smoothing parameter \code{kappa}, a numeric concentration
+#'  parameter (analogous to inverse radians) derived from the circular version of the 
+#'  additive method for circular kernel density estimation. Higher values indicate sharper,
+#'  more concentrated kernels and less smoothing; lower values indicate broader kernels 
+#'  and more smoothing. 
 #'
 #' @export
 #'
@@ -53,7 +56,7 @@
 #' @importFrom stats optimize
 #' @importFrom circular mle.vonmises
 #' @import cli
-bwJf <- function(x, verbose = FALSE) {
+bwJF <- function(x, verbose = FALSE) {
   n <- length(x)
   if (n == 0) {
     cli::cli_abort(
@@ -105,6 +108,7 @@ bwJf <- function(x, verbose = FALSE) {
   r_fVM4 <- (8 * kappa_hat^2 * b0_2kappa + 105 * kappa_hat^4 * b2_2kappa +
                105 * kappa_hat^3 * b3_2kappa + 244 * kappa_hat^2 * b2_2kappa) / (32 * pi * b0_kappa^2)
 
+  # formula based on approximation of R(f_{VM}) see suplementary material of Tsuruta and Sagae (2017)
   r_hat <- 25 * r_fVM2 / 144 - 5 * r_fVM3 / 36 + r_fVM4 / 36
   if (verbose) {
     cli::cli_alert_info("MLE concentration parameter estimate:")
