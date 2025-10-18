@@ -48,7 +48,7 @@
 #' @importFrom stats optimize
 #' @importFrom circular circular
 #' @import cli
-bwFo <- function(x) {
+bwFo <- function(x, C1 = 0.25, C2 = 25, gamma = 0.5) {
   n <- length(x)
   if (n == 0) {
     cli::cli_abort(
@@ -62,6 +62,18 @@ bwFo <- function(x) {
     cli::cli_abort(
       c("{.var x} must be a numeric vector.", "x" = "You've supplied a {.cls {class(x)}} vector.")
     )
+  }
+  if (gamma <= 0 || !is.numeric(gamma) || length(gamma) != 1 || gamma > 1) {
+    cli::cli_abort("{.var gamma} must be a strictly positive numeric value from the interval (0, 1].")
+  }
+  for (nm in c("C1", "C2")) {
+    val <- get(nm, inherits = TRUE)
+    if (!is.numeric(val) || length(val) != 1 || val <= 0) {
+      cli::cli_abort("{.var {nm}} must be a single strictly positive numeric value.")
+      }
+  }
+  if (C1 > C2) {
+    cli::cli_abort("{.var C1} must be less than {.var C2}.")
   }
   x <- circular(
     x,
@@ -84,29 +96,32 @@ bwFo <- function(x) {
   }
   
   n <- length(x)
-  C1 <- 0.25
-  C2 <- 25      
-  gamma <- 0.5
-
+  # Ln, Un are the determined lower and upper bounds for m computed based on n a strictly positive constants C1 and C2
+  # Choice of n^(1/11) provides the best rate of convergence for relative errors of the estiamtor
   Ln <- trunc(C1 * n^(1/11)) + 1
   Un <- trunc(C2 * n^(1/11)) 
   
-  theta2 <- numeric(Un)
+  # Function H(m) to be minimized to select optimal m (the formula for H(m) incorporates c_bar)
+  c1 <- (mean(cos(x)))^2 + (mean(sin(x)))^2  
+  c_bar <- (n / (n - 1)) * (c1 - 1/n)
+
   H <- numeric(Un)
-  
-  c1 <- (mean(cos(x)))^2 + (mean(sin(x)))^2
+  H[1] <- 1/n - gamma * (1 + 1/n) * c_bar
+
+  # theta2(m) - The only unknown part of fourier estimator is quadratic functional  
+  theta2 <- numeric(Un)
   theta2[1] <- c1 / pi 
   
-  c_bar <- (n / (n - 1)) * (c1 - 1/n)
-  H[1] <- 1/n - gamma * (1 + 1/n) * c_bar
-  
+  # Compute H(k) and theta2(k) for k = 2, ..., Un
   for (k in 2:Un) {
     c_k <- (mean(cos(k * x)))^2 + (mean(sin(k * x)))^2
     theta2[k] <- theta2[k - 1] + (k^4 * c_k) / pi
     c_bar <- c_bar + (n / (n - 1)) * (c_k - 1/n)
     H[k] <- k / n - gamma * (1 + 1/n) * c_bar
   }
+  # Optimal number of Fourier terms m
   m <- (Ln - 1) + which.min(H[Ln:Un])
+  # Fourier plug-in bandwidth
   bw <- (4 * pi)^(-1/10) * (theta2[m] * n)^(-1/5)
   return(bw)
 }
