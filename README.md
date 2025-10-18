@@ -1,9 +1,3 @@
----
-output:
-  md_document:
-    variant: markdown_github
----
-
 # circularKDE 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/circularKDE)](https://CRAN.R-project.org/package=circularKDE)
