@@ -54,7 +54,7 @@
 #' @seealso \link{bwScv}, \link{bwLscvg}, \link{bwCcv}
 #'
 #' @importFrom stats optimize
-#' @importFrom circular mle.vonmises
+#' @importFrom circular mle.vonmises circular
 #' @import cli
 bwJf <- function(x, verbose = FALSE) {
   n <- length(x)
