@@ -2,18 +2,20 @@
 % Please edit documentation in R/bwFo.R
 \name{bwFo}
 \alias{bwFo}
-\title{Plug-in estimator of Tenreiro based on Fourier series}
+\title{Optimal Bandwidth Selection via Fourier Plug-in Method}
 \usage{
 bwFo(x)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
-coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
 Can be a numeric vector or an object of class \code{circular}.}
 }
 \value{
-The computed optimal smoothing parameter, a numeric value derived from
-the Fourier method for circular kernel density estimation.
+The computed optimal smoothing parameter \code{kappa}, a numeric concentration
+parameter (analogous to inverse radians) derived from the Fourier method for circular
+kernel density estimation. Higher values indicate sharper,  more concentrated kernels
+and less smoothing; lower values indicate broader kernels and more smoothing.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
@@ -40,7 +42,8 @@ print(bw)
 
 x <- rwrappednormal(100, mu = circular(1), rho = 0.7)
 bw <- bwFo(x)
-print(bw)
+y <- density(x, bw=bw) 
+plot(y, main="KDE with Fourier Plug-in Bandwidth")
 
 }
 \references{
@@ -48,4 +51,7 @@ Tenreiro, C. (2022). Kernel density estimation for circular data: a Fourier
 series-based plug-in approach for bandwidth selection. \emph{Journal of
 Nonparametric Statistics}, 34(2):377--406.
 \doi{10.1080/10485252.2022.2057974}
+}
+\seealso{
+\link{bwScv}, \link{bwLscvg}, \link{bwCcv}
 }

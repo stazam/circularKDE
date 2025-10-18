@@ -4,12 +4,16 @@
 \alias{bwTs}
 \title{Plug-in Method by Tsuruta and Sagae with multiplicative method from Terrell and Scott}
 \usage{
-bwTs(x)
+bwTs(x, verbose = FALSE)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
 coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
 Can be a numeric vector or an object of class \code{circular}.}
+
+\item{verbose}{Logical indicating whether to print intermediate computational values
+for debugging purposes. Useful for diagnosing floating-point instability in
+Bessel-based moment terms. Default is FALSE.}
 }
 \value{
 The computed optimal smoothing parameter, a numeric value derived from
@@ -17,8 +21,10 @@ the circular version of the multiplicative method for circular kernel density es
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
-using the plug-in method introduced by Tsuruta and Sagae (see \doi{10.1016/j.spl.2017.08.003}) with the
+using the plug-in method, introduced by Tsuruta and Sagae (see \doi{10.1016/j.spl.2017.08.003}) with the
 multiplicative method from Terrell and Scott (1980) to form higher-order kernel functions.
+The method optimally balances the bias-variance tradeoff by minimizing asymptotic mean
+integrated squared error.
 }
 \details{
 The plug-in approach estimates the optimal bandwidth through the following steps:
@@ -44,6 +50,7 @@ bw <- bwTs(x)
 print(bw)
 
 x <- rwrappednormal(100, mu = circular(1), rho = 0.7)
+x <- as.numeric(x)
 bw <- bwTs(x)
 print(bw)
 
@@ -52,4 +59,11 @@ print(bw)
 Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density
 estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
 \doi{10.1016/j.spl.2017.08.003}
+
+Terrell, George R. & Scott, David W. (1980). On improving convergence rates
+for nonnegative kernel density estimators. \emph{The Annals of Statistics},
+8(5):1160--1163.
+}
+\seealso{
+\link{bwScv}, \link{bwLscvg}, \link{bwCcv}
 }

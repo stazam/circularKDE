@@ -8,12 +8,12 @@ bwLscvg(x, g = 4, lower = 0, upper = 60, tol = 0.1)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
-coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
 Can be a numeric vector or an object of class \code{circular}.}
 
 \item{g}{A numeric scalar that controls the variability in the cross-validation
 procedure. It influences the scaling in the internal calculations, affecting the
-bandwidth estimation. Default is 4.}
+bandwidth estimation. It needs to be positive number not equal to 2. Default is 4.}
 
 \item{lower}{Lower boundary of the interval to be used in the search for the
 smoothing parameter \code{kappa}. Must be a positive numeric value less than \code{upper}.
@@ -27,9 +27,12 @@ Default is 60.}
 precision of the optimization process. Default is 0.1.}
 }
 \value{
-The computed optimal smoothing parameter \code{kappa}, a numeric value that
-minimizes the least squares cross-validation criterion within the interval
-\code{[lower, upper]}.
+The computed optimal smoothing parameter \code{kappa}, a numeric concentration
+parameter (analogous to inverse radians) that minimizes the smoothed cross-validation
+criterion within the interval \code{[lower, upper]} and the value of objective function
+at that point. Higher values indicate sharper, more concentrated kernels and less
+smoothing; lower values indicate broader kernels and more smoothing. If the
+optimization fails, a warning is issued.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
@@ -55,11 +58,12 @@ library(circular)
 set.seed(123)
 x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 bw <- bwLscvg(x)
-print(bw)
+print(round(bw$minimum, 2))
 
 x <- rvonmises(100, mu = circular(0), kappa = 1)
 bw <- bwLscvg(x)
-print(bw)
+print(round(bw$minimum, 2))
+plot(density.circular(x, bw = bw$minimum))
 
 }
 \references{
@@ -70,4 +74,7 @@ cross-validation for circular data. \emph{Communications in Statistics}.
 Zhang, J. (2015). Generalized least squares cross-validation in kernel density
 estimation. \emph{Statistica Neerlandica}, 69(3), 315-328.
 \doi{10.1111/stan.12061}
+}
+\seealso{
+\link{bwScv}, \link{bwFo}, \link{bwCcv}
 }

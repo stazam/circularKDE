@@ -4,16 +4,23 @@
 \alias{bwJf}
 \title{Plug-in Method by Tsuruta and Sagae with additive Jones-Foster approach}
 \usage{
-bwJf(x)
+bwJf(x, verbose = FALSE)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
-coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
 Can be a numeric vector or an object of class \code{circular}.}
+
+\item{verbose}{Logical indicating whether to print intermediate computational values
+for debugging and teaching purposes. Shows kappa_hat, r_hat, and component
+calculations. Default is FALSE.}
 }
 \value{
-The computed optimal smoothing parameter, a numeric value derived from
-the circular version of the additive method for circular kernel density estimation.
+The computed optimal smoothing parameter \code{kappa}, a numeric concentration
+parameter (analogous to inverse radians) derived from the circular version of the
+additive method for circular kernel density estimation. Higher values indicate sharper,
+more concentrated kernels and less smoothing; lower values indicate broader kernels
+and more smoothing.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data
@@ -49,4 +56,11 @@ print(bw)
 Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density
 estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
 \doi{10.1016/j.spl.2017.08.003}
+
+Jones, M. C. & Foster, P. J. (1993). Generalized jackknifing and higher-order kernels.
+\emph{Journal of Nonparametric Statistics}, 3:81--94.
+\doi{10.1080/10485259308832573}
+}
+\seealso{
+\link{bwScv}, \link{bwLscvg}, \link{bwCcv}
 }

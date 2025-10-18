@@ -17,7 +17,7 @@ adaptiveDensityCircular(
 }
 \arguments{
 \item{x}{Data for which the density is to be estimated. The object is coerced to a
-numeric vector in radians using \code{circular::conversion.circular}. Can be a numeric
+numeric vector in radians using \code{\link[circular]{circular}}. Can be a numeric
 vector or an object of class \code{circular}.}
 
 \item{bw0}{Global bandwidth parameter, a positive numeric value that sets the
@@ -29,8 +29,13 @@ sensitivity of the local bandwidth adaptation. Higher values increase the
 influence of local data density on the bandwidth.}
 
 \item{type}{Character string specifying the method for calculating the local
-adaptation factor (default is "n"). Options depend on the implementation of the
-\code{local.factor} function (not shown here).}
+adaptation factor (default is "n"). Available options are:
+\describe{
+\item{"am"}{Arithmetic mean of pilot density estimates}
+\item{"gm"}{Geometric mean of pilot density estimates (requires all positive values)}
+\item{"rv"}{Range (max - min) of pilot density estimates}
+\item{"n"}{No scaling factor (equivalent to fixed bandwidth)}
+}}
 
 \item{z}{Optional numeric vector of points at which to evaluate the density. If
 \code{NULL} (default), a grid of \code{n} equally spaced points between \code{from} and \code{to} is
@@ -76,12 +81,12 @@ dens <- adaptiveDensityCircular(x, bw0 = bw0)
 plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
      main = "Adaptive Circular Density")
 
-# Example with circular data and custom evaluation points
+# Example with numerical integration over interval [0,2\pi] to verify normalization of computed density
+library(circular)
 x <- rvonmises(100, mu = circular(0), kappa = 1)
 bw0 <- bwLscvg(x = x)
-z <- seq(0, 2 * pi, length.out = 200)
-dens <- adaptiveDensityCircular(x, bw0 = 0.5, z = z)
-plot(z, dens, type = "l", main = "Density with Custom Points")
+dens <- function(z)adaptiveDensityCircular(z = z, bw0 = bw0, x=x)
+integrate(dens, lower = 0, upper = 2*pi) # 1 with absolute error < 4e-07
 
 }
 \references{

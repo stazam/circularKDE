@@ -8,12 +8,14 @@ bwScv(x, np = 500, lower = 0, upper = 60, tol = 0.1)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
-coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
-Can be a numeric vector or an object of class \code{circular}.}
+coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
+Can be a numeric vector or an object of class \code{circular}. Note: computational
+complexity scales as O(n²) due to outer product operations; datasets with n > 2000
+may cause performance and memory issues.}
 
 \item{np}{An integer specifying the number of points used in numerical integration
 to evaluate the SCV criterion. A higher number increases precision but also
-computational cost. Default is 500.}
+computational cost (recommended value is >= 100). Default is 500.}
 
 \item{lower}{Lower boundary of the interval for the optimization of the smoothing
 parameter \code{kappa}. Must be a positive numeric value smaller than \code{upper}.
@@ -23,16 +25,22 @@ Default is 0.}
 parameter \code{kappa}. Must be a positive numeric value greater than \code{lower}.
 Default is 60.}
 
-\item{tol}{Convergence tolerance used in the \code{\link[stats]{optimize}} function. Determines how
-precisely the optimal value is estimated. Default is 0.1.}
+\item{tol}{Convergence tolerance for the \code{\link[stats]{optimize}} function, determining the
+precision of the optimization process. Also used to detect convergence near boundaries:
+if the optimal value is within \code{tol} of \code{lower} or \code{upper}, a warning
+is issued suggesting interval adjustment. Default is 0.1.}
 }
 \value{
-The computed optimal smoothing parameter \code{kappa}, the numeric value
-that minimizes the smoothed cross-validation criterion.
+The computed optimal smoothing parameter \code{kappa}, a numeric concentration
+parameter (analogous to inverse radians) that minimizes the smoothed cross-validation
+criterion within the interval \code{[lower, upper]} and the value of objective function
+at that point. Higher values indicate sharper, more concentrated kernels and less
+smoothing; lower values indicate broader kernels and more smoothing. If the
+optimization fails, a warning is issued.
 }
 \description{
 This function computes the optimal smoothing parameter (bandwidth) for circular data using a smoothed cross-validation
-(SCV) method (see \doi{10.1007/s00180-023-01401-0}).
+(SCV) method (see \url{doi:10.1007/s00180-023-01401-0}).
 }
 \details{
 The smoothed cross-validation (SCV) method is an alternative bandwidth
@@ -50,15 +58,15 @@ The integral expressions involved in the SCV criterion (see Sections 3.2 in Zám
 on a uniform grid of length \code{np}.
 }
 \examples{
-# Example with circular data
+# Example with circular data (Lower `nu` = more smoothing; higher = sharper peaks).
 library(circular)
 x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 bw <- bwScv(x)
-print(bw)
+print(round(bw$minimum, 2)) 
 
 x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 bw <- bwScv(x)
-print(bw)
+print(round(bw$minimum, 2))
 
 }
 \references{
@@ -70,4 +78,7 @@ method for bandwidth selection in circular kernel density estimation.
 Hall, P., & Marron, J. S. (1992). On the amount of noise inherent in bandwidth
 selection for a kernel density estimator. \emph{The Annals of Statistics},
 20(1), 163-181.
+}
+\seealso{
+\link{bwTs}, \link{bwLscvg}, \link{bwCcv}
 }
