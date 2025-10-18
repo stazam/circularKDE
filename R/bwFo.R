@@ -16,9 +16,11 @@
 #' \deqn{\hat{h}_{VM} = (4\pi)^{-1/10} \left(\frac{3\hat{\kappa}^2 I_0(2\hat{\kappa}) - \hat{\kappa}I_1(2\hat{\kappa})}{8\pi I_0(\hat{\kappa})^2}\right)^{-1/5} n^{-1/5}}
 #' where \eqn{I_0} and \eqn{I_1} are the modified Bessel functions of the first kind of orders 0 and 1, 
 #' and \eqn{\hat{\kappa}} is the estimated concentration parameter of the von Mises distribution.
-#'
-#' @return The computed optimal smoothing parameter, a numeric value derived from
-#'   the Fourier method for circular kernel density estimation.
+#' 
+#' @return The computed optimal smoothing parameter \code{kappa}, a numeric concentration
+#'  parameter (analogous to inverse radians) derived from the Fourier method for circular 
+#'  kernel density estimation. Higher values indicate sharper,  more concentrated kernels 
+#'  and less smoothing; lower values indicate broader kernels and more smoothing.
 #'
 #' @export
 #'
@@ -32,7 +34,8 @@
 #'
 #' x <- rwrappednormal(100, mu = circular(1), rho = 0.7)
 #' bw <- bwFo(x)
-#' print(bw)
+#' y <- density(x, bw=bw) 
+#' plot(y, main="KDE with Fourier Plug-in Bandwidth")
 #'
 #' @references
 #' Tenreiro, C. (2022). Kernel density estimation for circular data: a Fourier 

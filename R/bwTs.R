@@ -46,14 +46,14 @@
 #' print(bw)
 #'
 #' @references
-#' Terrell, George R. & Scott, David W. (1980). On improving convergence rates 
-#' for nonnegative kernel density estimators. \emph{The Annals of Statistics}, 
-#' 8(5):1160--1163.
-#'
 #' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density
 #' estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
 #' \doi{10.1016/j.spl.2017.08.003}
 #' 
+#' Terrell, George R. & Scott, David W. (1980). On improving convergence rates 
+#' for nonnegative kernel density estimators. \emph{The Annals of Statistics}, 
+#' 8(5):1160--1163.
+#'
 #' @seealso \link{bwScv}, \link{bwLscvg}, \link{bwCcv}
 #'
 #' @importFrom stats optimize
