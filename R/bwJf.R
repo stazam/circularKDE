@@ -56,7 +56,7 @@
 #' @importFrom stats optimize
 #' @importFrom circular mle.vonmises
 #' @import cli
-bwJF <- function(x, verbose = FALSE) {
+bwJf <- function(x, verbose = FALSE) {
   n <- length(x)
   if (n == 0) {
     cli::cli_abort(
