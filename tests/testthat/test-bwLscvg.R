@@ -31,9 +31,9 @@ test_that("bwLscvg throws error if x contains only NAs", {
 
 test_that("bwLscvg removes NA values and returns result", {
   x <- circular(c(0, pi / 2, NA, pi))
-  result <- bwLscvg(x)$minimum
+  result <- bwLscvg(x, g = 4)$minimum
   expect_type(result, "double")
-  expect_cli_warning(bwLscvg(x),
+  expect_cli_warning(bwLscvg(x, g = 4),
                      1,
                      "! `x` contains missing values, which will be removed.")
 })
@@ -43,7 +43,7 @@ test_that("bwLscvg handles non-numeric g", {
   expect_cli_warning(
     result <- bwLscvg(x, g = "wrong")$minimum,
     1,
-    "! Argument `g` must be numeric not equal to 2. Default value 4 for coefficient was used."
+    "! Argument `g` must be positive numeric number and not equal to 2. Value 4 for coefficient was used."
   )
   expect_type(result, "double")
 })
@@ -51,7 +51,7 @@ test_that("bwLscvg handles non-numeric g", {
 test_that("bwLscvg handles non-numeric lower", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
-    result <- bwLscvg(x, lower = "zero")$minimum,
+    result <- bwLscvg(x, lower = "zero", g = 4)$minimum,
     1,
     "! Argument `lower` must be numeric. Default value 0 for lower boundary was used."
   )
@@ -61,7 +61,7 @@ test_that("bwLscvg handles non-numeric lower", {
 test_that("bwLscvg handles non-numeric upper", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
-    result <- bwLscvg(x, upper = "sixty")$minimum,
+    result <- bwLscvg(x, upper = "sixty", g = 4)$minimum,
     1,
     "! Argument `upper` must be numeric. Default value 60 for upper boundary was used."
   )
@@ -71,14 +71,14 @@ test_that("bwLscvg handles non-numeric upper", {
 test_that("bwLscvg warns and resets invalid boundary values", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
-    result <- bwLscvg(x, lower = -5, upper = 5)$minimum,
+    result <- bwLscvg(x, lower = -5, upper = 5, g = 4)$minimum,
     1,
     "! The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. Default boundaries lower=0, upper=60 were used."
   )
   expect_type(result, "double")
 
   expect_cli_warning(
-    result <- bwLscvg(x, lower = 10, upper = 5)$minimum,
+    result <- bwLscvg(x, lower = 10, upper = 5, g = 4)$minimum,
     1,
     "! The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. Default boundaries lower=0, upper=60 were used."
   )
@@ -87,7 +87,8 @@ test_that("bwLscvg warns and resets invalid boundary values", {
 
 test_that("bwLscvg warns when minimum is at edge of the range", {
   x <- circular(rep(0, 10))
-  expect_cli_warning(bwLscvg(x)$minimum,
+  expect_cli_warning(bwLscvg(x, g = 4)$minimum,
                      1,
                      "! Minimum/maximum occurred at one end of the range.")
 })
+

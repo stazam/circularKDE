@@ -68,7 +68,7 @@
 #' @importFrom circular circular
 #' @import cli
 bwLscvg <- function(x,
-                     g = 4,
+                     g = NULL,
                      lower = 0,
                      upper = 60,
                      tol = 0.1) {
@@ -94,17 +94,24 @@ bwLscvg <- function(x,
     modulo = "2pi",
     template = "none"
   )
+  if (!is.numeric(g) || g == 2 || is.null(g) || g <= 0) {
+    g <- tryCatch({
+      kappa <- mle.vonmises(x)$kappa
+      g <- trunc(kappa * log(n))
+      if (g == 0) 4 else g
+    },
+    error = function(e) {
+      g <- 4
+    })
+    cli::cli_alert_warning(c(
+      "Argument {.var g} must be positive numeric number and not equal to 2. ",
+      "Value {.val {g}} for coefficient was used."
+    ))
+  }
   x <- as.numeric(x)
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
-  }
-  if (!is.numeric(g) || g == 2) {
-    cli::cli_alert_warning(c(
-      "Argument {.var g} must be numeric not equal to 2. ",
-      "Default value 4 for coefficient was used."
-    ))
-    g <- 4
   }
   if (!is.numeric(lower)) {
     cli::cli_alert_warning(
@@ -134,7 +141,6 @@ bwLscvg <- function(x,
     lower <- 0
     upper <- 60
   }
-
   lscvg <- function(x, kappa, g) {
     n <- length(x)
     grid <- outer(x, x, '-')
