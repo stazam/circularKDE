@@ -52,15 +52,16 @@
 #' # Example with numeric data in radians
 #' library(circular)
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
-#' bw0 <- bwLscvg(x = x)
+#' bw0 <- bwLscvg(x = x)$minimum
 #' dens <- adaptiveDensityCircular(x, bw0 = bw0)
 #' plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
 #'      main = "Adaptive Circular Density")
 #'
-#' # Example with numerical integration over interval [0,2\pi] to verify normalization of computed density
+#' # Example with numerical integration over interval [0,2pi] to verify normalization of 
+#' # computed density
 #' library(circular)
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
-#' bw0 <- bwLscvg(x = x)
+#' bw0 <- bwLscvg(x = x)$minimum
 #' dens <- function(z)adaptiveDensityCircular(z = z, bw0 = bw0, x=x)
 #' integrate(dens, lower = 0, upper = 2*pi) # 1 with absolute error < 4e-07
 #'
@@ -111,8 +112,8 @@ adaptiveDensityCircular <- function(x,
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
-  if (bw0 <= 0 | !is.numeric(bw0)) {
-    cli::cli_abort("Argument {.var bw0} must be a positive numeric value.")
+  if (length(bw0) != 1 || !is.numeric(bw0) || bw0 <= 0) {
+    cli::cli_abort("Argument {.var bw0} must be a single positive numeric value.")
   }
   if (!is.numeric(alpha) | alpha < 0 | alpha > 1) {
     cli::cli_abort("Argument {.var alpha} must be a numeric value between 0 and 1.")

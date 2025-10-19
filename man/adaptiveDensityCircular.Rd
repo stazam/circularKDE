@@ -76,15 +76,16 @@ where \eqn{g} is a global measure of central tendency (typically the geometric m
 # Example with numeric data in radians
 library(circular)
 x <- rvonmises(100, mu = circular(0), kappa = 1)
-bw0 <- bwLscvg(x = x)
+bw0 <- bwLscvg(x = x)$minimum
 dens <- adaptiveDensityCircular(x, bw0 = bw0)
 plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
      main = "Adaptive Circular Density")
 
-# Example with numerical integration over interval [0,2\pi] to verify normalization of computed density
+# Example with numerical integration over interval [0,2pi] to verify normalization of 
+# computed density
 library(circular)
 x <- rvonmises(100, mu = circular(0), kappa = 1)
-bw0 <- bwLscvg(x = x)
+bw0 <- bwLscvg(x = x)$minimum
 dens <- function(z)adaptiveDensityCircular(z = z, bw0 = bw0, x=x)
 integrate(dens, lower = 0, upper = 2*pi) # 1 with absolute error < 4e-07
 
