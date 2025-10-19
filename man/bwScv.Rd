@@ -48,8 +48,8 @@ selection approach, originally introduced by Hall & Marron (1992) for linear
 densities and adapted for circular data by Zámečník et al. (2023).
 
 The SCV criterion is given by
-\deqn{\mathrm{SCV}(\kappa) = \frac{R(K)}{nh} 
- + \frac{1}{n^{2}} \sum_{i=1}^{n} \sum_{j=1}^{n} 
+\deqn{\mathrm{SCV}(\kappa) = \frac{R(K)}{nh}
+ + \frac{1}{n^{2}} \sum_{i=1}^{n} \sum_{j=1}^{n}
     \big(K_{\kappa} * K_{\kappa} * K_{\kappa} * K_{\kappa} - 2K_{\kappa} * K_{\kappa} *K_{\kappa} + K_{\kappa} * K_{\kappa}\big)(\Theta_i - \Theta_j)}
 where \eqn{K_\kappa} is the Von Mises kernel with concentration \eqn{\kappa} (for the formula see 3.7, 3.8 in Zámečník et al. (2023)). The optimal bandwidth minimizes the sum
 \eqn{ISB(\kappa) + IV(\kappa)} over the interval \code{[lower, upper]}.
@@ -62,7 +62,7 @@ on a uniform grid of length \code{np}.
 library(circular)
 x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
 bw <- bwScv(x)
-print(round(bw$minimum, 2)) 
+print(round(bw$minimum, 2))
 
 x <- rvonmises(100, mu = circular(0.5), kappa = 2)
 bw <- bwScv(x)

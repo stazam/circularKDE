@@ -6,6 +6,18 @@
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
 #'   Can be a numeric vector or an object of class \code{circular}.
+#' @param C1 Numeric scalar (default 0.25) representing the lower bound constant for 
+#'   determining the range of Fourier coefficients. Used to compute the lower bound 
+#'   \eqn{L_n = \lfloor C_1 \cdot n^{1/11} \rfloor + 1} for the optimal number of 
+#'   Fourier terms. Must be positive and less than \code{C2}.
+#' @param C2 Numeric scalar (default 25) representing the upper bound constant for 
+#'   determining the range of Fourier coefficients. Used to compute the upper bound 
+#'   \eqn{U_n = \lfloor C_2 \cdot n^{1/11} \rfloor} for the optimal number of 
+#'   Fourier terms. Must be positive and greater than \code{C1}.
+#' @param gamma Numeric scalar between 0 and 1 (default 0.5) representing the penalty 
+#'   parameter in the criterion function \eqn{H(m)} used for selecting the optimal 
+#'   number of Fourier coefficients. Controls the trade-off between bias and variance 
+#'   in the functional estimation.
 #' 
 #' @details The Fourier-based plug-in estimator computes the optimal bandwidth using the formula:
 #' \deqn{\hat{h}_{FO} := (4\pi)^{-1/10} \hat{\theta}_{2,\hat{m}}^{-1/5} n^{-1/5}}

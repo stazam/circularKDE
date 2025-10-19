@@ -3,7 +3,7 @@ localFactor <- function(x,
                          alpha = 0.5,
                          type = c("am", "gm", "rv", "n")) {
   type <- match.arg(type)
-  lambdas <- vapply(x, function(z_i) kernelDensityEst(z_i, x = x, bw = bw0), numeric(1))
+  lambdas <- kernelDensityEst(z = x,  x = x, bw = bw0)
   g <- switch(
     type,
     "am" = mean(lambdas),
@@ -25,6 +25,4 @@ kernelDensityEst <- function(z, x, bw) {
   result <- factor * rowSums(exp(bw * cos(outer(z, x, "-"))))
   return(result)
 }
-
-
 
