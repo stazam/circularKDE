@@ -29,12 +29,8 @@ test_that("bwFo throws error if x contains only NAs", {
   expect_error(bwFo(x), "`x` contains all missing values.")
 })
 
-test_that("bwFo removes NA values and returns result", {
+test_that("bwFo removes NA values and returns error", {
   x <- circular(c(0, pi / 2, NA, pi))
-  result <- bwFo(x)
-  expect_type(result, "double")
-  expect_cli_warning(bwFo(x),
-                     1,
-                     "! `x` contains missing values, which will be removed.")
+  expect_error(bwFo(x), "`x` must be a numeric vector of length at least 5 after removing missing values.")
 })
 

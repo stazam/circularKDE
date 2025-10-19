@@ -30,7 +30,7 @@ test_that("bwTs throws error if x contains only NAs", {
 })
 
 test_that("bwTs removes NA values and returns result", {
-  x <- circular(c(0, pi / 2, NA, pi))
+  x <- circular(c(0, pi / 2, NA, pi, 3 * pi /2, 2.14))
   result <- bwTs(x)
   expect_type(result, "double")
   expect_cli_warning(bwTs(x),

@@ -1,8 +1,8 @@
 test_that("bwCcv returns a numeric value for valid input", {
   set.seed(60)
   x <- rvonmises(50, circular(pi / 2), 1, control.circular = list(units = "radians"))
-  result <- bwCcv(x)
-  expect_equal(result, 7.98876150)
+  result <- bwCcv(x)$minimum
+  expect_equal(result, 7.98362626)
   expect_type(result, "double")
   expect_length(result, 1)
 })
@@ -11,8 +11,8 @@ test_that("bwCcv returns a numeric value for valid input with different seed",
           {
             set.seed(123)
             x <- rvonmises(50, circular(pi / 2), 1)
-            result <- bwCcv(x)
-            expect_equal(result, 0.808291373)
+            result <- bwCcv(x)$minimum
+            expect_equal(result, 0.8226704)
             expect_type(result, "double")
             expect_length(result, 1)
           })
@@ -32,7 +32,7 @@ test_that("bwCcv throws error if x contains only NAs", {
 
 test_that("bwCcv removes NA values and returns result", {
   x <- circular(c(0, pi / 2, NA, pi))
-  result <- bwCcv(x)
+  result <- bwCcv(x)$minimum
   expect_type(result, "double")
   expect_cli_warning(bwCcv(x),
                      1,
@@ -42,7 +42,7 @@ test_that("bwCcv removes NA values and returns result", {
 test_that("bwCcv handles non-numeric lower", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
-    result <- bwCcv(x, lower = "zero"),
+    result <- bwCcv(x, lower = "zero")$minimum,
     1,
     "! Argument `lower` must be numeric. Default value 0 for lower boundary was used."
   )
@@ -52,7 +52,7 @@ test_that("bwCcv handles non-numeric lower", {
 test_that("bwCcv handles non-numeric upper", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
-    result <- bwCcv(x, upper = "sixty"),
+    result <- bwCcv(x, upper = "sixty")$minimum,
     1,
     "! Argument `upper` must be numeric. Default value 60 for upper boundary was used."
   )
@@ -62,14 +62,14 @@ test_that("bwCcv handles non-numeric upper", {
 test_that("bwCcv warns and resets invalid boundary values", {
   x <- circular(seq(0, 2 * pi, length.out = 5))
   expect_cli_warning(
-    result <- bwCcv(x, lower = -5, upper = 5),
+    result <- bwCcv(x, lower = -5, upper = 5)$minimum,
     1,
     "! The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. Default boundaries lower=0, upper=60 were used."
   )
   expect_type(result, "double")
 
   expect_cli_warning(
-    result <- bwCcv(x, lower = 10, upper = 5),
+    result <- bwCcv(x, lower = 10, upper = 5)$minimum,
     1,
     "! The boundaries must be positive numbers and 'lower' must be smaller than 'upper'. Default boundaries lower=0, upper=60 were used."
   )
