@@ -10,7 +10,7 @@
 #' @param verbose Logical indicating whether to print intermediate computational values
 #'   for debugging and teaching purposes. Shows kappa_hat, r_hat, and component
 #'   calculations. Default is FALSE.
-#' 
+#'
 #' @details The plug-in approach estimates the optimal bandwidth through the following steps:
 #' \enumerate{
 #'   \item Apply the additive method from Jones and Foster (1993) to construct a p-th order kernel function.
@@ -23,10 +23,10 @@
 #' }
 #'
 #' @return The computed optimal smoothing parameter \code{kappa}, a numeric concentration
-#'  parameter (analogous to inverse radians) derived from the circular version of the 
+#'  parameter (analogous to inverse radians) derived from the circular version of the
 #'  additive method for circular kernel density estimation. Higher values indicate sharper,
-#'  more concentrated kernels and less smoothing; lower values indicate broader kernels 
-#'  and more smoothing. 
+#'  more concentrated kernels and less smoothing; lower values indicate broader kernels
+#'  and more smoothing.
 #'
 #' @export
 #'
@@ -46,11 +46,11 @@
 #' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density
 #' estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
 #' \doi{10.1016/j.spl.2017.08.003}
-#' 
-#' Jones, M. C. & Foster, P. J. (1993). Generalized jackknifing and higher-order kernels. 
+#'
+#' Jones, M. C. & Foster, P. J. (1993). Generalized jackknifing and higher-order kernels.
 #' \emph{Journal of Nonparametric Statistics}, 3:81--94.
 #' \doi{10.1080/10485259308832573}
-#' 
+#'
 #' @seealso \link{bwScv}, \link{bwLscvg}, \link{bwCcv}
 #'
 #' @importFrom stats optimize
@@ -79,7 +79,6 @@ bwJf <- function(x, verbose = FALSE) {
     modulo = "2pi",
     template = "none"
   )
-  x <- as.numeric(x)
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
@@ -87,7 +86,7 @@ bwJf <- function(x, verbose = FALSE) {
 
   n <- length(x)
   kappa_hat <- mle.vonmises(x)$kappa
-  
+
   if (!is.finite(kappa_hat) || kappa_hat <= 0) {
     cli::cli_abort(
       c("MLE estimation of concentration parameter failed.",

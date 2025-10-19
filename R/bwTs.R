@@ -1,10 +1,10 @@
 #' @title Plug-in Method by Tsuruta and Sagae with multiplicative method from Terrell and Scott
-#' 
+#'
 #' @description This function computes the optimal smoothing parameter (bandwidth) for circular data
 #' using the plug-in method, introduced by Tsuruta and Sagae (see \doi{10.1016/j.spl.2017.08.003}) with the
 #' multiplicative method from Terrell and Scott (1980) to form higher-order kernel functions.
-#' The method optimally balances the bias-variance tradeoff by minimizing asymptotic mean 
-#' integrated squared error. 
+#' The method optimally balances the bias-variance tradeoff by minimizing asymptotic mean
+#' integrated squared error.
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
 #'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
@@ -12,7 +12,7 @@
 #' @param verbose Logical indicating whether to print intermediate computational values
 #'   for debugging purposes. Useful for diagnosing floating-point instability in
 #'   Bessel-based moment terms. Default is FALSE.
-#' 
+#'
 #' @details The plug-in approach estimates the optimal bandwidth through the following steps:
 #' \enumerate{
 #'   \item Apply the multiplicative method from Terrell and Scott (1980) to construct a p-th order kernel function.
@@ -49,9 +49,9 @@
 #' Tsuruta, Yasuhito & Sagae, Masahiko (2017). Higher order kernel density
 #' estimation on the circle. \emph{Statistics & Probability Letters}, 131:46--50.
 #' \doi{10.1016/j.spl.2017.08.003}
-#' 
-#' Terrell, George R. & Scott, David W. (1980). On improving convergence rates 
-#' for nonnegative kernel density estimators. \emph{The Annals of Statistics}, 
+#'
+#' Terrell, George R. & Scott, David W. (1980). On improving convergence rates
+#' for nonnegative kernel density estimators. \emph{The Annals of Statistics},
 #' 8(5):1160--1163.
 #'
 #' @seealso \link{bwScv}, \link{bwLscvg}, \link{bwCcv}
@@ -82,13 +82,12 @@ bwTs <- function(x, verbose = FALSE) {
     modulo = "2pi",
     template = "none"
   )
-  x <- as.numeric(x)
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
     if (length(x) < 5) {
       cli::cli_abort(
-        c("{.var x} must be a numeric vector of length at least 5 after removing missing values.", 
+        c("{.var x} must be a numeric vector of length at least 5 after removing missing values.",
           "x" = "You've supplied an object of length {length(x)} after removing missing values.")
       )
     }
@@ -96,7 +95,7 @@ bwTs <- function(x, verbose = FALSE) {
 
   n <- length(x)
   kappa_hat <- mle.vonmises(x)$kappa
-  
+
   if (!is.finite(kappa_hat) || kappa_hat <= 0) {
     cli::cli_abort(
       c("MLE estimation of concentration parameter failed.",
@@ -104,7 +103,7 @@ bwTs <- function(x, verbose = FALSE) {
         "i" = "This may indicate insufficient data or degenerate distribution.")
     )
   }
-  
+
   b0_kappa <- besselI(kappa_hat, 0)
   b0_2kappa <- besselI(2 * kappa_hat, 0)
   b1_2kappa <- besselI(2 * kappa_hat, 1)
@@ -145,4 +144,6 @@ bwTs <- function(x, verbose = FALSE) {
 
   return(bw)
 }
+
+
 

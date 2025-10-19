@@ -17,26 +17,26 @@
 #'   Default is 60.
 #' @param tol Convergence tolerance for the \code{\link[stats]{optimize}} function, determining the
 #'   precision of the optimization process. Default is 0.1.
-#' 
-#' @details The generalized least squares cross-validation method (LSCV_g) is an 
-#' adaptation of the method originally introduced by Zhang for linear data, developed 
+#'
+#' @details The generalized least squares cross-validation method (LSCV_g) is an
+#' adaptation of the method originally introduced by Zhang for linear data, developed
 #' for circular data (see Zamecnik, et.al 2025) to address the finite-sample performance issues of standard LSCV.
-#' 
+#'
 #' The LSCV_g criterion is defined as:
 #' \deqn{LSCV_g(\kappa) = \frac{1}{n}R(K_{\kappa}) + \frac{1}{n(n-1)} \sum_{i=1}^n \sum_{j \neq i}^n \left(\frac{n-1}{n} (K_{\kappa}*K_{\kappa})(\theta_i-\theta_j) + \frac{2}{g(g-2)} K_{\kappa/g}(\theta_i-\theta_j) - \frac{g-1}{g-2} K_{\kappa/2}(\theta_i-\theta_j)\right)}
-#' 
+#'
 #' Using the von Mises kernel, this takes the computational form:
 #' \deqn{LSCV_g(\kappa) = \frac{1}{2\pi n^2} \sum_{i=1}^n \sum_{j=1}^n \frac{I_0(\kappa \sqrt{2(1+\cos(\theta_i-\theta_j))})}{I_0^2(\kappa)} + \frac{1}{n(n-1)} \sum_{i=1}^n \sum_{j \neq i}^n \left(\frac{2}{g(g-2)} \frac{\exp(\frac{\kappa}{g}\cos(\theta_i-\theta_j))}{2\pi I_0(\kappa/g)} - \frac{g-1}{g-2} \frac{\exp(\frac{\kappa}{2}\cos(\theta_i-\theta_j))}{2\pi I_0(\kappa/2)}\right)}
-#' 
-#' The optimal bandwidth is obtained by minimizing this criterion over the interval 
-#' \code{[lower, upper]}. 
 #'
-#' @return The computed optimal smoothing parameter \code{kappa}, a numeric concentration 
-#' parameter (analogous to inverse radians) that minimizes the smoothed cross-validation 
-#' criterion within the interval \code{[lower, upper]} and the value of objective function 
-#' at that point. Higher values indicate sharper, more concentrated kernels and less 
-#' smoothing; lower values indicate broader kernels and more smoothing. If the 
-#' optimization fails, a warning is issued. 
+#' The optimal bandwidth is obtained by minimizing this criterion over the interval
+#' \code{[lower, upper]}.
+#'
+#' @return The computed optimal smoothing parameter \code{kappa}, a numeric concentration
+#' parameter (analogous to inverse radians) that minimizes the smoothed cross-validation
+#' criterion within the interval \code{[lower, upper]} and the value of objective function
+#' at that point. Higher values indicate sharper, more concentrated kernels and less
+#' smoothing; lower values indicate broader kernels and more smoothing. If the
+#' optimization fails, a warning is issued.
 #'
 #' @export
 #'
@@ -52,14 +52,14 @@
 #' bw <- bwLscvg(x)
 #' print(round(bw$minimum, 2))
 #' plot(density.circular(x, bw = bw$minimum))
-#' 
+#'
 #' @references
-#' Zámečník, S., Horová, I., & Hasilová, K. (2025). Generalised least square 
-#' cross-validation for circular data. \emph{Communications in Statistics}. 
+#' Zámečník, S., Horová, I., & Hasilová, K. (2025). Generalised least square
+#' cross-validation for circular data. \emph{Communications in Statistics}.
 #' \doi{10.1007/s00180-023-01401-0}
-#' 
-#' Zhang, J. (2015). Generalized least squares cross-validation in kernel density 
-#' estimation. \emph{Statistica Neerlandica}, 69(3), 315-328. 
+#'
+#' Zhang, J. (2015). Generalized least squares cross-validation in kernel density
+#' estimation. \emph{Statistica Neerlandica}, 69(3), 315-328.
 #' \doi{10.1111/stan.12061}
 #'
 #' @seealso \link{bwScv}, \link{bwFo}, \link{bwCcv}
@@ -99,9 +99,9 @@ bwLscvg <- function(x,
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
   }
-  if (!is.numeric(g) || g != 2) {
+  if (!is.numeric(g) || g == 2) {
     cli::cli_alert_warning(c(
-      "Argument {.var g} must be numeric not equal to 2.",
+      "Argument {.var g} must be numeric not equal to 2. ",
       "Default value 4 for coefficient was used."
     ))
     g <- 4
@@ -172,8 +172,9 @@ bwLscvg <- function(x,
     x = x ,
     g = g
   )
-  if (bw < lower + tol | bw > upper - tol) {
+  if (bw$minimum < lower + tol | bw$minimum > upper - tol) {
     cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
   }
   return(bw)
 }
+
