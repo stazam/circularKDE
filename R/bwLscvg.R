@@ -4,11 +4,11 @@
 #' using a generalized least squares cross-validation method (see \doi{10.1007/s00180-023-01401-0}).
 #'
 #' @param x Data from which the smoothing parameter is to be computed. The object is
-#'   coerced to a numeric vector in radians using \code{\link[circular]{conversion.circular}}.
+#'   coerced to a numeric vector in radians using \code{\link[circular]{circular}}.
 #'   Can be a numeric vector or an object of class \code{circular}.
 #' @param g A numeric scalar that controls the variability in the cross-validation
 #'   procedure. It influences the scaling in the internal calculations, affecting the
-#'   bandwidth estimation. Default is 4.
+#'   bandwidth estimation. It needs to be positive number not equal to 2. Default is 4.
 #' @param lower Lower boundary of the interval to be used in the search for the
 #'   smoothing parameter \code{kappa}. Must be a positive numeric value less than \code{upper}.
 #'   Default is 0.
@@ -17,23 +17,26 @@
 #'   Default is 60.
 #' @param tol Convergence tolerance for the \code{\link[stats]{optimize}} function, determining the
 #'   precision of the optimization process. Default is 0.1.
-#' 
-#' @details The generalized least squares cross-validation method (LSCV_g) is an 
-#' adaptation of the method originally introduced by Zhang for linear data, developed 
+#'
+#' @details The generalized least squares cross-validation method (LSCV_g) is an
+#' adaptation of the method originally introduced by Zhang for linear data, developed
 #' for circular data (see Zamecnik, et.al 2025) to address the finite-sample performance issues of standard LSCV.
-#' 
+#'
 #' The LSCV_g criterion is defined as:
 #' \deqn{LSCV_g(\kappa) = \frac{1}{n}R(K_{\kappa}) + \frac{1}{n(n-1)} \sum_{i=1}^n \sum_{j \neq i}^n \left(\frac{n-1}{n} (K_{\kappa}*K_{\kappa})(\theta_i-\theta_j) + \frac{2}{g(g-2)} K_{\kappa/g}(\theta_i-\theta_j) - \frac{g-1}{g-2} K_{\kappa/2}(\theta_i-\theta_j)\right)}
-#' 
+#'
 #' Using the von Mises kernel, this takes the computational form:
 #' \deqn{LSCV_g(\kappa) = \frac{1}{2\pi n^2} \sum_{i=1}^n \sum_{j=1}^n \frac{I_0(\kappa \sqrt{2(1+\cos(\theta_i-\theta_j))})}{I_0^2(\kappa)} + \frac{1}{n(n-1)} \sum_{i=1}^n \sum_{j \neq i}^n \left(\frac{2}{g(g-2)} \frac{\exp(\frac{\kappa}{g}\cos(\theta_i-\theta_j))}{2\pi I_0(\kappa/g)} - \frac{g-1}{g-2} \frac{\exp(\frac{\kappa}{2}\cos(\theta_i-\theta_j))}{2\pi I_0(\kappa/2)}\right)}
-#' 
-#' The optimal bandwidth is obtained by minimizing this criterion over the interval 
-#' \code{[lower, upper]}. 
 #'
-#' @return The computed optimal smoothing parameter \code{kappa}, a numeric value that
-#'   minimizes the least squares cross-validation criterion within the interval
-#'   \code{[lower, upper]}.
+#' The optimal bandwidth is obtained by minimizing this criterion over the interval
+#' \code{[lower, upper]}.
+#'
+#' @return The computed optimal smoothing parameter \code{kappa}, a numeric concentration
+#' parameter (analogous to inverse radians) that minimizes the smoothed cross-validation
+#' criterion within the interval \code{[lower, upper]} and the value of objective function
+#' at that point. Higher values indicate sharper, more concentrated kernels and less
+#' smoothing; lower values indicate broader kernels and more smoothing. If the
+#' optimization fails, a warning is issued.
 #'
 #' @export
 #'
@@ -42,27 +45,30 @@
 #' library(circular)
 #' set.seed(123)
 #' x <- rwrappednormal(100, mu = circular(2), rho = 0.5)
-#' bw <- bw.lscvg(x)
-#' print(bw)
+#' bw <- bwLscvg(x)
+#' print(round(bw$minimum, 2))
 #'
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
-#' bw <- bw.lscvg(x)
-#' print(bw)
-#' 
+#' bw <- bwLscvg(x)
+#' print(round(bw$minimum, 2))
+#' plot(density.circular(x, bw = bw$minimum))
+#'
 #' @references
-#' Zámečník, S., Horová, I., & Hasilová, K. (2025). Generalised least square 
-#' cross-validation for circular data. \emph{Communications in Statistics}. 
+#' Zámečník, S., Horová, I., & Hasilová, K. (2025). Generalised least square
+#' cross-validation for circular data. \emph{Communications in Statistics}.
 #' \doi{10.1007/s00180-023-01401-0}
-#' 
-#' Zhang, J. (2015). Generalized least squares cross-validation in kernel density 
-#' estimation. \emph{Statistica Neerlandica}, 69(3), 315-328. 
+#'
+#' Zhang, J. (2015). Generalized least squares cross-validation in kernel density
+#' estimation. \emph{Statistica Neerlandica}, 69(3), 315-328.
 #' \doi{10.1111/stan.12061}
 #'
+#' @seealso \link{bwScv}, \link{bwFo}, \link{bwCcv}
+#'
 #' @importFrom stats optimize
-#' @import circular
+#' @importFrom circular circular
 #' @import cli
-bw.lscvg <- function(x,
-                     g = 4,
+bwLscvg <- function(x,
+                     g = NULL,
                      lower = 0,
                      upper = 60,
                      tol = 0.1) {
@@ -88,17 +94,24 @@ bw.lscvg <- function(x,
     modulo = "2pi",
     template = "none"
   )
-  attr(x, "class") <- attr(x, "circularp") <- NULL
+  if (!is.numeric(g) || g == 2 || is.null(g) || g <= 0) {
+    g <- tryCatch({
+      kappa <- mle.vonmises(x)$kappa
+      g <- trunc(kappa * log(n))
+      if (g == 0) 4 else g
+    },
+    error = function(e) {
+      g <- 4
+    })
+    cli::cli_alert_warning(c(
+      "Argument {.var g} must be positive numeric number and not equal to 2. ",
+      "Value {.val {g}} for coefficient was used."
+    ))
+  }
+  x <- as.numeric(x)
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
-  }
-  if (!is.numeric(g)) {
-    cli::cli_alert_warning(c(
-      "Argument {.var g} must be numeric. ",
-      "Default value 4 for coefficient was used."
-    ))
-    g <- 4
   }
   if (!is.numeric(lower)) {
     cli::cli_alert_warning(
@@ -128,30 +141,34 @@ bw.lscvg <- function(x,
     lower <- 0
     upper <- 60
   }
-
   lscvg <- function(x, kappa, g) {
     n <- length(x)
     grid <- outer(x, x, '-')
-    cos.grid <- cos(grid)
+    cos_grid <- cos(grid)
 
-    b0.kappa      <- besselI(kappa, 0)
-    b0.2.kappa     <- besselI(2 * kappa, 0)
-    b0.kappa.g    <- besselI(kappa / g, 0)
-    b0.kappa.half <- besselI(kappa / 2, 0)
+    b0_kappa      <- besselI(kappa, 0)
+    b0_2_kappa     <- besselI(2 * kappa, 0)
+    b0_kappa_g    <- besselI(kappa / g, 0)
+    b0_kappa_half <- besselI(kappa / 2, 0)
 
-    part.1 <- b0.2.kappa / (2 * pi * n * (b0.kappa ^ 2))
+    part_1 <- b0_2_kappa / (2 * pi * n * (b0_kappa ^ 2))
 
-    factor.2 <- (2 / (g * (g - 2))) * (1 / (2 * pi * b0.kappa.g))
-    part.2 <- factor.2 * (sum(exp((kappa / g) * cos.grid)) - n * exp(kappa / g))
+    factor_2 <- (2 / (g * (g - 2))) * (1 / (2 * pi * b0_kappa_g))
+    part_2 <- factor_2 * (sum(exp((kappa / g) * cos_grid)) - n * exp(kappa / g))
 
-    arg.3 <- kappa * sqrt(2 * (1 + cos.grid))
-    factor.3 <- ((n - 1) / n) * (1 / (2 * pi * (b0.kappa ^ 2)))
-    part.3 <- factor.3 * (sum(besselI(arg.3, 0)) - n * b0.2.kappa)
+    arg_3 <- kappa * sqrt(2 * (1 + cos_grid))
+    factor_3 <- ((n - 1) / n) * (1 / (2 * pi * (b0_kappa ^ 2)))
+    part_3 <- factor_3 * (sum(besselI(arg_3, 0)) - n * b0_2_kappa)
 
-    factor.4 <- ((g - 1) / (g - 2)) * (1 / (2 * pi * b0.kappa.half))
-    part.4 <-  factor.4 * (sum(exp((kappa / 2) * cos.grid)) - n * exp(kappa / 2))
+    factor_4 <- ((g - 1) / (g - 2)) * (1 / (2 * pi * b0_kappa_half))
+    part_4 <-  factor_4 * (sum(exp((kappa / 2) * cos_grid)) - n * exp(kappa / 2))
 
-    result <- part.1 + (part.2 + part.3 - part.4) / (n * (n - 1))
+    if (any(is.na(c(part_1, part_2, part_3, part_4)))) {
+      cli::cli_abort(c("Numerical issues encountered during optimization. ",
+                       "Try adjusting the interval [{.var lower}, {.var upper}]."))
+    }
+
+    result <- part_1 + (part_2 + part_3 - part_4) / (n * (n - 1))
     return(result)
   }
   bw <- optimize(
@@ -160,9 +177,10 @@ bw.lscvg <- function(x,
     maximum = FALSE,
     x = x ,
     g = g
-  )$minimum
-  if (bw < lower + tol | bw > upper - tol) {
+  )
+  if (bw$minimum < lower + tol | bw$minimum > upper - tol) {
     cli::cli_alert_warning("Minimum/maximum occurred at one end of the range.")
   }
   return(bw)
 }
+

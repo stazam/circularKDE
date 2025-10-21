@@ -5,8 +5,8 @@
 #' density (see \doi{10.1007/s00180-023-01401-0}).
 #'
 #' @param x Data for which the density is to be estimated. The object is coerced to a
-#'   numeric vector in radians using `circular::conversion.circular`. Can be a numeric
-#'   vector or an object of class `circular`.
+#'   numeric vector in radians using \code{\link[circular]{circular}}. Can be a numeric
+#'   vector or an object of class \code{circular}.
 #' @param bw0 Global bandwidth parameter, a positive numeric value that sets the
 #'   baseline smoothness of the density estimate. Controls the overall scale of the
 #'   kernel.
@@ -14,8 +14,13 @@
 #'   sensitivity of the local bandwidth adaptation. Higher values increase the
 #'   influence of local data density on the bandwidth.
 #' @param type Character string specifying the method for calculating the local
-#'   adaptation factor (default is "n"). Options depend on the implementation of the
-#'   `local.factor` function (not shown here).
+#'   adaptation factor (default is "n"). Available options are:
+#'   \describe{
+#'     \item{"am"}{Arithmetic mean of pilot density estimates}
+#'     \item{"gm"}{Geometric mean of pilot density estimates (requires all positive values)}
+#'     \item{"rv"}{Range (max - min) of pilot density estimates}
+#'     \item{"n"}{No scaling factor (equivalent to fixed bandwidth)}
+#'   }
 #' @param z Optional numeric vector of points at which to evaluate the density. If
 #'   \code{NULL} (default), a grid of \code{n} equally spaced points between \code{from} and \code{to} is
 #'   generated automatically.
@@ -47,17 +52,18 @@
 #' # Example with numeric data in radians
 #' library(circular)
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
-#' bw0 <- bw.lscvg(x = x)
-#' dens <- adaptive.density.circular(x, bw0 = bw0)
+#' bw0 <- bwLscvg(x = x)$minimum
+#' dens <- adaptiveDensityCircular(x, bw0 = bw0)
 #' plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
 #'      main = "Adaptive Circular Density")
 #'
-#' # Example with circular data and custom evaluation points
+#' # Example with numerical integration over interval [0,2pi] to verify normalization of 
+#' # computed density
+#' library(circular)
 #' x <- rvonmises(100, mu = circular(0), kappa = 1)
-#' bw0 <- bw.lscvg(x = x)
-#' z <- seq(0, 2 * pi, length.out = 200)
-#' dens <- adaptive.density.circular(x, bw0 = 0.5, z = z)
-#' plot(z, dens, type = "l", main = "Density with Custom Points")
+#' bw0 <- bwLscvg(x = x)$minimum
+#' dens <- function(z)adaptiveDensityCircular(z = z, bw0 = bw0, x=x)
+#' integrate(dens, lower = 0, upper = 2*pi) # 1 with absolute error < 4e-07
 #'
 #' @references
 #' Zámečník, S., Horová, I., Katina, S., & Hasilová, K. (2023). An adaptive
@@ -69,9 +75,9 @@
 #' multivariate densities. \emph{Technometrics}, 19(2), 135-144.
 #' \doi{10.2307/1268623}
 #'
-#' @import circular
+#' @importFrom circular circular
 #' @import cli
-adaptive.density.circular <- function(x,
+adaptiveDensityCircular <- function(x,
                                       bw0,
                                       alpha = 0.5,
                                       type = "n",
@@ -101,10 +107,16 @@ adaptive.density.circular <- function(x,
     modulo = "2pi",
     template = "none"
   )
-  attr(x, "class") <- attr(x, "circularp") <- NULL
+  x <- as.numeric(x)
   if (any(is.na(x))) {
     cli::cli_alert_warning("{.var x} contains missing values, which will be removed.")
     x <- x[!is.na(x)]
+  }
+  if (length(bw0) != 1 || !is.numeric(bw0) || bw0 <= 0) {
+    cli::cli_abort("Argument {.var bw0} must be a single positive numeric value.")
+  }
+  if (!is.numeric(alpha) | alpha < 0 | alpha > 1) {
+    cli::cli_abort("Argument {.var alpha} must be a numeric value between 0 and 1.")
   }
   if (!is.numeric(from) | !is.finite(from)) {
     cli::cli_abort("Argument {.var from} must be finite numeric value.")
@@ -131,19 +143,20 @@ adaptive.density.circular <- function(x,
       modulo = "2pi",
       template = "none"
     )
+    z <- as.numeric(z)
   }
-  lambda <- local.factor(x, bw0, alpha, type)
-  kernel.density.adaptive.est <- function(x, z, bw0, alpha, type, lambda) {
+  # compute the local adaptation factors at every point in x
+  lambda <- localFactor(x, bw0, alpha, type)
+  kernelDensityAdaptiveEst <- function(x, z, bw0, alpha, type, lambda) {
     n <- length(x)
     factor <- 1 / (2 * n * pi)
-
-    main.part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)), na.rm = TRUE)
-    result <- factor * main.part
+    main_part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)), na.rm = TRUE)
+    result <- factor * main_part
     return(result)
   }
   y <- sapply(
     X = z,
-    FUN = kernel.density.adaptive.est,
+    FUN = kernelDensityAdaptiveEst,
     x = x,
     bw0 = bw0,
     alpha = alpha,

@@ -1,9 +1,9 @@
-local.factor <- function(x,
+localFactor <- function(x,
                          bw0,
                          alpha = 0.5,
                          type = c("am", "gm", "rv", "n")) {
   type <- match.arg(type)
-  lambdas <- sapply(x,kernel.density.est, x = x, bw = bw0)
+  lambdas <- kernelDensityEst(z = x,  x = x, bw = bw0)
   g <- switch(
     type,
     "am" = mean(lambdas),
@@ -15,16 +15,14 @@ local.factor <- function(x,
     "rv" = max(lambdas) - min(lambdas),
     "n" = 1
   )
-  result <- (lambdas / g) ^ (-alpha)
+  result <- (g / lambdas) ^ (alpha)
   return(result)
 }
 
-kernel.density.est <- function(z, x, bw) {
+kernelDensityEst <- function(z, x, bw) {
   n <- length(x)
   factor <- 1 / (2 * n * pi * besselI(bw, 0))
-  result <- factor * sum(exp (bw * cos(z - x)))
+  result <- factor * rowSums(exp(bw * cos(outer(z, x, "-"))))
   return(result)
 }
-
-
 
