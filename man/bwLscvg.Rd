@@ -4,7 +4,7 @@
 \alias{bwLscvg}
 \title{Generalized Least Squares Cross-Validation for Circular Data}
 \usage{
-bwLscvg(x, g = 4, lower = 0, upper = 60, tol = 0.1)
+bwLscvg(x, g = NULL, lower = 0, upper = 60, tol = 0.1)
 }
 \arguments{
 \item{x}{Data from which the smoothing parameter is to be computed. The object is
