@@ -95,14 +95,7 @@ bwLscvg <- function(x,
     template = "none"
   )
   if (!is.numeric(g) || g == 2 || is.null(g) || g <= 0) {
-    g <- tryCatch({
-      kappa <- mle.vonmises(x)$kappa
-      g <- trunc(kappa * log(n))
-      if (g == 0) 4 else g
-    },
-    error = function(e) {
-      g <- 4
-    })
+    g <- 4
     cli::cli_alert_warning(c(
       "Argument {.var g} must be positive numeric number and not equal to 2. ",
       "Value {.val {g}} for coefficient was used."
