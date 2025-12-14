@@ -81,7 +81,7 @@ dens <- adaptiveDensityCircular(x, bw0 = bw0)
 plot(seq(0, 2 * pi, length.out = 500), dens, type = "l",
      main = "Adaptive Circular Density")
 
-# Example with numerical integration over interval [0,2pi] to verify normalization of 
+# Example with numerical integration over interval [0,2pi] to verify normalization of
 # computed density
 library(circular)
 x <- rvonmises(100, mu = circular(0), kappa = 1)

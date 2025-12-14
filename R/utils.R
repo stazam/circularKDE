@@ -15,7 +15,7 @@ localFactor <- function(x,
     "rv" = max(lambdas) - min(lambdas),
     "n" = 1
   )
-  result <- (g / lambdas) ^ (alpha)
+  result <- (lambdas / g) ^ (alpha)
   return(result)
 }
 
