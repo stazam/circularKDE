@@ -6,7 +6,7 @@ Authors@R:
       person(given = "Ivanka", family = "Hórová", email = "horova@math.muni.cz", role = c("aut")),
       person(given = "Kamila", family = "Hasilová", email = "kamila.hasilova@unob.cz", role = c("aut")),
       person(given = "Stanislav", family = "Katina", email = "katina@math.muni.cz", role = c("aut")))
-Description: Provides recent kernel density estimation methods for circular data, including adaptive and higher-order techniques. The implementation is based on recent advances in bandwidth selection and circular smoothing. Key methods include adaptive bandwidth selection methods (Zámečník et al. 2024), complete cross-validation (Hasilová et al. 2024), Fourier-based plug-in rules (Tenreiro 2022), and higher-order kernels (Tsuruta & Sagae 2017).
+Description: Provides recent kernel density estimation methods for circular data, including adaptive and higher-order techniques. The implementation is based on recent advances in bandwidth selection and circular smoothing. Key methods include adaptive bandwidth selection methods ('Zámečník' et al. 2024), complete cross-validation ('Hasilová' et al. 2024), Fourier-based plug-in rules ('Tenreiro' 2022), and higher-order kernels ('Tsuruta' & 'Sagae' 2017).
 Depends: R(>= 3.5.0), circular, cli
 License: GPL-2 | file LICENSE 
 Encoding: UTF-8

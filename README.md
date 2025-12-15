@@ -3,7 +3,7 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/circularKDE)](https://CRAN.R-project.org/package=circularKDE)
 [![R-CMD-check](https://github.com/stazam/circularKDE/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/stazam/circularKDE/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/stazam/circularKDE/branch/main/graph/badge.svg)](https://app.codecov.io/gh/stazam/circularKDE?branch=main)
-[![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+[![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/circularKDE)](https://CRAN.R-project.org/package=circularKDE)
 <!-- badges: end -->
 
