@@ -147,7 +147,7 @@ adaptiveDensityCircular <- function(x,
   }
   # compute the local adaptation factors at every point in x
   lambda <- localFactor(x, bw0, alpha, type)
-  kernelDensityAdaptiveEst <- function(x, z, bw0, alpha, type, lambda) {
+  kernelDensityAdaptiveEst <- function(x, z, bw0, type, lambda) {
     n <- length(x)
     factor <- 1 / (2 * n * pi)
     main_part <- sum(1 / besselI(lambda * bw0, 0) * exp (lambda * bw0 * cos(z - x)), na.rm = TRUE)
@@ -159,7 +159,6 @@ adaptiveDensityCircular <- function(x,
     FUN = kernelDensityAdaptiveEst,
     x = x,
     bw0 = bw0,
-    alpha = alpha,
     type = type,
     lambda = lambda
   )

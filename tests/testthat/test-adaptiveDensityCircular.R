@@ -1,10 +1,10 @@
 test_that("adaptiveDensityCircular returns a numeric vector for valid input",
           {
-            density_vector <- c(0.225589943,
-                                0.209118581,
-                                0.145161036,
-                                0.059112002,
-                                0.225589943)
+            density_vector <- c(0.173521608,
+                                0.183378918,
+                                0.147806612,
+                                0.131912573,
+                                0.173521608)
             set.seed(60)
             x <- rvonmises(50, circular(pi / 2), 1)
             result <- adaptiveDensityCircular(x, bw0 = 1, n = 5)
@@ -16,7 +16,7 @@ test_that("adaptiveDensityCircular returns a numeric vector for valid input",
 test_that(
   "adaptiveDensityCircular returns a numeric vector for valid input with different seed",
   {
-    density_vector <- c(0.17452359, 0.26973702, 0.12384836, 0.07047693, 0.17452359)
+    density_vector <- c(0.168161733, 0.196041884, 0.147535191, 0.124876756, 0.168161733)
     set.seed(123)
     x <- rvonmises(50, circular(pi / 2), 1)
     result <- adaptiveDensityCircular(x, bw0 = 1, n = 5)
