@@ -6,7 +6,7 @@
 \alias{circularKDE}
 \title{circularKDE: Recent Methods for Kernel Density Estimation of Circular Data}
 \description{
-Provides recent kernel density estimation methods for circular data, including adaptive and higher-order techniques. The implementation is based on recent advances in bandwidth selection and circular smoothing. Key methods include adaptive bandwidth selection methods (Zámečník et al. 2024), complete cross-validation (Hasilová et al. 2024), Fourier-based plug-in rules (Tenreiro 2022), and higher-order kernels (Tsuruta & Sagae 2017).
+Provides recent kernel density estimation methods for circular data, including adaptive and higher-order techniques. The implementation is based on recent advances in bandwidth selection and circular smoothing. Key methods include adaptive bandwidth selection methods ('Zámečník' et al. 2024), complete cross-validation ('Hasilová' et al. 2024), Fourier-based plug-in rules ('Tenreiro' 2022), and higher-order kernels ('Tsuruta' & 'Sagae' 2017).
 }
 \seealso{
 Useful links:
