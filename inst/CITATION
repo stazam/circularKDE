@@ -37,7 +37,7 @@ bibentry(
 )
 
 bibentry(
-  bibtype = "Article", 
+  bibtype = "Article",
   title = "A comprehensive exploration of complete cross-validation for circular data",
   author = c(
     person("Kamila", "Hasilová"),
